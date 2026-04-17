@@ -66,8 +66,6 @@ import { ref, shallowRef, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { usePosts } from '../composables/usePosts'
 
-const WP_BASE_URL = import.meta.env.VITE_WP_API
-
 const currentYear = new Date().getFullYear()
 
 function createNewRecord() {
@@ -118,26 +116,6 @@ function limpiar(value) {
   return value.replace(/<\/?[^>]+(>|$)/g, "")
 }
 
-async function getEntries() {
-  try {
-    const response = await axios.get(`${WP_BASE_URL}/wp-json/wp/v2/posts`);
-
-    console.log('Respuesta completa:', response);
-
-    let data = response.data;
-
-    entries.value = data.map(el => ({
-      id: el.id,
-      title: el.title.rendered,
-      content: limpiar(el.content.rendered),
-      date: el.date,
-      status: el.status,
-    }));
-
-  } catch (error) {
-    console.error('Error fetching posts', error);
-  }
-}
 
 async function save() {
   try {
