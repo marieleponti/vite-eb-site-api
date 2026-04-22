@@ -16,6 +16,16 @@ const routes = [
     path: '/crud',
     name: 'crud',
     component: () => import('../views/Crud.vue')
+  },
+  {
+    path: '/blog',
+    name: 'blog',
+    component: () => import('../views/BlogPage.vue')
+  },
+  {
+    path: '/resources',
+    name: 'resources',
+    component: () => import('../views/ResourcesPage.vue')
   }
 ]
 
