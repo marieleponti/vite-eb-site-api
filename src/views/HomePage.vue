@@ -1,27 +1,6 @@
 
 <template>
   <div class="website-container">
-    <!-- Header -->
-    <header class="header">
-      <div class="header-content">
-        <div class="logo">
-         <img src="/logo.png" alt="Logo" style="width: 280px; height: auto;" />
-        </div>
-        
-        <nav class="navigation">
-          <a href="#" class="nav-link">HOME</a>
-          <a href="#" class="nav-link">REPOSITORY</a>
-          <a href="#" class="nav-link">BLOG</a>
-          <a href="#" class="nav-link">ABOUT</a>
-          <a href="#" class="nav-link">ENGLISH</a>
-        </nav>
-
-        <button class="submit-btn">Submit Resource</button>
-      </div>
-    </header>
-
-    <!-- Dashed Line Decoration -->
-    <div class="dashed-line-decoration"></div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -45,6 +24,53 @@
       </p>
     </section>
 
+    <!-- Border Explanation Section -->
+<section class="content-section">
+  <p class="section-text">
+        The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
+  </p>
+</section>
+
+<!-- Icons Image -->
+<div class="image-center">
+  <img src="/border_icons.png" alt="Icons" />
+</div>
+
+<!-- Bullet Section -->
+<section class="content-section">
+  <p class="section-text">This is “The Everywhere Border”:</p>
+
+  <ul class="bullet-list">
+    <li>It enables the policing of people wherever they are, based on race, nationality, ethnicity, class, gender, and other social markers.</li>
+    <li>It relies on public narratives, laws, and politics to reinforce hierarchies of belonging,  thereby allowing governments to more easily limit people’s freedom of movement, ability to stay, and to live freely.</li>
+    <li>It plays a fundamental role in disrupting the social fabric of origin, transit, and destination countries, making communities surveilled, policed and unsafe.</li>
+  </ul>
+  <p class="section-text">We invite you to explore the resources available here, leverage them in your work, and share information with others.
+
+</p>
+
+  <button class="join-btn">Explore the Database</button>
+</section>
+
+<!-- Full Width Image -->
+<div class="full-image">
+  <img src="/traincart.png" alt="Train" />
+</div>
+
+<!-- Featured Content -->
+<section class="content-section">
+  <h2 class="section-title">Featured Content</h2>
+
+  <div class="featured-card">
+    <img src="/featured.jpg" alt="Featured" />
+    <div>
+      <h3>Seeking Refuge in Canada</h3>
+      <p>What We Know About US-Canada Data Sharing</p>
+      <button class="join-btn">Read More</button>
+    </div>
+  </div>
+</section>
+
     <!-- Another Dashed Line -->
     <div class="dashed-line-decoration"></div>
 
@@ -55,40 +81,6 @@
         <div class="vertical-bars"></div>
       </div>
       
-      <div class="footer-content">
-        <p class="footer-text">
-          The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
-        </p>
-        
-        <div class="icon-row">
-          <div class="icon-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="5" y="2" h="14" w="14" rx="2" ry="2"/>
-              <line x1="12" y1="18" x2="12" y2="18"/>
-            </svg>
-          </div>
-          <div class="icon-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 11c0 6.627-8 11-8 11s8-4.373 8-11S4 0 4 0s8 4.373 8 11z"/>
-              <circle cx="12" cy="11" r="3"/>
-            </svg>
-          </div>
-          <div class="icon-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <ellipse cx="12" cy="5" rx="9" ry="3"/>
-              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-            </svg>
-          </div>
-          <div class="icon-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="15" y1="9" x2="9" y2="15"/>
-              <line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-          </div>
-        </div>
-      </div>
     </footer>
   </div>
 </template>
@@ -161,7 +153,7 @@
   color: #F4D06F;
   text-decoration: none;
   font-family: 'Arial', sans-serif;
-  font-size: 12px;
+  font-size: 18px;
   font-weight: bold;
   letter-spacing: 1px;
   transition: border-bottom 0.3s;
@@ -283,7 +275,7 @@
   background-color: #2B3B47;
   padding: 60px 40px;
   position: relative;
-  min-height: 600px;
+  min-height: 300px;
 }
 
 .pattern-section {
@@ -384,4 +376,50 @@
     padding-top: 150px;
   }
 }
+
+/* Center image */
+.image-center {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.image-center img {
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Bullet list */
+.bullet-list {
+  max-width: 800px;
+  margin: 20px auto;
+  text-align: left;
+  line-height: 1.8;
+}
+
+/* Full image */
+.full-image img {
+  width: 100%;
+  display: block;
+  margin: 40px 0;
+}
+
+/* Featured card */
+.featured-card {
+  display: flex;
+  max-width: 900px;
+  margin: 40px auto;
+  background: #1f2a33;
+  border: 1px solid #F4D06F;
+}
+
+.featured-card img {
+  width: 40%;
+  object-fit: cover;
+}
+
+.featured-card div {
+  padding: 20px;
+  text-align: left;
+}
+
 </style>
