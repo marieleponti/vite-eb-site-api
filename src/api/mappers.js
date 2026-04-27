@@ -1,12 +1,17 @@
+function decodeHtml(text = '') {
+  const textarea = document.createElement('textarea')
+  textarea.innerHTML = text
+  return textarea.value
+}
+
 function limpiar(html = '') {
-  return html
-    // Elimina shortcodes de Divi y otros plugins
-    .replace(/\[[^\]]+\]/g, '')
-    // Elimina etiquetas HTML
-    .replace(/<\/?[^>]+(>|$)/g, '')
-    // Normaliza espacios
-    .replace(/\s+/g, ' ')
-    .trim()
+  return decodeHtml(
+    html
+      .replace(/\[[^\]]+\]/g, '')      // elimina shortcodes
+      .replace(/<\/?[^>]+(>|$)/g, '')  // elimina HTML
+      .replace(/\s+/g, ' ')            // normaliza espacios
+      .trim()
+  )
 }
 
 export function mapPost(post) {
@@ -14,7 +19,7 @@ export function mapPost(post) {
     id: post.id,
     slug: post.slug,
 
-    title: limpiar(post.title?.rendered || ''),
+    title: decodeHtml(post.title?.rendered || ''),
 
     excerpt: limpiar(post.excerpt?.rendered || ''),
 
@@ -26,16 +31,13 @@ export function mapPost(post) {
       post._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
 
     date: post.date,
-
     permalink: post.link,
 
     topics: post.topic || [],
     formats: post.format || [],
     countries: post.country || [],
     languages: post.language || [],
-
     visibility: post.visibility || [],
-
     status: post.status,
   }
 }

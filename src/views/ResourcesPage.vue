@@ -44,40 +44,65 @@
 
           <v-data-table :items="items" :headers="headers" :loading="loading" item-value="id">
 
-            <!-- TITLE -->
-            <template #item.title="{ item }">
-              <div class="d-flex align-center ga-4 py-2">
-                <v-img v-if="item.featured_image" :src="item.featured_image" :alt="item.title" width="120" height="80"
-                  cover class="rounded" />
+         <v-row>
+  <v-col
+    v-for="item in items"
+    :key="item.id"
+    cols="12"
+    md="6"
+    lg="4"
+  >
+    <v-card
+      class="h-100 d-flex flex-column"
+      elevation="2"
+      rounded="lg"
+    >
+      <v-img
+        v-if="item.featuredImage"
+        :src="item.featuredImage"
+        :alt="item.title"
+        height="220"
+        cover
+      />
 
-                <div>
-                  <a :href="item.permalink" target="_blank" rel="noopener noreferrer"
-                    class="text-decoration-none text-primary font-weight-bold">
-                    {{ item.title }}
-                  </a>
+      <v-card-item>
+        <v-card-title class="text-wrap">
+          <a
+            :href="item.permalink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-decoration-none text-primary"
+          >
+            {{ item.title }}
+          </a>
+        </v-card-title>
 
-                  <div class="text-caption text-medium-emphasis mt-1">
-                    {{ item.acf?.author || 'Unknown author' }}
-                  </div>
-                </div>
-              </div>
-            </template>
-            <!-- CONTENT -->
-            <template #item.content="{ item }">
-              <span class="text-truncate d-inline-block" style="max-width: 300px;">
-                {{ item.content }}
-              </span>
-            </template>
+        <v-card-subtitle>
+          {{ item.author }} • {{ formatDate(item.date) }}
+        </v-card-subtitle>
+      </v-card-item>
 
-            <!-- DATE -->
-            <template #item.date="{ item }">
-              {{ formatDate(item.date) }}
-            </template>
+      <v-card-text class="flex-grow-1">
+        <div class="text-truncate-4">
+          {{ item.excerpt || item.content }}
+        </div>
+      </v-card-text>
 
-            <!-- ACTIONS -->
-            <template #item.actions="{ item }">
-              <v-btn icon="mdi-eye" variant="text" @click="view(item)" />
-            </template>
+      <v-card-actions>
+        <v-spacer />
+
+        <v-btn
+          color="primary"
+          variant="text"
+          :href="item.permalink"
+          target="_blank"
+        >
+          View Resource
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-col>
+</v-row>
 
           </v-data-table>
 
