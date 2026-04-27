@@ -100,21 +100,20 @@ async function onFiltersUpdate(filters) {
 /**
  * query builder WP REST
  */
+
 async function fetchPosts(filters = {}) {
   const params = new URLSearchParams()
 
-  if (filters.s) params.append('search', filters.s)
+  if (filters.s) {
+    params.append('search', filters.s)
+  }
 
   if (filters.categories?.length) {
-    filters.categories.forEach(c =>
-      params.append('categories[]', c)
-    )
+    params.append('categories', filters.categories.join(','))
   }
 
   if (filters.tags?.length) {
-    filters.tags.forEach(t =>
-      params.append('tags[]', t)
-    )
+    params.append('tags', filters.tags.join(','))
   }
 
   await fetchAll(params.toString())

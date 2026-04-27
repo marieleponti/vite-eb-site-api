@@ -1,5 +1,12 @@
 function limpiar(html = '') {
-  return html.replace(/<\/?[^>]+(>|$)/g, '')
+  return html
+    // Elimina shortcodes de Divi y otros plugins
+    .replace(/\[[^\]]+\]/g, '')
+    // Elimina etiquetas HTML
+    .replace(/<\/?[^>]+(>|$)/g, '')
+    // Normaliza espacios
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 export function mapPost(post) {
@@ -7,7 +14,7 @@ export function mapPost(post) {
     id: post.id,
     slug: post.slug,
 
-    title: post.title?.rendered || '',
+    title: limpiar(post.title?.rendered || ''),
 
     excerpt: limpiar(post.excerpt?.rendered || ''),
 
@@ -19,6 +26,8 @@ export function mapPost(post) {
       post._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
 
     date: post.date,
+
+    permalink: post.link,
 
     topics: post.topic || [],
     formats: post.format || [],

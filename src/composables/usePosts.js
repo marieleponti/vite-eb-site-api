@@ -1,10 +1,6 @@
 import { ref } from 'vue'
-import { getPosts } from '../api/wp.service'
+import { fetchPosts, fetchResources } from '../api/wp.service'
 import { mapPost } from '../api/mappers'
-
-function limpiar(html = '') {
-  return html.replace(/<\/?[^>]+(>|$)/g, '')
-}
 
 export function usePosts(type = 'posts') {
   const items = ref([])
@@ -12,17 +8,24 @@ export function usePosts(type = 'posts') {
 
   async function fetchAll(params = '') {
     loading.value = true
-    try {
-      const { data } = await getPosts(type, params)
 
-      if (Array.isArray(data)) {
-        items.value = data.map(mapPost)
+    try {
+      let data
+
+      if (type === 'inforepo_resource') {
+        const response = await fetchResources(params)
+        data = response.items || []
       } else {
-        console.error('La respuesta de la API no es un arreglo', data)
+        data = await fetchPosts(type, params)
       }
 
+     items.value = Array.isArray(data)
+        ? data.map(mapPost)
+        : []
+        
     } catch (error) {
-      console.error('Error fetching posts', error)
+      console.error(`Error fetching ${type}:`, error)
+      items.value = []
     } finally {
       loading.value = false
     }

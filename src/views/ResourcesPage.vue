@@ -19,9 +19,7 @@
       <!-- 🔎 FILTERS (LEFT SIDEBAR) -->
       <v-col cols="12" md="3">
 
-        <ResourceFilters
-          @update="onFiltersUpdate"
-        />
+        <ResourceFilters @update="onFiltersUpdate" />
 
       </v-col>
 
@@ -35,10 +33,7 @@
             <strong>{{ items.length }}</strong> results
           </div>
 
-          <v-btn
-            variant="outlined"
-            @click="refresh"
-          >
+          <v-btn variant="outlined" @click="refresh">
             Refresh
           </v-btn>
 
@@ -47,18 +42,26 @@
         <!-- RESULTS TABLE -->
         <v-card>
 
-          <v-data-table
-            :items="items"
-            :headers="headers"
-            :loading="loading"
-            item-value="id"
-          >
+          <v-data-table :items="items" :headers="headers" :loading="loading" item-value="id">
 
             <!-- TITLE -->
             <template #item.title="{ item }">
-              <strong>{{ item.title }}</strong>
-            </template>
+              <div class="d-flex align-center ga-4 py-2">
+                <v-img v-if="item.featured_image" :src="item.featured_image" :alt="item.title" width="120" height="80"
+                  cover class="rounded" />
 
+                <div>
+                  <a :href="item.permalink" target="_blank" rel="noopener noreferrer"
+                    class="text-decoration-none text-primary font-weight-bold">
+                    {{ item.title }}
+                  </a>
+
+                  <div class="text-caption text-medium-emphasis mt-1">
+                    {{ item.acf?.author || 'Unknown author' }}
+                  </div>
+                </div>
+              </div>
+            </template>
             <!-- CONTENT -->
             <template #item.content="{ item }">
               <span class="text-truncate d-inline-block" style="max-width: 300px;">
@@ -132,27 +135,23 @@ async function onFiltersUpdate(filters) {
 async function fetchResources(filters = {}) {
   const params = new URLSearchParams()
 
-  if (filters.s) params.append('search', filters.s)
-
-  if (filters.topic?.length) {
-    filters.topic.forEach(t => params.append('topic[]', t))
+  if (filters.s) {
+    params.append('search', filters.s)
   }
 
-  if (filters.source?.length) {
-    filters.source.forEach(s => params.append('source[]', s))
-  }
+  const taxonomies = [
+    'topic',
+    'source',
+    'format',
+    'country',
+    'language'
+  ]
 
-  if (filters.format?.length) {
-    filters.format.forEach(f => params.append('format[]', f))
-  }
-
-  if (filters.country?.length) {
-    filters.country.forEach(c => params.append('country[]', c))
-  }
-
-  if (filters.language?.length) {
-    filters.language.forEach(l => params.append('language[]', l))
-  }
+  taxonomies.forEach(tax => {
+    if (filters[tax]?.length) {
+      params.append(tax, filters[tax].join(','))
+    }
+  })
 
   await fetchAll(params.toString())
 }
