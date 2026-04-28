@@ -1,76 +1,96 @@
 <template>
-  <v-card class="pa-4">
-
-    <!-- 🔎 Search -->
+  <v-card flat class="resource-filters pa-6">
+    <!-- Search Input -->
     <v-text-field
-      v-model="localFilters.s"
-      label="Key terms"
+      v-model="filters.s"
+      placeholder="key terms"
+      variant="outlined"
+      density="comfortable"
+      hide-details
       clearable
-      prepend-inner-icon="mdi-magnify"
-      class="mb-4"
+      class="mb-6"
+      @keyup.enter="emitFilters"
     />
 
-    <!-- Taxonomy filters -->
-    <v-expansion-panels multiple>
-
-      <v-expansion-panel
-        v-for="tax in taxonomies"
-        :key="tax.slug"
+    <!-- Top Buttons -->
+    <div class="filter-actions mb-8">
+      <v-btn
+        variant="outlined"
+        class="filter-btn"
+        @click="emitFilters"
       >
-        <v-expansion-panel-title>
-          {{ tax.label }}
-        </v-expansion-panel-title>
-
-        <v-expansion-panel-text>
-          <v-checkbox
-            v-for="term in tax.terms"
-            :key="term.id"
-            v-model="localFilters[tax.slug]"
-            :label="term.name"
-            :value="term.id"
-            density="compact"
-            hide-details
-          />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-
-    </v-expansion-panels>
-
-    <!-- Actions -->
-    <div class="d-flex justify-space-between mt-4">
+        Search
+      </v-btn>
 
       <v-btn
-        variant="text"
+        variant="outlined"
+        class="filter-btn"
         @click="clearFilters"
       >
         Clear
       </v-btn>
 
       <v-btn
-        color="primary"
-        @click="applyFilters"
+        variant="outlined"
+        class="filter-btn"
       >
-        Search
+        Map View
       </v-btn>
-
     </div>
 
+    <!-- Accordion Filters -->
+    <v-expansion-panels
+      multiple
+      variant="accordion"
+      flat
+    >
+      <v-expansion-panel
+        v-for="taxonomy in taxonomies"
+        :key="taxonomy.slug"
+        elevation="0"
+        class="filter-panel"
+      >
+        <v-expansion-panel-title class="filter-title">
+          {{ taxonomy.label.toUpperCase() }}
+        </v-expansion-panel-title>
+
+        <v-expansion-panel-text>
+          <v-checkbox
+            v-for="term in taxonomy.children"
+            :key="term.slug"
+            v-model="filters[taxonomy.slug]"
+            :label="term.label"
+            :value="term.slug"
+            density="compact"
+            hide-details
+            color="primary"
+            class="mb-1"
+            @change="emitFilters"
+          />
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
+    <!-- Bottom Search -->
+    <v-btn
+      variant="outlined"
+      class="filter-btn mt-8"
+      @click="emitFilters"
+    >
+      Search
+    </v-btn>
   </v-card>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
-import axios from 'axios'
+import { reactive, ref, onMounted } from 'vue'
+import { fetchResourceFilters } from '@/api/wp.service'
 
-/**
- * filters que recibe/expone el padre
- */
 const emit = defineEmits(['update'])
 
-/**
- * estado local
- */
-const localFilters = ref({
+const taxonomies = ref([])
+
+const filters = reactive({
   s: '',
   topic: [],
   source: [],
@@ -79,63 +99,69 @@ const localFilters = ref({
   language: []
 })
 
-/**
- * estructura de taxonomías (equivalente a get_filters_data())
- */
-const taxonomies = ref([
-  { slug: 'topic', label: 'Topic', terms: [] },
-  { slug: 'source', label: 'Source', terms: [] },
-  { slug: 'format', label: 'Format', terms: [] },
-  { slug: 'country', label: 'Country', terms: [] },
-  { slug: 'language', label: 'Language', terms: [] }
-])
-
-/**
- * cargar términos desde WP (REST o endpoint custom)
- * Ajusta esta URL a tu backend real
- */
-async function fetchTerms() {
+async function loadFilters() {
   try {
-    const { data } = await axios.get('/.netlify/functions/getFilters')
-
-    // esperado: mismo shape que taxonomies
-    taxonomies.value = data
-  } catch (err) {
-    console.error('Error loading filters', err)
+    taxonomies.value = await fetchResourceFilters()
+  } catch (error) {
+    console.error('Error loading filters:', error)
   }
 }
 
-/**
- * 🚀 emitir filtros al padre
- */
-function applyFilters() {
-  emit('update', { ...localFilters.value })
+function emitFilters() {
+  emit('update', { ...filters })
 }
 
-/**
- *  limpiar todo
- */
 function clearFilters() {
-  localFilters.value = {
-    s: '',
-    topic: [],
-    source: [],
-    format: [],
-    country: [],
-    language: []
-  }
+  filters.s = ''
+  filters.topic = []
+  filters.source = []
+  filters.format = []
+  filters.country = []
+  filters.language = []
 
-  applyFilters()
+  emitFilters()
 }
 
-/**
- * opcional: auto-reactivo (tipo “search as you filter”)
- */
-watch(localFilters, () => {
-  emit('update', { ...localFilters.value })
-}, { deep: true })
-
-onMounted(() => {
-  fetchTerms()
-})
+onMounted(loadFilters)
 </script>
+
+<style scoped>
+.resource-filters {
+  background: #f4f4f6;
+  border-radius: 0;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+}
+
+.filter-panel {
+  border-bottom: 1px solid #d7d7d7;
+  background: transparent !important;
+}
+
+.filter-title {
+  font-size: 1.75rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: #2b3f47;
+  padding-left: 0;
+}
+
+:deep(.v-expansion-panel-text__wrapper) {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+:deep(.v-selection-control) {
+  margin-bottom: 8px;
+}
+</style>

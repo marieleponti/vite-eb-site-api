@@ -1,42 +1,70 @@
 <template>
   <v-container fluid class="resources-page">
-
     <v-row>
-      <!-- FILTERS -->
+      <!-- Filters -->
       <v-col cols="12" md="3">
         <ResourceFilters @update="onFiltersUpdate" />
       </v-col>
 
-      <!-- RESULTS -->
+      <!-- Results -->
       <v-col cols="12" md="9">
         <v-card class="mb-4 pa-3 d-flex justify-space-between align-center">
           <div>
             <strong>{{ items.length }}</strong> results
           </div>
 
-          <v-btn variant="outlined" :loading="loading" @click="refresh">
+          <v-btn
+            variant="outlined"
+            :loading="loading"
+            @click="refresh"
+          >
             Refresh
           </v-btn>
         </v-card>
 
-        <!-- Loading -->
         <v-row v-if="loading">
-          <v-col v-for="n in 6" :key="n" cols="12" md="6" lg="4">
-            <v-skeleton-loader type="image, article, actions" class="rounded-lg" />
+          <v-col
+            v-for="n in 6"
+            :key="n"
+            cols="12"
+            md="6"
+            lg="4"
+          >
+            <v-skeleton-loader
+              type="image, article, actions"
+              class="rounded-lg"
+            />
           </v-col>
         </v-row>
 
-        <!-- Cards -->
         <v-row v-else-if="items.length">
-          <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
-
-
-            <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
-              <v-img v-if="item.featuredImage" :src="item.featuredImage" :alt="item.title" height="220" cover />
+          <v-col
+            v-for="item in items"
+            :key="item.id"
+            cols="12"
+            md="6"
+            lg="4"
+          >
+            <v-card
+              class="resource-card h-100 d-flex flex-column"
+              elevation="2"
+              rounded="lg"
+            >
+              <v-img
+                v-if="item.featuredImage"
+                :src="item.featuredImage"
+                :alt="item.title"
+                height="220"
+                cover
+              />
 
               <v-card-item>
                 <v-card-title class="resource-title">
-                  <a :href="item.permalink" target="_blank" rel="noopener noreferrer">
+                  <a
+                    :href="item.permalink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {{ item.title }}
                   </a>
                 </v-card-title>
@@ -55,18 +83,24 @@
               <v-spacer />
 
               <v-card-actions>
-                <v-btn color="primary" variant="text" :href="item.permalink" target="_blank">
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  :href="item.permalink"
+                  target="_blank"
+                >
                   View Resource
                 </v-btn>
               </v-card-actions>
             </v-card>
-
-
           </v-col>
         </v-row>
 
-        <!-- Empty -->
-        <v-alert v-else type="info" variant="tonal">
+        <v-alert
+          v-else
+          type="info"
+          variant="tonal"
+        >
           No resources found.
         </v-alert>
       </v-col>

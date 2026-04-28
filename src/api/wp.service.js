@@ -53,3 +53,13 @@ export async function updatePost(id, payload) {
 
   return res.json();
 }
+
+export async function fetchResourceFilters() {
+  const response = await fetch(`${INFOREPO_API}/filters`)
+
+  if (!response.ok) {
+    throw new Error(`Filters API error: ${response.status}`)
+  }
+
+  return response.json()
+}
