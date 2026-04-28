@@ -1,116 +1,76 @@
 <template>
   <v-container fluid class="resources-page">
 
-    <!-- HEADER -->
-    <v-row class="mb-4">
-      <v-col cols="12">
-        <h1 class="text-h4 font-weight-bold">
-          Resources
-        </h1>
-        <p class="text-medium-emphasis">
-          Browse and filter all available resources
-        </p>
-      </v-col>
-    </v-row>
-
-    <!-- 🧩 MAIN LAYOUT -->
     <v-row>
-
-      <!-- 🔎 FILTERS (LEFT SIDEBAR) -->
+      <!-- FILTERS -->
       <v-col cols="12" md="3">
-
         <ResourceFilters @update="onFiltersUpdate" />
-
       </v-col>
 
-      <!-- RESULTS (RIGHT CONTENT) -->
+      <!-- RESULTS -->
       <v-col cols="12" md="9">
-
-        <!-- TOP BAR -->
         <v-card class="mb-4 pa-3 d-flex justify-space-between align-center">
-
           <div>
             <strong>{{ items.length }}</strong> results
           </div>
 
-          <v-btn variant="outlined" @click="refresh">
+          <v-btn variant="outlined" :loading="loading" @click="refresh">
             Refresh
           </v-btn>
-
         </v-card>
 
-        <!-- RESULTS TABLE -->
-        <v-card>
+        <!-- Loading -->
+        <v-row v-if="loading">
+          <v-col v-for="n in 6" :key="n" cols="12" md="6" lg="4">
+            <v-skeleton-loader type="image, article, actions" class="rounded-lg" />
+          </v-col>
+        </v-row>
 
-          <v-data-table :items="items" :headers="headers" :loading="loading" item-value="id">
+        <!-- Cards -->
+        <v-row v-else-if="items.length">
+          <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
 
-         <v-row>
-  <v-col
-    v-for="item in items"
-    :key="item.id"
-    cols="12"
-    md="6"
-    lg="4"
-  >
-    <v-card
-      class="h-100 d-flex flex-column"
-      elevation="2"
-      rounded="lg"
-    >
-      <v-img
-        v-if="item.featuredImage"
-        :src="item.featuredImage"
-        :alt="item.title"
-        height="220"
-        cover
-      />
 
-      <v-card-item>
-        <v-card-title class="text-wrap">
-          <a
-            :href="item.permalink"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-decoration-none text-primary"
-          >
-            {{ item.title }}
-          </a>
-        </v-card-title>
+            <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
+              <v-img v-if="item.featuredImage" :src="item.featuredImage" :alt="item.title" height="220" cover />
 
-        <v-card-subtitle>
-          {{ item.author }} • {{ formatDate(item.date) }}
-        </v-card-subtitle>
-      </v-card-item>
+              <v-card-item>
+                <v-card-title class="resource-title">
+                  <a :href="item.permalink" target="_blank" rel="noopener noreferrer">
+                    {{ item.title }}
+                  </a>
+                </v-card-title>
 
-      <v-card-text class="flex-grow-1">
-        <div class="text-truncate-4">
-          {{ item.excerpt || item.content }}
-        </div>
-      </v-card-text>
+                <v-card-subtitle class="resource-meta">
+                  {{ formatDate(item.date) }}
+                </v-card-subtitle>
+              </v-card-item>
 
-      <v-card-actions>
-        <v-spacer />
+              <v-card-text class="resource-content">
+                <div class="resource-excerpt">
+                  {{ item.excerpt || item.content }}
+                </div>
+              </v-card-text>
 
-        <v-btn
-          color="primary"
-          variant="text"
-          :href="item.permalink"
-          target="_blank"
-        >
-          View Resource
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-col>
-</v-row>
+              <v-spacer />
 
-          </v-data-table>
+              <v-card-actions>
+                <v-btn color="primary" variant="text" :href="item.permalink" target="_blank">
+                  View Resource
+                </v-btn>
+              </v-card-actions>
+            </v-card>
 
-        </v-card>
 
+          </v-col>
+        </v-row>
+
+        <!-- Empty -->
+        <v-alert v-else type="info" variant="tonal">
+          No resources found.
+        </v-alert>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
 
@@ -123,16 +83,6 @@ import { usePosts } from '@/composables/usePosts'
  * CPT resource data
  */
 const { items, fetchAll, loading } = usePosts('inforepo_resource')
-
-/**
- * table headers
- */
-const headers = [
-  { title: 'Title', key: 'title' },
-  { title: 'Content', key: 'content' },
-  { title: 'Date', key: 'date' },
-  { title: 'Actions', key: 'actions', sortable: false }
-]
 
 /**
  * current filters state
@@ -186,13 +136,6 @@ async function fetchResources(filters = {}) {
  */
 function refresh() {
   fetchResources(currentFilters.value)
-}
-
-/**
- * view action (placeholder)
- */
-function view(item) {
-  console.log('View resource:', item)
 }
 
 /**

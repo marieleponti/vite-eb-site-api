@@ -1,9 +1,9 @@
 const WP_API = 'https://dev-eb-vue.pantheonsite.io/wp-json/wp/v2'
 const INFOREPO_API = 'https://dev-eb-vue.pantheonsite.io/wp-json/inforepo/v1'
 
-
 export async function fetchPosts(type = 'posts', query = '') {
-  const url = `${WP_API}/${type}${query ? `?${query}` : ''}`
+  const separator = query ? '&' : '?'
+  const url = `${WP_API}/${type}${query ? `?${query}` : ''}${separator}_embed=true`
 
   const res = await fetch(url)
 
@@ -15,7 +15,8 @@ export async function fetchPosts(type = 'posts', query = '') {
 }
 
 export async function fetchResources(query = '') {
-  const url = `${INFOREPO_API}/resources${query ? `?${query}` : ''}`
+  const separator = query ? '&' : '?'
+  const url = `${INFOREPO_API}/resources${query ? `?${query}` : ''}${separator}_embed=true`
 
   const res = await fetch(url)
 
@@ -23,9 +24,8 @@ export async function fetchResources(query = '') {
     throw new Error(`Resources API error: ${res.status}`)
   }
 
-  return res.json()
+  return await res.json()
 }
-
 
 export async function createPost(payload) {
   const res = await fetch(`${WP_API}/posts`, {

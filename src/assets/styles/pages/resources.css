@@ -1,0 +1,33 @@
+.resource-title {
+  font-size: 1.4rem;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.resource-title a {
+  color: #2b3f47;
+  text-decoration: none;
+}
+
+.resource-title a:hover {
+  color: #ff5b00;
+}
+
+.resource-meta {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.resource-excerpt {
+  color: #4b5563;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.resources-page {
+  min-height: 100vh;
+}
