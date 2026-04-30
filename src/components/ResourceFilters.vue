@@ -217,4 +217,24 @@ onMounted(loadFilters)
   height: 24px !important;
   margin-right: 12px;
 }
+
+/* Search field text */
+:deep(.v-field input) {
+  color: #29465b !important;
+  -webkit-text-fill-color: #29465b !important;
+  caret-color: #29465b !important;
+  opacity: 1 !important;
+}
+
+/* Search placeholder */
+:deep(.v-field input::placeholder) {
+  color: #7a8a96 !important;
+  opacity: 1 !important;
+}
+
+/* Search label */
+:deep(.v-field .v-label) {
+  color: #29465b !important;
+  opacity: 1 !important;
+}
 </style>
