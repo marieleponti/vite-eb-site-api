@@ -1,5 +1,7 @@
+[build]
+  functions = "netlify/functions"
+
 [[redirects]]
   from = "/api/*"
-  to = "https://dev-eb-vue.pantheonsite.io/wp-json/inforepo/v1/:splat"
+  to = "/.netlify/functions/:splat"
   status = 200
-  force = true
