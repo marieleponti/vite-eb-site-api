@@ -1,21 +1,23 @@
 <template>
   <v-card flat class="resource-filters pa-6">
-    <!-- Search Input -->
+    <!-- Search -->
     <v-text-field
       v-model="filters.s"
-      placeholder="key terms"
+      label="Key Terms"
       variant="outlined"
       density="comfortable"
-      hide-details
+      prepend-inner-icon="mdi-magnify"
       clearable
+      hide-details
       class="mb-6"
       @keyup.enter="emitFilters"
     />
 
-    <!-- Top Buttons -->
-    <div class="filter-actions mb-8">
+    <!-- Actions -->
+    <div class="filter-actions mb-6">
       <v-btn
         variant="outlined"
+        color="primary"
         class="filter-btn"
         @click="emitFilters"
       >
@@ -24,6 +26,7 @@
 
       <v-btn
         variant="outlined"
+        color="primary"
         class="filter-btn"
         @click="clearFilters"
       >
@@ -32,26 +35,23 @@
 
       <v-btn
         variant="outlined"
+        color="primary"
         class="filter-btn"
       >
         Map View
       </v-btn>
     </div>
 
-    <!-- Accordion Filters -->
-    <v-expansion-panels
-      multiple
-      variant="accordion"
-      flat
-    >
+    <!-- Taxonomies -->
+    <v-expansion-panels multiple variant="accordion">
       <v-expansion-panel
-        v-for="taxonomy in taxonomies"
+        v-for="taxonomy in normalizedTaxonomies"
         :key="taxonomy.slug"
-        elevation="0"
         class="filter-panel"
+        elevation="0"
       >
         <v-expansion-panel-title class="filter-title">
-          {{ taxonomy.label.toUpperCase() }}
+          {{ taxonomy.label }}
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
@@ -61,29 +61,20 @@
             v-model="filters[taxonomy.slug]"
             :label="term.label"
             :value="term.slug"
+            color="primary"
             density="compact"
             hide-details
-            color="primary"
-            class="mb-1"
-            @change="emitFilters"
+            class="taxonomy-checkbox"
+            @update:model-value="emitFilters"
           />
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-
-    <!-- Bottom Search -->
-    <v-btn
-      variant="outlined"
-      class="filter-btn mt-8"
-      @click="emitFilters"
-    >
-      Search
-    </v-btn>
   </v-card>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import { fetchResourceFilters } from '@/api/wp.service'
 
 const emit = defineEmits(['update'])
@@ -96,8 +87,19 @@ const filters = reactive({
   source: [],
   format: [],
   country: [],
-  language: []
+  language: [],
 })
+
+const normalizedTaxonomies = computed(() =>
+  (taxonomies.value || []).map((taxonomy) => ({
+    ...taxonomy,
+    label: taxonomy.label || taxonomy.name || taxonomy.slug,
+    children: (taxonomy.children || []).map((term) => ({
+      slug: term.slug,
+      label: term.label || term.name || term.slug,
+    })),
+  })),
+)
 
 async function loadFilters() {
   try {
@@ -127,41 +129,93 @@ onMounted(loadFilters)
 
 <style scoped>
 .resource-filters {
-  background: #f4f4f6;
-  border-radius: 0;
+  background: #f5f5f5;
+  border: 1px solid #e5e7eb;
 }
 
+/* Search field outlined */
+:deep(.v-field--variant-outlined) {
+  background: #fff;
+}
+
+:deep(.v-field--variant-outlined .v-field__outline) {
+  opacity: 1 !important;
+}
+
+/* Search input text */
+:deep(.v-field input) {
+  color: #1f2937 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+
+/* Search label */
+:deep(.v-label) {
+  color: #6b7280 !important;
+  opacity: 1 !important;
+}
+
+/* Search icon */
+:deep(.v-field__prepend-inner .v-icon) {
+  color: #6b7280 !important;
+}
+
+/* Placeholder */
+:deep(input::placeholder) {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Buttons */
 .filter-actions {
   display: flex;
-  gap: 12px;
   flex-wrap: wrap;
+  gap: 12px;
 }
 
 .filter-btn {
+  min-width: 120px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 0.85rem;
 }
 
+/* Accordion */
 .filter-panel {
-  border-bottom: 1px solid #d7d7d7;
+  border-bottom: 1px solid #d1d5db;
   background: transparent !important;
 }
 
 .filter-title {
-  font-size: 1.75rem;
-  font-weight: 300;
-  letter-spacing: 0.02em;
+  font-size: 1.25rem;
+  font-weight: 600;
   color: #2b3f47;
   padding-left: 0;
 }
 
+/* Checkbox visibility */
+:deep(.v-selection-control) {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+:deep(.v-checkbox-btn) {
+  opacity: 1 !important;
+}
+
+:deep(.v-selection-control__wrapper) {
+  color: rgb(var(--v-theme-primary)) !important;
+}
+
+:deep(.v-label) {
+  opacity: 1 !important;
+  color: #374151 !important;
+}
+
+/* Panel padding */
 :deep(.v-expansion-panel-text__wrapper) {
   padding-left: 0;
   padding-right: 0;
 }
 
-:deep(.v-selection-control) {
-  margin-bottom: 8px;
-}
+
 </style>
