@@ -9,5 +9,16 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://dev-eb-vue.pantheonsite.io',
+        changeOrigin: true,
+        rewrite: path =>
+          path.replace('/api', '/wp-json/inforepo/v1')
+      }
+    }
   }
 })
+
