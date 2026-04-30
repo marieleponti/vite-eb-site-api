@@ -15,8 +15,7 @@ export async function fetchPosts(type = 'posts', query = '') {
 }
 
 export async function fetchResources(query = '') {
-  const separator = query ? '&' : '?'
-  const url = `${INFOREPO_API}/resources${query ? `?${query}` : ''}${separator}_embed=true`
+  const url = `${INFOREPO_API}/resources${query ? `?${query}` : ''}`
 
   const res = await fetch(url)
 
