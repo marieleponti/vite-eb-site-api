@@ -1,6 +1,6 @@
 const WP_API = 'https://dev-eb-vue.pantheonsite.io/wp-json/wp/v2'
 // const INFOREPO_API = '/api'
-const INFOREPO_API = 'https://dev-eb-vue.pantheonsite.io/wp-json/inforepo/v1'
+const INFOREPO_API = import.meta.env.VITE_API_BASE
 
 export async function fetchPosts(type = 'posts', query = '') {
   const separator = query ? '&' : '?'
