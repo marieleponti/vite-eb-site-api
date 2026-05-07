@@ -2,10 +2,14 @@ const WP_BASE = 'https://dev-eb-vue.pantheonsite.io/wp-json/wp/v2'
 
 exports.handler = async (event) => {
   try {
-    const query = event.rawQuery || ''
-    const url = `${WP_BASE}/inforepo_resource?${query}&_embed=true`
+    const query = event.rawQueryString || ''
+    const url = `${WP_BASE}/inforepo_resource${query ? `?${query}&` : '?'}_embed=true`
 
     const response = await fetch(url)
+
+    if (!response.ok) {
+      throw new Error(`WP error: ${response.status}`)
+    }
 
     const items = await response.json()
 
@@ -13,6 +17,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
         items,
