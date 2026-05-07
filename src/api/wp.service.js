@@ -1,5 +1,4 @@
-const WP_API = 'https://dev-eb-vue.pantheonsite.io/wp-json/wp/v2'
-// const INFOREPO_API = '/api'
+const WP_API = import.meta.env.VITE_WP_API
 const INFOREPO_API = import.meta.env.VITE_API_BASE
 
 export async function fetchPosts(type = 'posts', query = '') {
