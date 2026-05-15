@@ -1,4 +1,4 @@
-const WP_BASE = 'https://dev-eb-vue.pantheonsite.io/wp-json/wp/v2'
+const WP_BASE = 'https://dev-eb-vue.pantheonsite.io/wp-json/ebinforepo/v1'
 
 exports.handler = async (event) => {
   try {

@@ -39,7 +39,7 @@
 
 <script setup>
 import { reactive, ref, computed, onMounted } from 'vue'
-import { fetchResourceFilters } from '@/api/wp.service'
+import { fetchResourceFilters } from '@/api/services/wp.service'
 
 const emit = defineEmits(['update'])
 
