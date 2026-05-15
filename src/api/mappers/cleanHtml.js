@@ -1,4 +1,4 @@
-function cleanHtml(html = '') {
+export function cleanHtml(html = '') {
   return html
     // Remove Divi shortcodes
     .replace(/\[et_pb_[^\]]*\]/gi, '')

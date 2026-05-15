@@ -1,5 +1,16 @@
-import { ref } from 'vue'
-import { fetchPosts, fetchResources } from '@/api/services/wp.service'
+import {
+  ref
+} from 'vue'
+import {
+  fetchPosts,
+  fetchResources
+} from '@/api/services/wp.service'
+import {
+  mapPost
+} from '@/api/mappers/postMapper'
+import {
+  normalizeResource
+} from '@/api/mappers/resourceMapper'
 
 export function useContent(defaultParams = {}) {
 
@@ -33,7 +44,15 @@ export function useContent(defaultParams = {}) {
         res = await fetchResources(merged.query || '')
       }
 
-      items.value = res.items || res
+      const raw = res.items || res
+
+      if (merged.type === 'posts') {
+        items.value = raw.map(mapPost)
+      }
+
+      if (merged.type === 'resources') {
+        items.value = raw.map(normalizeResource)
+      }
 
       meta.value.total = res.total || 0
       meta.value.totalPages = res.total_pages || 1
