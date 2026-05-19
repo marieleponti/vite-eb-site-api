@@ -92,7 +92,7 @@ type: 'posts',
 const currentFilters = ref({})
 
 onMounted(() => {
-  fetchAll()
+  fetch()
 })
 
 async function onFiltersUpdate(filters) {
@@ -119,7 +119,7 @@ async function fetchPosts(filters = {}) {
     params.append('tags', filters.tags.join(','))
   }
 
-  await fetchAll(params.toString())
+  await fetch(params.toString())
 }
 
 function refresh() {
