@@ -78,13 +78,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import BlogFilters from '@/components/BlogFilters.vue'
-import { usePosts } from '@/composables/usePosts'
+import { useContent } from '@/composables/useContent'
 
-/**
- * WP post type = posts (default WP)
- * o si tienes CPT: 'post'
- */
-const { items, fetchAll, loading } = usePosts('posts')
+const {
+items,
+loading,
+fetch,
+} = useContent({
+type: 'posts',
+})
+
 
 const currentFilters = ref({})
 
