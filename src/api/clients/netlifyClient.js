@@ -1,12 +1,24 @@
-const API_BASE = import.meta.env.VITE_API_BASE
+const API =
+  import.meta.env.VITE_API_BASE
 
-export async function netlifyFetch(endpoint, params = '') {
-  const url = `${API_BASE}${endpoint}${params ? `?${params}` : ''}`
+export async function netlifyFetch(
+  endpoint,
+  query = '',
+  headers = {}
+) {
 
-  const res = await fetch(url)
+  const url =
+    `${API}${endpoint}` +
+    `${query ? `?${query}` : ''}`
+
+  const res = await fetch(url, {
+    headers,
+  })
 
   if (!res.ok) {
-    throw new Error(`Netlify API error: ${res.status}`)
+    throw new Error(
+      `API error: ${res.status}`
+    )
   }
 
   return await res.json()

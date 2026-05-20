@@ -1,23 +1,22 @@
 const WP = process.env.VITE_WP_API
 
 async function getUser(event) {
-  try {
-    const res = await fetch(
-      `${WP}/wp-json/custom/v1/me`, {
-        headers: {
-          cookie: event.headers.cookie || '',
-        },
+  const token = event.headers.authorization?.replace('Bearer ', '')
+
+  if (!token) return null
+
+  const res = await fetch(
+    `${WP}/wp-json/wp/v2/users/me`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    )
-    if (!res.ok) {
-      return null
     }
+  )
 
-    return await res.json()
+  if (!res.ok) return null
 
-  } catch {
-    return null
-  }
+  return await res.json()
 }
 
 exports.handler = async (event) => {
@@ -29,7 +28,8 @@ exports.handler = async (event) => {
 
     const canSeePrivate =
       roles.includes('administrator') ||
-      roles.includes('editor')
+      roles.includes('editor')||
+      roles.includes('ebteam')
 
     const query = event.rawQueryString || ''
 
