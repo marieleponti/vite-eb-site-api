@@ -1,4 +1,3 @@
-
 const API =
   import.meta.env.VITE_API_BASE
 
@@ -15,6 +14,9 @@ export async function netlifyFetch(
   const res = await fetch(url, {
     headers,
   })
+
+  console.log('URL:', url)
+  console.log('RAW RESPONSE:', text)
 
   if (!res.ok) {
     throw new Error(
