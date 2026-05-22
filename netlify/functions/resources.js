@@ -1,4 +1,4 @@
-const WP = process.env.VITE_WP_API
+const WP = process.env.WP_API
 
 async function getUser(event) {
   const token = event.headers.authorization?.replace('Bearer ', '')

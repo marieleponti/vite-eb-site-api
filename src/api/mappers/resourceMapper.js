@@ -1,38 +1,84 @@
 import { cleanHtml } from './cleanHtml'
 
 export function normalizeResource(item) {
-  return {
-    id: item.id,
 
-    title: item.title?.rendered || item.title,
+return {
+id: item.id,
 
-    excerpt: cleanHtml(item.excerpt?.rendered || ''),
+slug:
+  item.slug ?? '',
 
-    content: cleanHtml(item.content?.rendered || ''),
+title:
+  item.title?.rendered ??
+  item.title ??
+  'Untitled',
 
-    date: item.date,
+permalink:
+  item.link ??
+  item.permalink ??
+  '#',
 
-    featuredImage:
-      item._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
-      item.featured_image ||
-      null,
+excerpt: cleanHtml(
+  item.excerpt?.rendered ??
+  item.excerpt ??
+  ''
+),
 
-    permalink: item.link
-  }
+content: cleanHtml(
+  item.content?.rendered ??
+  item.content ??
+  ''
+),
+
+date:
+  item.date ?? '',
+
+featuredImage:
+  item._embedded?.['wp:featuredmedia']?.[0]?.source_url ??
+  item.featured_media_url ??
+  item.featured_image ??
+  item.acf?.image ??
+  null,
+
+topics:
+  item.topic ?? [],
+
+formats:
+  item.format ?? [],
+
+countries:
+  item.country ?? [],
+
+languages:
+  item.language ?? [],
+
+status:
+  item.status ?? 'publish',
+
+}
 }
 
 export function normalizeResourcesResponse(response) {
-  const rawItems =
-    response?.items ??
-    response ??
-    []
 
-  return {
-    items: Array.isArray(rawItems)
-      ? rawItems.map(normalizeResource)
-      : [],
+const rawItems =
+response?.items ??
+response ??
+[]
 
-    total: response?.total ?? rawItems.length ?? 0,
-    totalPages: response?.total_pages ?? 1
-  }
+return {
+
+items: Array.isArray(rawItems)
+  ? rawItems.map(normalizeResource)
+  : [],
+
+total:
+  response?.total ??
+  rawItems.length ??
+  0,
+
+totalPages:
+  response?.total_pages ??
+  1,
+
+}
 }
