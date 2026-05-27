@@ -83,7 +83,7 @@ const taxonomies = ref({
 })
 
 async function fetchTaxonomies() {
-  const { data } = await axios.get('/wp-json/wp/v2/blog-filters')
+  const { data } = await axios.get('/.netlify/functions/filters')
 
   taxonomies.value = data
 }
