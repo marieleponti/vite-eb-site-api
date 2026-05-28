@@ -3,11 +3,17 @@ const WP = process.env.WP_API
 exports.handler = async () => {
   try {
 
+    console.log('WP:', WP)
+
     const res = await fetch(
       `${WP}/wp-json/ebinforepo/v1/filters`
     )
 
-    const data = await res.json()
+    const text = await res.text()
+
+    console.log('RAW RESPONSE:', text)
+
+    const data = JSON.parse(text)
 
     return {
       statusCode: 200,
@@ -21,6 +27,9 @@ exports.handler = async () => {
 
     return {
       statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         error: err.message,
       }),
