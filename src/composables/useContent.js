@@ -20,49 +20,82 @@ export function useContent(defaultParams = {}) {
 
   const meta = ref({
     total: 0,
-    totalPages: 0,
+    totalPages: 1,
   })
 
   async function fetch(params = {}) {
-    loading.value = true
-    error.value = null
 
-    try {
+  loading.value = true
+  error.value = null
+  items.value = []
 
-      const merged = {
-        ...defaultParams,
-        ...params,
+  try {
+
+    const merged = {
+      ...defaultParams,
+      ...params,
+    }
+
+    let res
+
+    if (merged.type === 'posts') {
+      res = await fetchPosts('posts', merged.query || '')
+    }
+
+    if (merged.type === 'resources') {
+
+      const query = new URLSearchParams()
+
+      if (merged.page) {
+        query.append('page', merged.page)
       }
 
-      let res
-
-      if (merged.type === 'posts') {
-        res = await fetchPosts('posts', merged.query || '')
+      if (merged.perPage) {
+        query.append('per_page', merged.perPage)
       }
 
-      if (merged.type === 'resources') {
-        res = await fetchResources(merged.query || '')
+      if (merged.filters?.s) {
+        query.append('search', merged.filters.s)
       }
 
-      const raw = res.items || res
-
-      if (merged.type === 'posts') {
-        items.value = raw.map(mapPost)
+      if (merged.filters?.categories?.length) {
+        query.append(
+          'categories',
+          merged.filters.categories.join(',')
+        )
       }
 
-      if (merged.type === 'resources') {
-        items.value = raw.map(normalizeResource)
+      if (merged.filters?.tags?.length) {
+        query.append(
+          'tags',
+          merged.filters.tags.join(',')
+        )
       }
+
+      res = await fetchResources(query.toString())
+
+      console.log('PAGE:', merged.page)
+      console.log('RESULT ITEMS:', res.items?.map(i => i.id))
+
+      const raw = res.items || []
+
+      items.value = [...raw].map(normalizeResource)
 
       meta.value.total = res.total || 0
       meta.value.totalPages = res.total_pages || 1
-
-    } catch (err) {
-      error.value = err.message
-    } finally {
-      loading.value = false
     }
+
+    if (merged.type === 'posts') {
+      const raw = res.items || res
+      items.value = raw.map(mapPost)
+    }
+
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    loading.value = false
   }
+}
 
   return {
     items,

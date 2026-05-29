@@ -18,12 +18,12 @@ async function getUser(token) {
   return await res.json()
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event = {}) => {
 
   try {
 
     const token =
-      event.headers.authorization?.replace(
+      event.headers?.authorization?.replace(
         'Bearer ',
         ''
       )
@@ -37,17 +37,53 @@ exports.handler = async (event) => {
       roles.includes('editor') ||
       roles.includes('ebteam')
 
-    const query = event.rawQueryString || ''
+    // pagination
+    const page =
+      event.queryStringParameters?.page || '1'
 
-    const status = canSeePrivate
-      ? 'publish,private'
-      : 'publish'
+    const perPage =
+      event.queryStringParameters?.per_page || '16'
+
+    // optional filters
+    const search =
+      event.queryStringParameters?.search || ''
+
+    const categories =
+      event.queryStringParameters?.categories || ''
+
+    const tags =
+      event.queryStringParameters?.tags || ''
+
+    // build params
+    const params = new URLSearchParams()
+
+    params.set('page', page)
+    params.set('per_page', perPage)
+    params.set('_embed', 'true')
+
+    params.set(
+      'status',
+      canSeePrivate
+        ? 'publish,private'
+        : 'publish'
+    )
+
+    if (search) {
+      params.set('search', search)
+    }
+
+    if (categories) {
+      params.set('categories', categories)
+    }
+
+    if (tags) {
+      params.set('tags', tags)
+    }
 
     const url =
-      `${WP}/wp-json/wp/v2/inforepo_resource` +
-      `?status=${status}` +
-      `${query ? `&${query}` : ''}` +
-      `&_embed=true`
+      `${WP}/wp-json/wp/v2/inforepo_resource?${params.toString()}`
+
+    console.log('FINAL URL:', url)
 
     const response = await fetch(url, {
       headers: token

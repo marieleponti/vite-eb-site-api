@@ -42,7 +42,7 @@
           </v-col>
         </v-row>
 
-        <v-row v-else-if="items.length">
+        <v-row v-else-if="items.length" :key="page">
           <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
             <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
               <v-img v-if="item.featuredImage" :src="item.featuredImage" :alt="item.title" height="220" cover />
@@ -76,13 +76,13 @@
           </v-col>
         </v-row>
 
-        <v-row v-if="!loading && totalPages > 1" class="mt-8">
+        <v-row v-if="!loading && meta.totalPages > 1" class="mt-8">
           <v-col cols="12" class="d-flex justify-center align-center flex-wrap ga-2">
             <v-btn variant="text" class="pagination-nav" :disabled="page === 1" @click="changePage(page - 1)">
               « Previous
             </v-btn>
 
-            <v-btn v-for="n in totalPages" :key="n" :variant="page === n ? 'flat' : 'outlined'"
+            <v-btn v-for="n in meta.totalPages" :key="n" :variant="page === n ? 'flat' : 'outlined'"
               :color="page === n ? '#2f4356' : undefined" class="pagination-number" @click="changePage(n)">
               {{ n }}
             </v-btn>
@@ -109,7 +109,7 @@ const { items, fetch, loading, meta } = useContent()
 
 const currentFilters = ref({})
 const page = ref(1)
-const perPage = 12
+const perPage = 15
 
 onMounted(() => {
   fetchResources()
@@ -122,6 +122,7 @@ async function onFiltersUpdate(filters) {
 }
 
 async function fetchResources(filters = {}) {
+
   await fetch({
     type: 'resources',
     filters,
@@ -147,7 +148,7 @@ async function changePage(newPage) {
 function formatDate(date) {
   return new Date(date).toLocaleDateString()
 }
-</script>
+</script>   5 
 
 <style scoped>
 .resources-page {
