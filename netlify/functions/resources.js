@@ -1,7 +1,6 @@
 const WP = process.env.WP_API
 
-async function getUser(event) {
-  const token = event.headers.authorization?.replace('Bearer ', '')
+async function getUser(token) {
 
   if (!token) return null
 
@@ -9,8 +8,8 @@ async function getUser(event) {
     `${WP}/wp-json/wp/v2/users/me`,
     {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }
   )
 
@@ -20,22 +19,29 @@ async function getUser(event) {
 }
 
 exports.handler = async (event) => {
+
   try {
 
-    const user = await getUser(event)
+    const token =
+      event.headers.authorization?.replace(
+        'Bearer ',
+        ''
+      )
+
+    const user = await getUser(token)
 
     const roles = user?.roles || []
 
     const canSeePrivate =
       roles.includes('administrator') ||
-      roles.includes('editor')||
+      roles.includes('editor') ||
       roles.includes('ebteam')
 
     const query = event.rawQueryString || ''
 
-    const status = canSeePrivate ?
-      'publish,private' :
-      'publish'
+    const status = canSeePrivate
+      ? 'publish,private'
+      : 'publish'
 
     const url =
       `${WP}/wp-json/wp/v2/inforepo_resource` +
@@ -44,9 +50,11 @@ exports.handler = async (event) => {
       `&_embed=true`
 
     const response = await fetch(url, {
-      headers: {
-        cookie: event.headers.cookie || '',
-      },
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {},
     })
 
     if (!response.ok) {
@@ -91,5 +99,3 @@ exports.handler = async (event) => {
 
   }
 }
-
-
