@@ -46,12 +46,7 @@ const emit = defineEmits(['update'])
 const taxonomies = ref([])
 
 const filters = reactive({
-  s: '',
-  topic: [],
-  source: [],
-  format: [],
-  country: [],
-  language: [],
+  s: ''
 })
 
 const normalizedTaxonomies = computed(() =>
@@ -68,22 +63,38 @@ const normalizedTaxonomies = computed(() =>
 async function loadFilters() {
   try {
     taxonomies.value = await fetchResourceFilters()
+
+    console.log(
+      'TAXONOMIES:',
+      JSON.stringify(taxonomies.value, null, 2)
+    )
+
+    taxonomies.value.forEach(taxonomy => {
+      filters[taxonomy.slug] = []
+    })
+
   } catch (error) {
     console.error('Error loading filters:', error)
   }
 }
 
 function emitFilters() {
+
+  console.log(
+    'FILTERS JSON:',
+    JSON.stringify(filters)
+  )
+
   emit('update', { ...filters })
 }
 
 function clearFilters() {
+
   filters.s = ''
-  filters.topic = []
-  filters.source = []
-  filters.format = []
-  filters.country = []
-  filters.language = []
+
+  taxonomies.value.forEach(taxonomy => {
+    filters[taxonomy.slug] = []
+  })
 
   emitFilters()
 }

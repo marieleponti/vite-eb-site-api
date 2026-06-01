@@ -53,24 +53,22 @@ export function useContent(defaultParams = {}) {
       if (merged.perPage) {
         query.append('per_page', merged.perPage)
       }
-
       if (merged.filters?.s) {
         query.append('search', merged.filters.s)
       }
 
-      if (merged.filters?.categories?.length) {
-        query.append(
-          'categories',
-          merged.filters.categories.join(',')
-        )
-      }
+      Object.entries(merged.filters || {}).forEach(
+        ([key, value]) => {
 
-      if (merged.filters?.tags?.length) {
-        query.append(
-          'tags',
-          merged.filters.tags.join(',')
-        )
-      }
+          if (key === 's') return
+
+          if (Array.isArray(value) && value.length) {
+            query.append(key, value.join(','))
+          }
+        }
+      )
+
+      console.log('Vue envia: ', query.toString())
 
       res = await fetchResources(query.toString())
 

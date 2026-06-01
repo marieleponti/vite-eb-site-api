@@ -26,15 +26,6 @@
 
       <!-- Results -->
       <v-col cols="12" md="9">
-        <!-- <v-card class="mb-4 pa-3 d-flex justify-space-between align-center">
-          <div>
-            <strong>{{ items.length }}</strong> results
-          </div>
-
-          <v-btn variant="outlined" :loading="loading" @click="refresh">
-            Refresh
-          </v-btn>
-        </v-card> -->
 
         <v-row v-if="loading">
           <v-col v-for="n in 6" :key="n" cols="12" md="6" lg="4">
