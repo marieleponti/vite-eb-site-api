@@ -17,19 +17,26 @@ exports.handler = async (event) => {
           error: 'Missing token',
         }),
       }
-    }
-
-    const res = await fetch(
-      `${WP}/wp-json/wp/v2/users/me`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
-    )
 
-    if (!res.ok) {
-      return {
+      console.log('TOKEN:', token)
+
+      const res = await fetch(
+
+        console.log(
+          'AUTH HEADER:',
+          `Bearer ${token}`
+        )
+        
+        `${WP}/wp-json/ebinforepo/v1/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (!res.ok) {
+        return {
         statusCode: 401,
         body: JSON.stringify({
           error: 'Invalid token',
@@ -43,7 +50,6 @@ exports.handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         id: user.id,
-        name: user.name,
         roles: user.roles,
         caps: user.capabilities,
       }),
