@@ -34,6 +34,7 @@ date:
   item.date ?? '',
 
 featuredImage:
+  item.featuredImage ??
   item._embedded?.['wp:featuredmedia']?.[0]?.source_url ??
   item.featured_media_url ??
   item.featured_image ??
