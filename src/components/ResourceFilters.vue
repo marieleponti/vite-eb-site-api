@@ -64,11 +64,6 @@ async function loadFilters() {
   try {
     taxonomies.value = await fetchResourceFilters()
 
-    console.log(
-      'TAXONOMIES:',
-      JSON.stringify(taxonomies.value, null, 2)
-    )
-
     taxonomies.value.forEach(taxonomy => {
       filters[taxonomy.slug] = []
     })

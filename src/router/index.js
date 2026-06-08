@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
 
 const routes = [
   {
@@ -12,11 +11,11 @@ const routes = [
     name: 'about',
     component: () => import('../views/About.vue')
   },
-  // {
-  //   path: '/crud',
-  //   name: 'crud',
-  //   component: () => import('../views/Crud.vue')
-  // },
+    {
+    path: '/ebcommunity',
+    name: 'login',
+    component: () => import('../components/Login.vue')
+  },
   {
     path: '/blog',
     name: 'blog',
@@ -33,5 +32,16 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+// 🔐 AUTH GUARD
+// router.beforeEach((to, from, next) => {
+//   const token = localStorage.getItem('jwt')
+
+//   if (to.path !== '/login' && !token) {
+//     next('/login')
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

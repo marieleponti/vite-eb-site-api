@@ -19,6 +19,10 @@ async function getUser(token) {
 
 exports.handler = async (event = {}) => {
   try {
+    
+    console.log('HEADERS RECEIVED:', event.headers)
+    console.log('AUTH FROM NETLIFY:', event.headers?.authorization)
+
     const token =
       event.headers?.authorization?.replace('Bearer ', '')
 
@@ -97,6 +101,9 @@ exports.handler = async (event = {}) => {
     // =====================
     // FETCH WP
     // =====================
+    console.log('TOKEN:', token)
+    console.log('AUTH HEADER:', token ? `Bearer ${token}` : 'NO TOKEN')
+
     const response = await fetch(url, {
       headers: token ?
         {
@@ -109,7 +116,13 @@ exports.handler = async (event = {}) => {
         throw new Error(`WP error: ${response.status}`)
       }
 
-      const data = await response.json()
+      // const data = await response.json()
+      const rawText = await response.text()
+      const data = JSON.parse(rawText)
+      
+      console.log('RAW WP RESPONSE:', rawText)
+      console.log('WP DATA RAW:', data)
+      console.log('DATA BEFORE RETURN:', data)
 
       return {
         statusCode: 200,

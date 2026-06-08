@@ -8,6 +8,9 @@ export async function netlifyFetch(
 
   const token = localStorage.getItem('jwt')
 
+  console.log('JWT EXISTS:', !!token)
+  console.log('JWT VALUE:', token)
+
   const url =
     `${API}${endpoint}` +
     `${query ? `?${query}` : ''}`
@@ -26,7 +29,7 @@ export async function netlifyFetch(
   const text = await res.text()
 
   console.log('URL:', url)
-  console.log('RAW RESPONSE:', text)
+  console.log('RAW NETLIFY RESPONSE:', text)
 
   try {
     return JSON.parse(text)

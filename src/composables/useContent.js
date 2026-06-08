@@ -71,7 +71,11 @@ export function useContent(defaultParams = {}) {
       console.log('Vue envia: ', query.toString())
 
       res = await fetchResources(query.toString())
-
+      
+      console.log('RES TYPE:', typeof res)
+      console.log('RES:', res)
+      console.log('RES KEYS:', Object.keys(res || {}))
+      console.log('FULL RESPONSE', res)
       console.log('PAGE:', merged.page)
       console.log('RESULT ITEMS:', res.items?.map(i => i.id))
 

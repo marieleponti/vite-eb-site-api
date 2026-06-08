@@ -4,21 +4,49 @@
       <div class="logo">
         <img src="/logo.png" alt="Logo" style="width: 280px; height: auto;" />
       </div>
-      
+
       <nav class="navigation">
         <router-link class="nav-link" to="/">HOME</router-link>
         <router-link class="nav-link" to="/resources">REPOSITORY</router-link>
         <router-link class="nav-link" to="/blog">BLOG</router-link>
         <router-link class="nav-link" to="/about">ABOUT</router-link>
+        <router-link v-if="!isLoggedIn" class="nav-link" to="/ebcommunity">
+          LOGIN
+        </router-link>
+
+        <a
+  v-else
+  href="#"
+  class="nav-link"
+  @click.prevent="handleLogout"
+>
+  LOGOUT
+</a>
       </nav>
 
       <button class="submit-btn">Submit Resource</button>
     </div>
   </header>
 
-  <!-- 👇 ESTA LÍNEA TAMBIÉN ES PARTE DEL NAVBAR -->
   <div class="dashed-line-decoration"></div>
 </template>
+
+<script setup>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
+
+const router = useRouter()
+
+const { token, logout } = useAuth()
+
+const isLoggedIn = computed(() => !!token.value)
+
+function handleLogout() {
+  logout()
+  router.push('/')
+}
+</script>
 
 <style scoped>
 .header {

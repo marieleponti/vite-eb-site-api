@@ -1,9 +1,7 @@
 import {
     ref
 } from 'vue'
-import {
-    login as loginRequest
-} from '@/api/services/auth.service'
+import { login as loginRequest } from '@/api/services/authService'
 
 const token = ref(
     localStorage.getItem('jwt') || null
@@ -14,26 +12,20 @@ const user = ref(null)
 export function useAuth() {
 
     async function login(username, password) {
+    const data = await loginRequest(username, password)
 
-        const data = await loginRequest(
-            username,
-            password
-        )
+    console.log('LOGIN RESPONSE:', data)
 
-        token.value = data.token
+    token.value = data.token
 
-        localStorage.setItem(
-            'jwt',
-            data.token
-        )
+    localStorage.setItem('jwt', data.token)
 
-        user.value = {
-            name: data.user_display_name,
-            email: data.user_email,
-        }
+    user.value = {
+        name: data.user_display_name,
+        email: data.user_email,
+    }
 
-        return data
-
+    return data
     }
 
     function logout() {
