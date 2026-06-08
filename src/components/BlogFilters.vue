@@ -1,66 +1,93 @@
 <template>
-  <v-card class="pa-4">
+  <v-card flat class="resource-filters pa-6">
 
-    <!-- SEARCH -->
-    <v-text-field
-      v-model="filters.s"
-      label="Search posts"
-      prepend-inner-icon="mdi-magnify"
-      clearable
-      class="mb-4"
-    />
 
-    <!-- Categories -->
-    <v-expansion-panels multiple>
-      <v-expansion-panel>
-        <v-expansion-panel-title>
-          Categories
-        </v-expansion-panel-title>
+<!-- Search -->
+<v-text-field
+  v-model="filters.s"
+  label="Search Posts"
+  variant="outlined"
+  density="comfortable"
+  prepend-inner-icon="mdi-magnify"
+  clearable
+  hide-details
+  class="mb-6"
+  @keyup.enter="apply"
+/>
 
-        <v-expansion-panel-text>
-          <v-checkbox
-            v-for="cat in taxonomies.categories"
-            :key="cat.id"
-            v-model="filters.categories"
-            :label="cat.name"
-            :value="cat.id"
-            density="compact"
-            hide-details
-          />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+<!-- Actions -->
+<div class="filter-actions mb-6">
+  <v-btn
+    variant="outlined"
+    color="#29465b"
+    class="filter-btn"
+    @click="apply"
+  >
+    Search
+  </v-btn>
 
-      <!-- Tags -->
-      <v-expansion-panel>
-        <v-expansion-panel-title>
-          Tags
-        </v-expansion-panel-title>
+  <v-btn
+    variant="outlined"
+    color="#29465b"
+    class="filter-btn"
+    @click="clear"
+  >
+    Clear
+  </v-btn>
+</div>
 
-        <v-expansion-panel-text>
-          <v-checkbox
-            v-for="tag in taxonomies.tags"
-            :key="tag.id"
-            v-model="filters.tags"
-            :label="tag.name"
-            :value="tag.id"
-            density="compact"
-            hide-details
-          />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+<v-expansion-panels multiple variant="accordion">
 
-    </v-expansion-panels>
+  <!-- Categories -->
+  <v-expansion-panel
+    class="filter-panel"
+    elevation="0"
+  >
+    <v-expansion-panel-title>
+      Categories
+    </v-expansion-panel-title>
 
-    <!-- ACTIONS -->
-    <div class="d-flex justify-space-between mt-4">
-      <v-btn variant="text" @click="clear">
-        Clear
-      </v-btn>
+    <v-expansion-panel-text>
 
-      <v-btn color="primary" @click="apply">
-        Apply
-      </v-btn>
-    </div>
+      <v-checkbox
+        v-for="cat in taxonomies.categories"
+        :key="cat.id"
+        v-model="filters.categories"
+        :label="cat.name"
+        :value="cat.id"
+        class="taxonomy-checkbox"
+        hide-details
+      />
+
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+
+  <!-- Tags -->
+  <v-expansion-panel
+    class="filter-panel"
+    elevation="0"
+  >
+    <v-expansion-panel-title>
+      Tags
+    </v-expansion-panel-title>
+
+    <v-expansion-panel-text>
+
+      <v-checkbox
+        v-for="tag in taxonomies.tags"
+        :key="tag.id"
+        v-model="filters.tags"
+        :label="tag.name"
+        :value="tag.id"
+        class="taxonomy-checkbox"
+        hide-details
+      />
+
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+
+</v-expansion-panels>
+```
 
   </v-card>
 </template>
@@ -74,16 +101,18 @@ const emit = defineEmits(['update'])
 const filters = ref({
   s: '',
   categories: [],
-  tags: []
+  tags: [],
 })
 
 const taxonomies = ref({
   categories: [],
-  tags: []
+  tags: [],
 })
 
 async function fetchTaxonomies() {
-  const { data } = await axios.get('/.netlify/functions/filters')
+
+  const { data } =
+    await axios.get('/.netlify/functions/filters')
 
   taxonomies.value = data
 }
@@ -93,10 +122,11 @@ function apply() {
 }
 
 function clear() {
+
   filters.value = {
     s: '',
     categories: [],
-    tags: []
+    tags: [],
   }
 
   apply()
@@ -104,3 +134,53 @@ function clear() {
 
 onMounted(fetchTaxonomies)
 </script>
+
+<style scoped>
+.resource-filters {
+  background: #f3f3f3;
+  padding: 1.5rem;
+}
+
+.filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-btn {
+  min-width: 125px;
+  height: 48px;
+  border-radius: 0 !important;
+  border-width: 1px !important;
+  text-transform: uppercase;
+}
+
+.filter-panel {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid #d7d7d7;
+  background: transparent !important;
+}
+
+:deep(.v-expansion-panel-title) {
+  min-height: 72px;
+  padding: 0;
+  font-size: 2rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: #29465b;
+}
+
+:deep(.v-field--variant-outlined) {
+  background: #fff;
+  border-radius: 0;
+}
+
+:deep(.taxonomy-checkbox .v-label) {
+  color: #29465b !important;
+}
+
+:deep(.taxonomy-checkbox .v-icon) {
+  color: #29465b !important;
+}
+</style>

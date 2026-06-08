@@ -39,7 +39,9 @@ export function useContent(defaultParams = {}) {
     let res
 
     if (merged.type === 'posts') {
-      res = await fetchPosts('posts', merged.query || '')
+      res = await fetchPosts(merged.query || '')
+      const raw = Array.isArray(res) ? res : []
+      items.value = raw.map(mapPost)
     }
 
     if (merged.type === 'resources') {
@@ -85,11 +87,6 @@ export function useContent(defaultParams = {}) {
 
       meta.value.total = res.total || 0
       meta.value.totalPages = res.total_pages || 1
-    }
-
-    if (merged.type === 'posts') {
-      const raw = res.items || res
-      items.value = raw.map(mapPost)
     }
 
   } catch (err) {

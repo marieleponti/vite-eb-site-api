@@ -7,9 +7,11 @@ exports.handler = async (event) => {
 
   const headers = {
     'Content-Type': 'application/json',
-    ...(token
-      ? { Authorization: `Bearer ${token}` }
-      : {}),
+    ...(token ?
+      {
+        Authorization: `Bearer ${token}`
+      } :
+      {}),
   }
 
   try {
@@ -21,8 +23,10 @@ exports.handler = async (event) => {
 
       const url =
         `${WP}/wp-json/wp/v2/posts?_embed=true`
-
-      const res = await fetch(url, { headers })
+        
+      const res = await fetch(url, {
+        headers
+      })
       const data = await res.json()
 
       return {
@@ -34,24 +38,23 @@ exports.handler = async (event) => {
     // =====================
     // CREATE POST
     // =====================
-    if (event.httpMethod === 'POST') {
+    if (event.httpMethod === 'PUT') {
 
       const body = JSON.parse(event.body)
 
       const res = await fetch(
-        `${WP}/wp-json/wp/v2/posts`,
-        {
+        `${WP}/wp-json/wp/v2/posts`, {
           method: 'POST',
           headers,
           body: JSON.stringify(body),
         }
       )
-
-      const data = await res.json()
-
-      return {
-        statusCode: res.status,
-        body: JSON.stringify(data),
+      if (!res.ok) {
+        const text = await res.text()
+        return {
+          statusCode: res.status,
+          body: text,
+        }
       }
     }
 
@@ -64,8 +67,7 @@ exports.handler = async (event) => {
       const id = body.id
 
       const res = await fetch(
-        `${WP}/wp-json/wp/v2/posts/${id}`,
-        {
+        `${WP}/wp-json/wp/v2/posts/${id}`, {
           method: 'POST',
           headers,
           body: JSON.stringify(body),

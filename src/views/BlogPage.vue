@@ -1,76 +1,111 @@
 <template>
   <v-container fluid class="blog-page">
 
-    <!-- HEADER -->
-    <v-row class="mb-4">
-      <v-col cols="12">
-        <h1 class="text-h4 font-weight-bold">Blog</h1>
-        <p class="text-medium-emphasis">
-          Latest posts and updates
-        </p>
+<!-- Intro -->
+<v-card flat class="resources-intro mb-8">
+  <div class="resources-intro__inner">
+    <h1 class="resources-intro__title">
+      Blog
+    </h1>
+
+    <p class="resources-intro__text">
+      Explore articles, analysis, updates, and commentary from the Everywhere Border project and our contributors.
+    </p>
+  </div>
+</v-card>
+
+<v-row>
+  <!-- Filters -->
+  <v-col cols="12" md="3">
+    <BlogFilters @update="onFiltersUpdate" />
+  </v-col>
+
+  <!-- Content -->
+  <v-col cols="12" md="9">
+
+    <v-card flat class="results-summary mb-6 pa-4">
+      <strong>{{ items.length }}</strong> posts found
+    </v-card>
+
+    <v-row v-if="loading">
+      <v-col
+        v-for="n in 6"
+        :key="n"
+        cols="12"
+        md="6"
+        lg="4"
+      >
+        <v-skeleton-loader
+          type="image, article, actions"
+          class="rounded-lg"
+        />
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row v-else-if="items.length">
+      <v-col
+        v-for="post in items"
+        :key="post.id"
+        cols="12"
+        md="6"
+        lg="4"
+      >
+        <v-card
+          class="resource-card h-100 d-flex flex-column"
+          elevation="2"
+          rounded="lg"
+        >
 
-      <!-- FILTERS -->
-      <v-col cols="12" md="3">
-        <BlogFilters @update="onFiltersUpdate" />
-      </v-col>
+          <v-img
+            v-if="post.featuredImage"
+            :src="post.featuredImage"
+            :alt="post.title"
+            height="220"
+            cover
+          />
 
-      <!-- CONTENT -->
-      <v-col cols="12" md="9">
+          <v-card-item>
+            <v-card-title class="resource-title">
+              {{ post.title }}
+            </v-card-title>
 
-        <!-- TOP BAR -->
-        <v-card class="mb-4 pa-3 d-flex justify-space-between align-center">
-          <div>
-            <strong>{{ items.length }}</strong> posts
-          </div>
+            <v-card-subtitle class="resource-meta">
+              {{ formatDate(post.date) }}
+            </v-card-subtitle>
+          </v-card-item>
 
-          <v-btn variant="outlined" @click="refresh">
-            Refresh
-          </v-btn>
+          <v-card-text class="resource-content">
+            <div class="resource-excerpt">
+              {{ post.excerpt || post.content }}
+            </div>
+          </v-card-text>
+
+          <v-spacer />
+
+          <v-card-actions>
+            <v-btn
+              color="primary"
+              variant="text"
+              @click="view(post)"
+            >
+              Read More
+            </v-btn>
+          </v-card-actions>
+
         </v-card>
-
-        <!-- LIST -->
-        <v-row>
-          <v-col
-            v-for="post in items"
-            :key="post.id"
-            cols="12"
-            md="6"
-          >
-            <v-card class="h-100">
-
-              <v-card-title>
-                {{ post.title }}
-              </v-card-title>
-
-              <v-card-subtitle>
-                {{ formatDate(post.date) }}
-              </v-card-subtitle>
-
-              <v-card-text>
-                <div class="text-truncate-3">
-                  {{ post.excerpt || post.content }}
-                </div>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-btn
-                  variant="text"
-                  @click="view(post)"
-                >
-                  Read more
-                </v-btn>
-              </v-card-actions>
-
-            </v-card>
-          </v-col>
-        </v-row>
-
       </v-col>
     </v-row>
+
+    <v-alert
+      v-if="!loading && !items.length"
+      type="info"
+      variant="tonal"
+    >
+      No posts found.
+    </v-alert>
+
+  </v-col>
+</v-row>
 
   </v-container>
 </template>
@@ -81,13 +116,12 @@ import BlogFilters from '@/components/BlogFilters.vue'
 import { useContent } from '@/composables/useContent'
 
 const {
-items,
-loading,
-fetch,
+  items,
+  loading,
+  fetch,
 } = useContent({
-type: 'posts',
+  type: 'posts',
 })
-
 
 const currentFilters = ref({})
 
@@ -100,11 +134,8 @@ async function onFiltersUpdate(filters) {
   await fetchPosts(filters)
 }
 
-/**
- * query builder WP REST
- */
-
 async function fetchPosts(filters = {}) {
+
   const params = new URLSearchParams()
 
   if (filters.s) {
@@ -122,10 +153,6 @@ async function fetchPosts(filters = {}) {
   await fetch(params.toString())
 }
 
-function refresh() {
-  fetchPosts(currentFilters.value)
-}
-
 function view(post) {
   console.log('Open post:', post)
 }
@@ -141,10 +168,54 @@ function formatDate(date) {
   min-height: 100vh;
 }
 
-.text-truncate-3 {
+.results-summary {
+  background: #f3f3f3;
+  border: 1px solid #e0e0e0;
+}
+
+.resources-intro {
+  background: #f3f3f3;
+  border-radius: 0;
+  padding: 3rem 2rem;
+  border: 1px solid #e0e0e0;
+}
+
+.resources-intro__title {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: #29465b;
+  margin-bottom: 1.5rem;
+}
+
+.resources-intro__text {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #4b5563;
+}
+
+.resource-card {
+  transition: all .2s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-2px);
+}
+
+.resource-title {
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.resource-meta {
+  color: #7a8a96;
+}
+
+.resource-excerpt {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-</style>  
+</style>

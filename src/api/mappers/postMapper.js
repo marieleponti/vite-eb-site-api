@@ -1,3 +1,5 @@
+import { cleanHtml } from './cleanHtml'
+
 export function mapPost(post) {
   return {
     id: post.id,
