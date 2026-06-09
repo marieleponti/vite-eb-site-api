@@ -25,76 +25,98 @@ export function useContent(defaultParams = {}) {
 
   async function fetch(params = {}) {
 
-  loading.value = true
-  error.value = null
-  items.value = []
+    loading.value = true
+    error.value = null
+    items.value = []
 
-  try {
+    try {
 
-    const merged = {
-      ...defaultParams,
-      ...params,
-    }
-
-    let res
-
-    if (merged.type === 'posts') {
-      res = await fetchPosts(merged.query || '')
-      const raw = Array.isArray(res) ? res : []
-      items.value = raw.map(mapPost)
-    }
-
-    if (merged.type === 'resources') {
-
-      const query = new URLSearchParams()
-
-      if (merged.page) {
-        query.append('page', merged.page)
+      const merged = {
+        ...defaultParams,
+        ...params,
       }
 
-      if (merged.perPage) {
-        query.append('per_page', merged.perPage)
-      }
-      if (merged.filters?.s) {
-        query.append('search', merged.filters.s)
-      }
+      let res
 
-      Object.entries(merged.filters || {}).forEach(
-        ([key, value]) => {
+      if (merged.type === 'posts') {
+        const query = new URLSearchParams()
 
-          if (key === 's') return
-
-          if (Array.isArray(value) && value.length) {
-            query.append(key, value.join(','))
-          }
+        if (merged.filters?.s) {
+          query.append('search', merged.filters.s)
         }
-      )
 
-      console.log('Vue envia: ', query.toString())
+        if (merged.filters?.categories?.length) {
+          query.append('categories', merged.filters.categories.join(','))
+        }
 
-      res = await fetchResources(query.toString())
-      
-      console.log('RES TYPE:', typeof res)
-      console.log('RES:', res)
-      console.log('RES KEYS:', Object.keys(res || {}))
-      console.log('FULL RESPONSE', res)
-      console.log('PAGE:', merged.page)
-      console.log('RESULT ITEMS:', res.items?.map(i => i.id))
+        if (merged.filters?.tags?.length) {
+          query.append('tags', merged.filters.tags.join(','))
+        }
 
-      const raw = res.items || []
+        res = await fetchPosts(query.toString())
+        const raw = Array.isArray(res) ? res : []
+        items.value = raw.map(mapPost)
+      }
 
-      items.value = [...raw].map(normalizeResource)
+      if (merged.type === 'resources') {
 
-      meta.value.total = res.total || 0
-      meta.value.totalPages = res.total_pages || 1
+        const query = new URLSearchParams()
+
+        if (merged.page) {
+          query.append('page', merged.page)
+        }
+
+        if (merged.perPage) {
+          query.append('per_page', merged.perPage)
+        }
+       // 1. Añadimos la búsqueda por palabra si existe
+        if (merged.filters?.s && merged.filters.s.trim() !== '') {
+          query.append('search', merged.filters.s.trim())
+        }
+
+        // 2. Recorremos el resto de filtros de forma ultra-segura
+        if (merged.filters) {
+          Object.entries(merged.filters).forEach(([key, value]) => {
+            if (key === 's') return // Ignoramos la 's' porque ya la procesamos arriba
+
+            // Si es un array (categorías, tags) y tiene elementos, lo unimos por comas
+            if (Array.isArray(value)) {
+              if (value.length > 0) {
+                query.append(key, value.join(','))
+              }
+            } 
+            // Si es un string o número simple (por si acaso), lo añadimos si no está vacío
+            else if (value !== null && value !== undefined && value !== '') {
+              query.append(key, value)
+            }
+          })
+        }
+
+        console.log('Vue envia: ', query.toString())
+
+        res = await fetchResources(query.toString())
+
+        console.log('RES TYPE:', typeof res)
+        console.log('RES:', res)
+        console.log('RES KEYS:', Object.keys(res || {}))
+        console.log('FULL RESPONSE', res)
+        console.log('PAGE:', merged.page)
+        console.log('RESULT ITEMS:', res.items?.map(i => i.id))
+
+        const raw = res.items || []
+
+        items.value = [...raw].map(normalizeResource)
+
+        meta.value.total = res.total || 0
+        meta.value.totalPages = res.total_pages || 1
+      }
+
+    } catch (err) {
+      error.value = err.message
+    } finally {
+      loading.value = false
     }
-
-  } catch (err) {
-    error.value = err.message
-  } finally {
-    loading.value = false
   }
-}
 
   return {
     items,

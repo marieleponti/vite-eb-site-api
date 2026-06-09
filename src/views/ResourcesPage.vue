@@ -96,7 +96,8 @@ import { ref, onMounted } from 'vue'
 import ResourceFilters from '@/components/ResourceFilters.vue'
 import { useContent } from '@/composables/useContent'
 
-const { items, fetch, loading, meta } = useContent()
+// Desestructuramos la función fetch renombrándola para evitar colisiones de nombres
+const { items, fetch: cargarContenido, loading, meta } = useContent()
 
 const currentFilters = ref({})
 const page = ref(1)
@@ -106,17 +107,19 @@ onMounted(() => {
   fetchResources()
 })
 
-async function onFiltersUpdate(filters) {
+// Recibe los filtros sueltos del componente { s: '', categories: [], ... }
+async function onFiltersUpdate(filtersEmitidos) {
   page.value = 1
-  currentFilters.value = filters
-  await fetchResources(filters)
+  currentFilters.value = filtersEmitidos
+  await fetchResources(filtersEmitidos)
 }
 
 async function fetchResources(filters = {}) {
-
-  await fetch({
+  // CORRECCIÓN: Pasamos el objeto 'filters' envuelto en su propia llave
+  // tal y como lo requiere useContent para mapear el CPT y la búsqueda
+  await cargarContenido({
     type: 'resources',
-    filters,
+    filters: filters, // <-- Aquí se arregla el puente de datos
     page: page.value,
     perPage
   })
@@ -139,7 +142,7 @@ async function changePage(newPage) {
 function formatDate(date) {
   return new Date(date).toLocaleDateString()
 }
-</script>   5 
+</script>
 
 <style scoped>
 .resources-page {

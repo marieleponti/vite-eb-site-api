@@ -87,7 +87,7 @@
   </v-expansion-panel>
 
 </v-expansion-panels>
-```
+
 
   </v-card>
 </template>
@@ -182,5 +182,10 @@ onMounted(fetchTaxonomies)
 
 :deep(.taxonomy-checkbox .v-icon) {
   color: #29465b !important;
+}
+
+:deep(.v-field__input) {
+  color: #29465b !important;
+  -webkit-text-fill-color: #29465b !important;
 }
 </style>

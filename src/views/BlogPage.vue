@@ -115,42 +115,30 @@ import { ref, onMounted } from 'vue'
 import BlogFilters from '@/components/BlogFilters.vue'
 import { useContent } from '@/composables/useContent'
 
+// Inicializamos el composable apuntando al tipo 'posts'
 const {
   items,
   loading,
-  fetch,
+  fetch: cargarContenido, // Le cambiamos el nombre aquí para no confundir con el fetch nativo
 } = useContent({
   type: 'posts',
 })
 
 const currentFilters = ref({})
 
+// Carga inicial sin filtros (trae todos)
 onMounted(() => {
-  fetch()
+  cargarContenido()
 })
 
+// Esta función recibe el objeto limpio { s: '...', categories: [], tags: [] } desde BlogFilters
 async function onFiltersUpdate(filters) {
   currentFilters.value = filters
-  await fetchPosts(filters)
-}
-
-async function fetchPosts(filters = {}) {
-
-  const params = new URLSearchParams()
-
-  if (filters.s) {
-    params.append('search', filters.s)
-  }
-
-  if (filters.categories?.length) {
-    params.append('categories', filters.categories.join(','))
-  }
-
-  if (filters.tags?.length) {
-    params.append('tags', filters.tags.join(','))
-  }
-
-  await fetch(params.toString())
+  
+  // SOLUCIÓN: Le pasamos el objeto envuelto en la llave 'filters' tal como useContent lo espera
+  await cargarContenido({
+    filters: filters
+  })
 }
 
 function view(post) {
@@ -206,6 +194,7 @@ function formatDate(date) {
 .resource-title {
   font-size: 1.1rem;
   line-height: 1.4;
+  color: #29465b;
 }
 
 .resource-meta {
