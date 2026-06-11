@@ -25,6 +25,16 @@ const routes = [
     path: '/resources',
     name: 'resources',
     component: () => import('../views/ResourcesPage.vue')
+  },
+  {
+    path: '/featured-research',
+    name: 'featured_research',
+    component: () => import('../views/FeaturedResearch.vue')
+  },
+  {
+    path: '/prr',
+    name: 'public_records_requests',
+    component: () => import('../views/PublicRecordsRequests.vue')
   }
 ]
 

@@ -59,7 +59,7 @@
               <v-spacer />
 
               <v-card-actions>
-                <v-btn color="primary" variant="text" :href="item.permalink" target="_blank">
+                <v-btn color="#2f4356" variant="text" :href="item.permalink" target="_blank">
                   View Resource
                 </v-btn>
               </v-card-actions>
@@ -153,7 +153,7 @@ function formatDate(date) {
    Solo deja este bloque para la paginación personalizada */
 
 .pagination-nav {
-  color: #0074c8 !important;
+  color: #2f4356 !important;
   text-transform: none !important;
   font-size: 1.15rem;
   font-weight: 400;

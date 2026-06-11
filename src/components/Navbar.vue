@@ -11,7 +11,7 @@
         <!-- Dropdown REPOSITORY integrado limpiamente -->
         <v-menu open-on-hover transition="slide-y-transition" offset="20">
           <template #activator="{ props }">
-            <router-link class="nav-link d-inline-flex align-center" to="/resources" v-bind="props">
+            <router-link class="nav-link d-inline-flex align-center" v-bind="props">
               REPOSITORY
               <v-icon size="small" class="chevron-icon">mdi-chevron-down</v-icon>
             </router-link>
@@ -22,10 +22,10 @@
             <v-list-item to="/resources" class="dropdown-item">
               <span class="dropdown-link-text">Library</span>
             </v-list-item>
-            <v-list-item to="/resources?type=documents" class="dropdown-item">
+            <v-list-item to="/featured-research" class="dropdown-item">
               <span class="dropdown-link-text">Featured Research</span>
             </v-list-item>
-            <v-list-item to="/resources?type=media" class="dropdown-item">
+            <v-list-item to="/prr" class="dropdown-item">
               <span class="dropdown-link-text">Public Records Requests</span>
             </v-list-item>
           </v-list>

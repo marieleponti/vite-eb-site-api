@@ -43,6 +43,8 @@ exports.handler = async (event = {}) => {
     const source = event.queryStringParameters?.source || ''
     const format = event.queryStringParameters?.format || ''
     const language = event.queryStringParameters?.language || ''
+    const researchTeam = event.queryStringParameters?.['research-team'] || '' // <--- NUEVO
+    const specialContent = event.queryStringParameters?.['special-content'] || '' // <--- NUEVO
 
     // =====================
     // BUILD WP PARAMS
@@ -64,6 +66,10 @@ exports.handler = async (event = {}) => {
     if (source) params.set('source', source)
     if (format) params.set('format', format)
     if (language) params.set('language', language)
+
+    // Inyectamos las nuevas taxonomías a la url final de WordPress en Pantheon
+    if (researchTeam) params.set('research-team', researchTeam) // <--- NUEVO
+    if (specialContent) params.set('special-content', specialContent) // <--- NUEVO
 
     const url = `${WP}/wp-json/ebinforepo/v1/resources?${params.toString()}`
     console.log('FINAL URL:', url)
