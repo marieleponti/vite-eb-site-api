@@ -1,8 +1,20 @@
 export async function login(username, password) {
+
   const res = await fetch('/.netlify/functions/auth', {
     method: 'POST',
-    body: JSON.stringify({ username, password }),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username,
+      password
+    }),
   })
 
-  return await res.json()
+  const text = await res.text()
+
+  console.log('AUTH STATUS:', res.status)
+  console.log('AUTH RESPONSE:', text)
+
+  return text ? JSON.parse(text) : null
 }

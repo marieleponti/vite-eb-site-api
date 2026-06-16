@@ -1,4 +1,5 @@
-const API = import.meta.env.VITE_API_BASE
+const API =
+  import.meta.env.VITE_API_BASE
 
 export async function netlifyFetch(
   endpoint,
@@ -17,9 +18,11 @@ export async function netlifyFetch(
     headers: {
       'Content-Type': 'application/json',
       ...(options.headers || {}),
-      ...(token
-        ? { Authorization: `Bearer ${token}` }
-        : {}),
+      ...(token ?
+        {
+          Authorization: `Bearer ${token}`
+        } :
+        {}),
     },
   })
 

@@ -5,9 +5,28 @@ export async function fetchPosts(query = '') {
   return await netlifyFetch('/posts', query)
 }
 
-// RESOURCES
+// RESOURCES (LIST)
 export async function fetchResources(query = '') {
   return await netlifyFetch('/resources', query)
+}
+
+// RESOURCES (SINGLE BY SLUG)
+export async function fetchResourceBySlug(slug) {
+  const res = await netlifyFetch('/resources', `slug=${slug}`)
+
+  return {
+    item: res?.items?.[0] || null,
+    meta: res
+  }
+}
+
+// OPTIONAL: SINGLE BY ID
+export async function fetchResourceById(id) {
+  const res = await netlifyFetch(`/resources/${id}`)
+
+  return {
+    item: res?.item || res?.items?.[0] || null
+  }
 }
 
 // FILTERS

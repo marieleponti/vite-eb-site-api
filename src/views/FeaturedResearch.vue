@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="eb-research-section pa-0">
-    
+
     <!-- HEADER PRINCIPAL -->
     <h1 class="secondfont mb-3 font-weight-bold text-dark px-4 pt-4">
       The Everywhere Border Featured Research
@@ -11,21 +11,20 @@
       <v-row no-gutters align="center">
         <v-col cols="12" md="6" class="pa-6">
           <p class="jumbotron-text mb-0">
-            The United States is building a digital border infrastructure in neighbouring countries that expands and deepens surveillance,
-            while obscuring state violence. The implications of these infrastructures are long-lasting and need to be integrated into strategies
-            of resistance of migrant justice movements worldwide. Since 2023, The Everywhere Border project has been engaged in research to surface
-            information on the infrastructures put in place throughout Latin America in the service of deterrence and its human impacts on people on
+            The United States is building a digital border infrastructure in neighbouring countries that expands and
+            deepens surveillance,
+            while obscuring state violence. The implications of these infrastructures are long-lasting and need to be
+            integrated into strategies
+            of resistance of migrant justice movements worldwide. Since 2023, The Everywhere Border project has been
+            engaged in research to surface
+            information on the infrastructures put in place throughout Latin America in the service of deterrence and
+            its human impacts on people on
             the move and civil society at large. Our original research outputs available below.
           </p>
         </v-col>
         <v-col cols="12" md="6" class="d-none d-md-block position-relative line-illustration">
           <figure class="ma-0 position-relative fill-height">
-            <v-img 
-              src="/assets/images/border-tech.jpg" 
-              alt="Border Infrastructure Illustration" 
-              height="100%"
-              cover
-            />
+            <v-img src="src/assets/images/border-tech.jpg" alt="Border Infrastructure Illustration" height="100%" cover />
             <figcaption class="caption-text">
               <a href="https://www.instagram.com/chewsomebubblegum/" target="_blank" rel="noopener noreferrer">
                 Illustration by Zoran Svilar
@@ -49,25 +48,12 @@
 
       <!-- Grilla Unificada Final -->
       <v-row v-else-if="allResearch.length">
-        <v-col 
-          v-for="(item, index) in allResearch" 
-          :key="index" 
-          cols="12" 
-          sm="6" 
-          md="4" 
-          lg="3"
-        >
+        <v-col v-for="(item, index) in allResearch" :key="index" cols="12" sm="6" md="4" lg="3">
           <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
-            
+
             <!-- Contenedor Imagen -->
             <div class="position-relative">
-              <v-img 
-                v-if="item.featuredImage" 
-                :src="item.featuredImage" 
-                :alt="item.title" 
-                height="220" 
-                cover 
-              />
+              <v-img v-if="item.featuredImage" :src="item.featuredImage" :alt="item.title" height="220" cover />
             </div>
 
             <!-- Cuerpo de la tarjeta -->
@@ -80,7 +66,7 @@
 
               <v-card-subtitle class="resource-meta pt-2 d-flex justify-space-between align-center">
                 <span class="author-text text-truncate font-weight-bold text-grey-darken-2">
-                  {{ item.author || item.acf?.author}}
+                  {{ item.author || item.acf?.author }}
                 </span>
               </v-card-subtitle>
             </v-card-item>
@@ -94,13 +80,8 @@
             <v-spacer />
 
             <v-card-actions class="pa-4 pt-0">
-              <v-btn 
-                color="#002d62" 
-                variant="text" 
-                :href="item.permalink" 
-                target="_blank"
-                class="font-weight-bold px-0 text-none"
-              >
+              <v-btn color="#002d62" variant="text" :href="item.permalink" target="_blank"
+                class="font-weight-bold px-0 text-none">
                 View Research →
               </v-btn>
             </v-card-actions>
@@ -121,19 +102,23 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useContent } from '@/composables/useContent'
-
+import { useAuth } from '@/composables/useAuth' 
 const { items: dynamicItems, fetch: cargarContenido, loading } = useContent()
+const { roles: userRoles, checkCurrentUser } = useAuth() 
 
-const userRoles = ref(['administrator']) 
 const allowedRoles = ['ebteam', 'administrator', 'ebcommunity']
-const hasAccess = computed(() => userRoles.value.some(role => allowedRoles.includes(role)))
+
+// Este computed ahora es 100% reactivo y global
+const hasAccess = computed(() => {
+  return userRoles.value.some(role => allowedRoles.includes(role))
+})
 
 // 4 artículos estáticos iniciales fijos
 const staticResearch = ref([
   {
     title: 'Border Externalization in the Americas',
     permalink: '/research/border-externalization-in-americas',
-    featuredImage: '/assets/images/minibrief_border-ext_img.jpg',
+    featuredImage: 'src/assets/images/minibrief_border-ext.jpg',
     excerpt: 'Analysis of digital border infrastructure expansion.',
     author: 'Mizue Aizeki & S. Narváez',
     restricted: false
@@ -141,15 +126,15 @@ const staticResearch = ref([
   {
     title: 'Biometrics-Based Migration Management Infrastructures',
     permalink: '/research/biometrics-based-migration-management',
-    featuredImage: '/assets/images/portada-advertencia-CUID.jpg',
+    featuredImage: 'src/assets/images/minibrief_biometrics-migr-mgmt.jpg',
     excerpt: 'Surveillance and digital control tracking throughout Latin America.',
     author: 'Santiago Narváez',
-    restricted: true 
+    restricted: true
   },
   {
     title: 'Human Impacts',
     permalink: '/research/human-impacts-brief',
-    featuredImage: '/assets/images/human_impacts_img2.png',
+    featuredImage: 'src/assets/images/minibrief_human-impacts.png',
     excerpt: 'The cost of state deterrence policies on migrant populations.',
     author: 'Laura Bingham',
     restricted: false
@@ -157,7 +142,7 @@ const staticResearch = ref([
   {
     title: 'Biometrics & Borders',
     permalink: '/research/biometrics-mx-ca',
-    featuredImage: '/assets/images/biometrics-mx-ca.jpg',
+    featuredImage: 'src/assets/images/minibrief_biometrics-borders.jpg',
     excerpt: 'Examining biometric data extraction technologies.',
     author: 'Everywhere Border Project',
     restricted: false
@@ -173,13 +158,17 @@ function trimExcerpt(text, wordLimit) {
 
 // LLAMADA REPLICANDO TU WP_QUERY MEDIANTE NETLIFY PARAMS
 onMounted(async () => {
+  // Ejecutamos la validación en segundo plano. Si el token es válido, 
+  // 'userRoles' se actualizará solo y reactivará la tarjeta privada.
+  checkCurrentUser().catch(err => console.error("Error sutil de Auth:", err))
+
+  // Traemos el contenido de la API de inmediato
   await cargarContenido({
     type: 'resources',
     page: 1,
-    perPage: 12, // Traemos un exceso para compensar los eliminados por exclusión de JS
+    perPage: 12,
     filters: {
       s: '',
-      // Pasamos strings simples porque tu Netlify Function lee strings planos desde la URL
       'research-team': 'eb-research',
       'special-content': 'featured'
     }
@@ -192,13 +181,13 @@ const allResearch = computed(() => {
   const dynamicProcessed = dynamicItems.value
     .filter(item => {
       const itemSources = item.source || item.pure_taxonomies?.source || item.terms?.source || []
-      
+
       // Si el item tiene la taxonomía que queremos omitir, lo descartamos (return false)
       const hasPublicRecords = Array.isArray(itemSources)
         ? itemSources.some(s => (typeof s === 'object' ? s?.slug : s) === 'public-records-requests')
         : itemSources === 'public-records-requests'
-      
-      return !hasPublicRecords 
+
+      return !hasPublicRecords
     })
     .map(item => ({
       ...item,
@@ -208,12 +197,17 @@ const allResearch = computed(() => {
 
   // Unimos los 4 fijos con los dinámicos ya limpios
   const combined = [...staticResearch.value, ...dynamicProcessed]
-  
+
   // Sincronizamos accesos y cortamos para mostrar los 4 fijos + un máximo de 6 dinámicos (Total 10)
   return combined
-    .filter(item => !item.restricted || hasAccess.value)
-    .slice(0, 10) 
+    .filter(item => {
+      if (!item.restricted) return true; // Si es público, pasa directo
+      return hasAccess.value;            // Si es privado, depende estrictamente de su rol reactivo
+    })
+    .slice(0, 10)
 })
+
+
 </script>
 
 <style scoped>
@@ -223,16 +217,20 @@ const allResearch = computed(() => {
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
+
 .bg-lightblue {
-  background-color: #e8f3ec !important;
+  background-color: #F5F5F5 !important;
 }
+
 .resource-card {
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .resource-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
 }
+
 .resource-title a {
   color: #212529;
   text-decoration: none;
@@ -241,22 +239,27 @@ const allResearch = computed(() => {
   line-height: 1.3;
   transition: color 0.2s;
 }
+
 .resource-card:hover .resource-title a {
   color: #002d62;
 }
+
 .author-text {
   font-size: 0.85rem;
   color: #4b5563;
 }
+
 .jumbotron-custom {
   background: #e8f3ec;
   border: 1px solid #d1e7dd;
 }
+
 .jumbotron-text {
   font-size: 1.1rem;
   line-height: 1.8;
   color: #333333;
 }
+
 .caption-text {
   position: absolute;
   bottom: 12px;
@@ -266,11 +269,13 @@ const allResearch = computed(() => {
   border-radius: 4px;
   z-index: 2;
 }
+
 .caption-text a {
   color: #ffffff !important;
   font-size: 0.75rem;
   text-decoration: none;
 }
+
 .line-illustration {
   align-self: stretch;
 }
