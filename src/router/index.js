@@ -35,7 +35,13 @@ const routes = [
     path: '/prr',
     name: 'public_records_requests',
     component: () => import('../views/PublicRecordsRequests.vue')
-  }
+  },
+  {
+  path: '/resources/:slug',
+  name: 'ResourceSingle',
+  component: () => import('@/views/ResourceSingle.vue'),
+  props: true // Permite pasar el :slug como prop directamente al componente
+}
 ]
 
 const router = createRouter({

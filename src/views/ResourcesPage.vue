@@ -40,9 +40,10 @@
 
               <v-card-item>
                 <v-card-title class="resource-title">
-                  <a :href="item.permalink" target="_blank" rel="noopener noreferrer">
+                  <router-link :to="{ name: 'ResourceSingle', params: { slug: item.slug } }"
+                    style="text-decoration: none; color: inherit;">
                     {{ item.title }}
-                  </a>
+                  </router-link>
                 </v-card-title>
 
                 <v-card-subtitle class="resource-meta">
@@ -59,7 +60,7 @@
               <v-spacer />
 
               <v-card-actions>
-                <v-btn color="#2f4356" variant="text" :href="item.permalink" target="_blank">
+                <v-btn color="#2f4356" variant="text" :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
                   View Resource
                 </v-btn>
               </v-card-actions>
