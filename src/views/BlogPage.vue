@@ -1,111 +1,78 @@
 <template>
   <v-container fluid class="blog-page">
 
-<!-- Intro -->
-<v-card flat class="resources-intro mb-8">
-  <div class="resources-intro__inner">
-    <h1 class="resources-intro__title">
-      Blog
-    </h1>
+    <!-- Intro -->
+    <v-card flat class="resources-intro mb-8">
+      <div class="resources-intro__inner">
+        <h1 class="resources-intro__title">
+          Blog
+        </h1>
 
-    <p class="resources-intro__text">
-      Explore articles, analysis, updates, and commentary from the Everywhere Border project and our contributors.
-    </p>
-  </div>
-</v-card>
-
-<v-row>
-  <!-- Filters -->
-  <v-col cols="12" md="3">
-    <BlogFilters @update="onFiltersUpdate" />
-  </v-col>
-
-  <!-- Content -->
-  <v-col cols="12" md="9">
-
-    <v-card flat class="results-summary mb-6 pa-4">
-      <strong>{{ items.length }}</strong> posts found
+        <p class="resources-intro__text">
+          Explore articles, analysis, updates, and commentary from the Everywhere Border project and our contributors.
+        </p>
+      </div>
     </v-card>
 
-    <v-row v-if="loading">
-      <v-col
-        v-for="n in 6"
-        :key="n"
-        cols="12"
-        md="6"
-        lg="4"
-      >
-        <v-skeleton-loader
-          type="image, article, actions"
-          class="rounded-lg"
-        />
+    <v-row>
+      <!-- Filters -->
+      <v-col cols="12" md="3">
+        <BlogFilters @update="onFiltersUpdate" />
       </v-col>
-    </v-row>
 
-    <v-row v-else-if="items.length">
-      <v-col
-        v-for="post in items"
-        :key="post.id"
-        cols="12"
-        md="6"
-        lg="4"
-      >
-        <v-card
-          class="resource-card h-100 d-flex flex-column"
-          elevation="2"
-          rounded="lg"
-        >
+      <!-- Content -->
+      <v-col cols="12" md="9">
 
-          <v-img
-            v-if="post.featuredImage"
-            :src="post.featuredImage"
-            :alt="post.title"
-            height="220"
-            cover
-          />
-
-          <v-card-item>
-            <v-card-title class="resource-title">
-              {{ post.title }}
-            </v-card-title>
-
-            <v-card-subtitle class="resource-meta">
-              {{ formatDate(post.date) }}
-            </v-card-subtitle>
-          </v-card-item>
-
-          <v-card-text class="resource-content">
-            <div class="resource-excerpt">
-              {{ post.excerpt || post.content }}
-            </div>
-          </v-card-text>
-
-          <v-spacer />
-
-          <v-card-actions>
-            <v-btn
-              color="primary"
-              variant="text"
-              @click="view(post)"
-            >
-              Read More
-            </v-btn>
-          </v-card-actions>
-
+        <v-card flat class="results-summary mb-6 pa-4">
+          <strong>{{ items.length }}</strong> posts found
         </v-card>
+
+        <v-row v-if="loading">
+          <v-col v-for="n in 6" :key="n" cols="12" md="6" lg="4">
+            <v-skeleton-loader type="image, article, actions" class="rounded-lg" />
+          </v-col>
+        </v-row>
+
+        <v-row v-else-if="items.length">
+          <v-col v-for="post in items" :key="post.id" cols="12" md="6" lg="4">
+            <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
+
+              <v-img v-if="post.featuredImage" :src="post.featuredImage" :alt="post.title" height="220" cover />
+
+              <v-card-item>
+                <v-card-title class="resource-title">
+                  {{ post.title }}
+                </v-card-title>
+
+                <v-card-subtitle class="resource-meta">
+                  {{ formatDate(post.date) }}
+                </v-card-subtitle>
+              </v-card-item>
+
+              <v-card-text class="resource-content">
+                <div class="resource-excerpt">
+                  {{ post.excerpt || post.content }}
+                </div>
+              </v-card-text>
+
+              <v-spacer />
+
+              <v-card-actions>
+                <v-btn color="primary" variant="text" @click="view(post)">
+                  Read More
+                </v-btn>
+              </v-card-actions>
+
+            </v-card>
+          </v-col>
+        </v-row>
+
+        <v-alert v-if="!loading && !items.length" type="info" variant="tonal">
+          No posts found.
+        </v-alert>
+
       </v-col>
     </v-row>
-
-    <v-alert
-      v-if="!loading && !items.length"
-      type="info"
-      variant="tonal"
-    >
-      No posts found.
-    </v-alert>
-
-  </v-col>
-</v-row>
 
   </v-container>
 </template>
@@ -114,37 +81,64 @@
 import { ref, onMounted } from 'vue'
 import BlogFilters from '@/components/BlogFilters.vue'
 import { useContent } from '@/composables/useContent'
+import { useRouter } from 'vue-router'
 
-// Inicializamos el composable apuntando al tipo 'posts'
+const router = useRouter()
+
+// composable
 const {
   items,
   loading,
-  fetch: cargarContenido, // Le cambiamos el nombre aquí para no confundir con el fetch nativo
+  fetch: cargarContenido,
 } = useContent({
   type: 'posts',
 })
 
 const currentFilters = ref({})
+const page = ref(1)
+const perPage = 15
 
-// Carga inicial sin filtros (trae todos)
-onMounted(() => {
-  cargarContenido()
-})
-
-// Esta función recibe el objeto limpio { s: '...', categories: [], tags: [] } desde BlogFilters
-async function onFiltersUpdate(filters) {
-  currentFilters.value = filters
-  
-  // SOLUCIÓN: Le pasamos el objeto envuelto en la llave 'filters' tal como useContent lo espera
+// ======================
+// FETCH FUNCTION
+// ======================
+async function loadPosts() {
   await cargarContenido({
-    filters: filters
+    type: 'posts',
+    page: page.value,
+    perPage,
+    filters: currentFilters.value,
   })
 }
 
-function view(post) {
-  console.log('Open post:', post)
+// ======================
+// INIT
+// ======================
+onMounted(() => {
+  loadPosts()
+})
+
+// ======================
+// FILTERS
+// ======================
+async function onFiltersUpdate(filters) {
+  currentFilters.value = filters
+  page.value = 1
+  await loadPosts()
 }
 
+// ======================
+// VIEW ACTION
+// ======================
+function view(post) {
+  router.push({
+    name: 'BlogSingle',
+    params: { slug: post.slug }
+  })
+}
+
+// ======================
+// FORMAT DATE
+// ======================
 function formatDate(date) {
   return new Date(date).toLocaleDateString()
 }

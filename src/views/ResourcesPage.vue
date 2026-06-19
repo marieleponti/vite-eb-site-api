@@ -1,22 +1,27 @@
 <template>
   <v-container fluid class="resources-page">
 
-      <!-- Intro -->
-      <v-card flat class="resources-intro mb-8">
-        <div class="resources-intro__inner">
-          <h1 class="resources-intro__title">
-            Resources Library
-          </h1>
+    <!-- Intro -->
+    <v-card flat class="resources-intro mb-8">
+      <div class="resources-intro__inner">
+        <h1 class="resources-intro__title">
+          Resources Library
+        </h1>
 
-          <p class="resources-intro__text">
-          Welcome to The Everywhere Border resource library. Here you will find a comprehensive and expanding compilation of diverse research outputs, 
-                such as reports, white papers, academic articles, analyses and other resources, as well as original source documentation related to border 
-                enforcement and externalization, border technologies, securitization, militarization, corporate actors, funding streams, human impacts and more, 
-                with a particular focus in the Americas. This is a curated library, meaning, the resources gathered here have been selected given their relevance 
-                and importance to the issues in question. If you want to submit a resource for consideration, please fill out this form.
-          </p>
-        </div>
-      </v-card>
+        <p class="resources-intro__text">
+          Welcome to The Everywhere Border resource library. Here you will find a comprehensive and expanding
+          compilation of diverse research outputs,
+          such as reports, white papers, academic articles, analyses and other resources, as well as original source
+          documentation related to border
+          enforcement and externalization, border technologies, securitization, militarization, corporate actors,
+          funding streams, human impacts and more,
+          with a particular focus in the Americas. This is a curated library, meaning, the resources gathered here have
+          been selected given their relevance
+          and importance to the issues in question. If you want to submit a resource for consideration, please fill out
+          this form.
+        </p>
+      </div>
+    </v-card>
 
     <v-row>
       <!-- Filters -->
@@ -33,15 +38,15 @@
           </v-col>
         </v-row>
 
-        <v-row v-else-if="items.length" :key="page">
+        <v-row v-else-if="items.length">
           <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
             <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
+
               <v-img v-if="item.featuredImage" :src="item.featuredImage" :alt="item.title" height="220" cover />
 
               <v-card-item>
                 <v-card-title class="resource-title">
-                  <router-link :to="{ name: 'ResourceSingle', params: { slug: item.slug } }"
-                    style="text-decoration: none; color: inherit;">
+                  <router-link v-if="item.slug" :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
                     {{ item.title }}
                   </router-link>
                 </v-card-title>
@@ -60,7 +65,8 @@
               <v-spacer />
 
               <v-card-actions>
-                <v-btn color="#2f4356" variant="text" :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
+                <v-btn v-if="item.slug" color="#2f4356" variant="text"
+                  :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
                   View Resource
                 </v-btn>
               </v-card-actions>
@@ -120,7 +126,7 @@ async function fetchResources(filters = {}) {
   // tal y como lo requiere useContent para mapear el CPT y la búsqueda
   await cargarContenido({
     type: 'resources',
-    filters: filters, // <-- Aquí se arregla el puente de datos
+    filters: filters,
     page: page.value,
     perPage
   })
@@ -150,6 +156,7 @@ function formatDate(date) {
   background: #f9f9f9;
   min-height: 100vh;
 }
+
 /* Elimina TODO el CSS anterior de v-pagination.
    Solo deja este bloque para la paginación personalizada */
 

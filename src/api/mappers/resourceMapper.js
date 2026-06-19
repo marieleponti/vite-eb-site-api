@@ -5,8 +5,15 @@ export function normalizeResource(item) {
 return {
 id: item.id,
 
-slug:
-  item.slug ?? '',
+// slug:
+//   item.slug ||
+//   item.link?.split('/').filter(Boolean).pop() ||
+//   '',
+
+slug: (item.slug || item.link || '')
+  .split('/')
+  .filter(Boolean)
+  .pop() || '',
 
 title:
   item.title?.rendered ??
@@ -61,10 +68,15 @@ status:
 
 export function normalizeResourcesResponse(response) {
 
-const rawItems =
-response?.items ??
-response ??
-[]
+// const rawItems =
+// response?.items ??
+// response ??
+// []
+const rawItems = Array.isArray(response?.items)
+  ? response.items
+  : Array.isArray(response)
+    ? response
+    : []
 
 return {
 
@@ -78,8 +90,6 @@ total:
   0,
 
 totalPages:
-  response?.total_pages ??
-  1,
-
+  Number(response?.total_pages ?? 1),
 }
 }

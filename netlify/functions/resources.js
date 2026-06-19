@@ -34,11 +34,12 @@ exports.handler = async (event = {}) => {
     // QUERY PARAMS
     // =====================
     const paramsRaw = event.queryStringParameters || {}
+    console.log('QUERY PARAMS:', event.queryStringParameters)
 
     const page = paramsRaw.page || '1'
     const perPage = paramsRaw.per_page || '16'
     const search = paramsRaw.search || ''
-    const slug = paramsRaw.slug || '' // ✅ FIX CLAVE
+    const slug = paramsRaw.slug || '' 
 
     const categories = paramsRaw.categories || ''
     const tags = paramsRaw.tags || ''
@@ -49,6 +50,8 @@ exports.handler = async (event = {}) => {
     const language = paramsRaw.language || ''
     const researchTeam = paramsRaw['research-team'] || ''
     const specialContent = paramsRaw['special-content'] || ''
+    console.log('SOURCE:', source)
+    console.log('RESEARCH TEAM:', researchTeam)
 
     // =====================
     // BUILD WP PARAMS
@@ -72,6 +75,7 @@ exports.handler = async (event = {}) => {
     if (language) params.set('language', language)
     if (researchTeam) params.set('research-team', researchTeam)
     if (specialContent) params.set('special-content', specialContent)
+      console.log('FINAL PARAMS:', params.toString())
 
     const url = `${WP}/wp-json/ebinforepo/v1/resources?${params.toString()}`
 

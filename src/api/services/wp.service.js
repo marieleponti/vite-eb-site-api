@@ -1,4 +1,5 @@
 import { netlifyFetch } from '@/api/clients/netlifyClient'
+import { mapPost } from '@/api/mappers/postMapper'
 
 // POSTS
 export async function fetchPosts(query = '') {
@@ -7,7 +8,18 @@ export async function fetchPosts(query = '') {
 
 // RESOURCES (LIST)
 export async function fetchResources(query = '') {
-  return await netlifyFetch('/resources', query)
+  const res = await netlifyFetch('/resources', query)
+
+  return {
+    items: Array.isArray(res?.items)
+      ? res.items
+      : Array.isArray(res)
+        ? res
+        : [],
+
+    total: res?.total ?? 0,
+    total_pages: res?.total_pages ?? 1,
+  }
 }
 
 // RESOURCES (SINGLE BY SLUG)
@@ -16,6 +28,19 @@ export async function fetchResourceBySlug(slug) {
 
   return {
     item: res?.items?.[0] || null,
+    meta: res
+  }
+}
+
+export async function fetchPostBySlug(slug) {
+  const res = await netlifyFetch('/posts', `slug=${slug}`)
+
+  const post = Array.isArray(res)
+    ? res[0]
+    : res?.items?.[0]
+
+  return {
+    item: post ? mapPost(post) : null,
     meta: res
   }
 }

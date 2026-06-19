@@ -13,9 +13,12 @@ exports.handler = async (event) => {
       const query = event.queryStringParameters?.search || event.queryStringParameters?.s || ''
       const categories = event.queryStringParameters?.categories || ''
       const tags = event.queryStringParameters?.tags || ''
+      const slug = event.queryStringParameters?.slug || ''
 
       // 1. Construimos la URL base para WordPress
       let url = `${WP}/wp-json/wp/v2/posts?_embed=true&per_page=100`
+
+      if (slug) {url += `&slug=${encodeURIComponent(slug)}`}
 
       // 2. Si venían taxonomías de tus filtros funcionales, las conservamos
       if (categories) url += `&categories=${categories}`

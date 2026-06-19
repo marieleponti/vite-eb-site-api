@@ -41,7 +41,12 @@ const routes = [
   name: 'ResourceSingle',
   component: () => import('@/views/ResourceSingle.vue'),
   props: true // Permite pasar el :slug como prop directamente al componente
-}
+  },
+  {
+  path: '/blog/:slug',
+  name: 'BlogSingle',
+  component: () => import('@/views/BlogSingle.vue')
+  }
 ]
 
 const router = createRouter({

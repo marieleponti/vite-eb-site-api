@@ -1,76 +1,112 @@
 import { ref } from 'vue'
 import { login as loginRequest } from '@/api/services/authService'
-import { netlifyFetch } from '@/api/clients/netlifyClient' 
+import { netlifyFetch } from '@/api/clients/netlifyClient'
 
-// Store global persistente
-const token = ref(localStorage.getItem('jwt') || null)
-const user = ref(null)
-// Cargamos los roles guardados inmediatamente para que no se pierdan al navegar
-const roles = ref(JSON.parse(localStorage.getItem('user_roles')) || []) 
+// =======================
+// GLOBAL STATE (shared)
+// =======================
+export const token = ref(localStorage.getItem('jwt') || null)
+export const roles = ref(JSON.parse(localStorage.getItem('user_roles') || '[]'))
+export const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
 
 export function useAuth() {
 
-    async function login(username, password) {
-        const data = await loginRequest(username, password)
-        console.log('LOGIN RESPONSE:', data)
+  // =======================
+  // LOGIN
+  // =======================
+  async function login(username, password) {
 
-        token.value = data.token
-        localStorage.setItem('jwt', data.token)
+    const data = await loginRequest(username, password)
 
-        // Si tu endpoint de login ya incluye los roles, los guardamos de una vez
-        // Si viene en otro formato (ej: data.user_roles), cambia 'data.roles' por la propiedad correcta
-        roles.value = data.roles || ['administrator'] 
-        localStorage.setItem('user_roles', JSON.stringify(roles.value))
-
-        user.value = {
-            name: data.user_display_name,
-            email: data.user_email,
-        }
-
-        return data
+    // Validación estricta del token
+    if (!data || !data.token) {
+      throw new Error('Login failed: invalid response (no token)')
     }
 
-    async function checkCurrentUser() {
-        if (!token.value) {
-            roles.value = []
-            return null
-        }
-        
-        try {
-            // Intentamos validar el token con WordPress
-            const data = await netlifyFetch('/wp-json/wp/v2/users/me')
-            
-            // Si la respuesta es correcta y trae roles, actualizamos el estado
-            if (data && data.roles) {
-                roles.value = data.roles
-                localStorage.setItem('user_roles', JSON.stringify(data.roles))
-            } else if (data && data.code && data.code.includes('jwt_auth')) {
-                // Solo si WordPress dice explícitamente que el JWT venció, deslogueamos
-                logout()
-            }
-            return data
-        } catch (e) {
-            // Si falla la conexión o el endpoint da error temporal, NO te sacamos. 
-            // Mantenemos los roles que ya estaban en el localStorage para no interrumpir tu navegación.
-            console.warn('No se pudo verificar el token en tiempo real, manteniendo sesión local:', e)
-            return null
-        }
+    // Guardar token
+    token.value = data.token
+    localStorage.setItem('jwt', data.token)
+
+    // Roles seguros (NO fallback, NO defaults)
+    if (Array.isArray(data.roles)) {
+      roles.value = data.roles
+    } else {
+      roles.value = []
     }
 
-    function logout() {
-        token.value = null
-        user.value = null
-        roles.value = []
-        localStorage.removeItem('jwt')
-        localStorage.removeItem('user_roles')
+    localStorage.setItem('user_roles', JSON.stringify(roles.value))
+
+    // Usuario seguro
+    user.value = {
+      name: data.user_display_name || null,
+      email: data.user_email || null,
     }
 
-    return {
-        token,
-        user,
-        roles,
-        login,
-        logout,
-        checkCurrentUser
+    localStorage.setItem('user', JSON.stringify(user.value))
+
+    return data
+  }
+
+  // =======================
+  // CHECK CURRENT USER
+  // =======================
+  async function checkCurrentUser() {
+
+    if (!token.value) return null
+
+    try {
+      const data = await netlifyFetch('/wp-json/ebinforepo/v1/me')
+
+      // Si el backend responde correctamente, sincronizamos roles
+      if (data && Array.isArray(data.roles)) {
+        roles.value = data.roles
+        localStorage.setItem('user_roles', JSON.stringify(data.roles))
+      }
+
+      return data
+
+    } catch (error) {
+      // IMPORTANTE:
+      // No romper sesión por errores de red o backend temporal
+      console.warn('Auth check failed (network or server issue):', error)
+      return null
     }
+  }
+
+  // =======================
+  // LOGOUT
+  // =======================
+  function logout() {
+    token.value = null
+    roles.value = []
+    user.value = null
+
+    localStorage.removeItem('jwt')
+    localStorage.removeItem('user_roles')
+    localStorage.removeItem('user')
+  }
+
+  // =======================
+  // HELPERS (seguridad UI)
+  // =======================
+  function isAuthenticated() {
+    return !!token.value
+  }
+
+  function hasRole(role) {
+    return Array.isArray(roles.value) && roles.value.includes(role)
+  }
+
+  return {
+    token,
+    roles,
+    user,
+
+    login,
+    logout,
+    checkCurrentUser,
+
+    isAuthenticated,
+    hasRole
+  }
 }

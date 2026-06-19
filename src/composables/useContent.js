@@ -1,16 +1,7 @@
-import {
-  ref
-} from 'vue'
-import {
-  fetchPosts,
-  fetchResources
-} from '@/api/services/wp.service'
-import {
-  mapPost
-} from '@/api/mappers/postMapper'
-import {
-  normalizeResource
-} from '@/api/mappers/resourceMapper'
+import { ref } from 'vue'
+import { fetchPosts, fetchResources } from '@/api/services/wp.service'
+import { mapPost } from '@/api/mappers/postMapper'
+import { normalizeResource } from '@/api/mappers/resourceMapper'
 
 export function useContent(defaultParams = {}) {
 
@@ -27,18 +18,18 @@ export function useContent(defaultParams = {}) {
 
     loading.value = true
     error.value = null
-    items.value = []
 
     try {
+      const merged = { ...defaultParams, ...params }
+      console.log('PAGE:', merged.page)
 
-      const merged = {
-        ...defaultParams,
-        ...params,
-      }
+      let res = null
 
-      let res
-
+      // ======================
+      // POSTS
+      // ======================
       if (merged.type === 'posts') {
+
         const query = new URLSearchParams()
 
         if (merged.filters?.s) {
@@ -54,65 +45,80 @@ export function useContent(defaultParams = {}) {
         }
 
         res = await fetchPosts(query.toString())
-        const raw = Array.isArray(res) ? res : []
+
+        // const raw = Array.isArray(res) ? res : []
+        const raw = Array.isArray(res?.items) ?
+          res.items :
+          Array.isArray(res) ?
+          res :
+          []
+
+        console.log('FIRST ITEM RAW:', res?.items?.[0])
         items.value = raw.map(mapPost)
+
+        meta.value.total = raw.length
+        meta.value.totalPages = 1
       }
 
+      // ======================
+      // RESOURCES
+      // ======================
       if (merged.type === 'resources') {
 
         const query = new URLSearchParams()
 
-        if (merged.page) {
-          query.append('page', merged.page)
-        }
+        query.append('page', merged.page || 1)
+        query.append('per_page', merged.perPage || 16)
 
-        if (merged.perPage) {
-          query.append('per_page', merged.perPage)
-        }
-       // 1. Añadimos la búsqueda por palabra si existe
-        if (merged.filters?.s && merged.filters.s.trim() !== '') {
+        if (merged.filters?.s?.trim()) {
           query.append('search', merged.filters.s.trim())
         }
 
-        // 2. Recorremos el resto de filtros de forma ultra-segura
         if (merged.filters) {
           Object.entries(merged.filters).forEach(([key, value]) => {
-            if (key === 's') return // Ignoramos la 's' porque ya la procesamos arriba
 
-            // Si es un array (categorías, tags) y tiene elementos, lo unimos por comas
-            if (Array.isArray(value)) {
-              if (value.length > 0) {
-                query.append(key, value.join(','))
-              }
-            } 
-            // Si es un string o número simple (por si acaso), lo añadimos si no está vacío
+            if (key === 's') return
+
+            if (Array.isArray(value) && value.length) {
+              query.append(key, value.join(','))
+            }
+
             else if (value !== null && value !== undefined && value !== '') {
               query.append(key, value)
             }
           })
         }
 
-        console.log('Vue envia: ', query.toString())
+        const queryString = query.toString()
 
-        res = await fetchResources(query.toString())
+        console.log('Vue envia:', queryString)
 
-        console.log('RES TYPE:', typeof res)
-        console.log('RES:', res)
-        console.log('RES KEYS:', Object.keys(res || {}))
-        console.log('FULL RESPONSE', res)
-        console.log('PAGE:', merged.page)
-        console.log('RESULT ITEMS:', res.items?.map(i => i.id))
+        res = await fetchResources(queryString)
 
-        const raw = res.items || []
+        console.log('RAW RESPONSE:', res)
 
-        items.value = [...raw].map(normalizeResource)
+        // ======================
+        // NORMALIZACIÓN SEGURA
+        // ======================
+        // const rawItems = Array.isArray(res?.items) ? res.items : []
+        const rawItems =
+          Array.isArray(res) ?
+          res :
+          Array.isArray(res?.items) ?
+          res.items :
+          []
+        console.log('FIRST ITEM NORMALIZED:', rawItems?.[0])
 
-        meta.value.total = res.total || 0
-        meta.value.totalPages = res.total_pages || 1
+        items.value = rawItems.map(normalizeResource)
+
+        meta.value.total = res?.total ?? 0
+        meta.value.totalPages = res?.total_pages ?? 1
       }
 
     } catch (err) {
-      error.value = err.message
+      console.error('useContent error:', err)
+      error.value = err.message || 'Unknown error'
+      items.value = []
     } finally {
       loading.value = false
     }
