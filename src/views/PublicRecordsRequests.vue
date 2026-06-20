@@ -137,10 +137,8 @@ import { fetchResources, fetchPosts } from '@/api/services/wp.service'
 // Estados Reactivos
 const featuredCases = ref([])
 const loadingFeatured = ref(true)
-
 const updates = ref([])
 const loadingUpdates = ref(true)
-
 const docketFeed = ref([])
 const loadingDocket = ref(true)
 const currentPage = ref(1)
@@ -215,20 +213,29 @@ async function getUpdates() {
 }
 
 // SECCIÓN 3: Trae de resources.js (Estructura paginada)
-async function getDocketFeed(pageNumber = 1) {
+async function getDocketFeed() {
   loadingDocket.value = true
   try {
-    const query = `?page=${pageNumber}&per_page=3&source=public-records-requests&research-team=eb-research`
+    const query = '?page=1&per_page=3&source=public-records-requests&research-team=eb-research'
     const response = await fetchResources(query)
     
     docketFeed.value = response?.items || []
-    totalPages.value = response?.total_pages || 1
   } catch (err) {
     console.error('Error en Docket Feed:', err)
   } finally {
     loadingDocket.value = false
   }
 }
+//  loadingFeatured.value = true
+//   try {
+//     const query = '?page=1&per_page=3&source=public-records-requests&special-content=featured'
+//     const response = await fetchResources(query)
+//     featuredCases.value = response?.items || []
+//   } catch (err) {
+//     console.error('Error en Featured Cases:', err)
+//   } finally {
+//     loadingFeatured.value = false
+//   }
 
 function cambiarPaginaDocket(targetPage) {
   currentPage.value = targetPage

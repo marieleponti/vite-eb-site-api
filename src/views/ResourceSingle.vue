@@ -14,23 +14,17 @@
 
     <!-- Visualización del Contenido del Recurso -->
     <v-row v-else-if="resource">
-      
+
       <!-- COLUMNA PRINCIPAL (Izquierda): Información y Media -->
       <v-col cols="12" md="8">
         <article>
           <!-- Imagen Destacada -->
-          <v-img 
-            v-if="resource.featuredImage" 
-            :src="resource.featuredImage" 
-            :alt="resource.title" 
-            max-height="400" 
-            class="rounded-lg mb-6"
-            cover 
-          />
+          <v-img v-if="resource.featuredImage" :src="resource.featuredImage" :alt="resource.title" max-height="400"
+            class="rounded-lg mb-6" cover />
 
           <!-- Título Principal -->
           <h1 class="resource-title-single mb-2">{{ resource.title }}</h1>
-          
+
           <!-- Metadatos de Publicación (Fecha y Autor de ACF) -->
           <div class="resource-meta-single mb-6 text-grey-darken-1">
             <span>Published on: {{ formatDate(resource.date) }}</span>
@@ -40,58 +34,72 @@
           <v-divider class="mb-6"></v-divider>
 
           <!-- Descripción del recurso (ACF description) -->
-          <div 
-            class="resource-content-single mb-8" 
-            v-html="resource.acf?.description || 'No description available for this resource.'"
-          ></div>
+          <div class="resource-content-single mb-8"
+            v-html="resource.acf?.description || 'No description available for this resource.'"></div>
 
           <!-- Video Embebido Adaptativo (ACF embed_video) -->
           <div v-if="resource.acf?.video_embed" class="video-container mb-8 rounded-lg overflow-hidden">
             <div v-html="resource.acf.video_embed"></div>
           </div>
-          
-          <!-- Botones de Acción para Enlaces y Descargas (PDFs) -->
-          <div class="d-flex flex-wrap ga-3 mt-6">
-            <v-btn 
-              v-if="resource.acf?.link_to_resource" 
-              color="#2f4356" 
-              size="large" 
-              :href="resource.acf.link_to_resource" 
-              target="_blank"
-              prepend-icon="mdi-open-in-new"
-            >
-              Link to Original Source
-            </v-btn>
 
-            <v-btn 
-              v-if="resource.acf?.file_url" 
-              color="red-darken-2" 
-              variant="flat"
-              size="large" 
-              :href="resource.acf.file_url" 
-              target="_blank"
-              prepend-icon="mdi-file-pdf-box"
-            >
-              Download PDF / File
-            </v-btn>
-          </div>
+          <!-- PDFs: selector + viewer -->
+<div v-if="resource?.acf?.upload_files?.length" class="mb-8">
+  <v-select
+    v-model="selectedPdfUrl"
+    :items="resource.acf.upload_files.map(x => ({ title: x.file.title, value: x.file.url }))"
+    item-title="title"
+    item-value="value"
+    label="Select a PDF"
+    variant="outlined"
+    density="comfortable"
+  />
+
+  <div class="d-flex align-center ga-3 mt-3" v-if="selectedPdfUrl">
+    <v-icon color="#2f4356">mdi-file-pdf-box</v-icon>
+    <span>{{ resource.acf.upload_files.find(x => x.file.url === selectedPdfUrl)?.file.title }}</span>
+  </div>
+
+  <div class="rounded-lg overflow-hidden mt-4" v-if="selectedPdfUrl">
+    <iframe
+      :src="selectedPdfUrl"
+      width="100%"
+      height="750"
+      style="border:0;"
+      type="application/pdf"
+    />
+  </div>
+
+  <v-btn
+    class="mt-4"
+    v-if="selectedPdfUrl"
+    color="#2f4356"
+    size="large"
+    :href="selectedPdfUrl"
+    target="_blank"
+    prepend-icon="mdi-open-in-new"
+  >
+    Download/Open PDF
+  </v-btn>
+</div>
         </article>
       </v-col>
 
       <!-- COLUMNA LATERAL (Derecha): Especificaciones del Recurso (Taxonomías) -->
       <v-col cols="12" md="4">
         <v-card variant="outlined" class="pa-5 rounded-lg bg-details-box" style="border-color: #c7cdd4 !important;">
-          <h3 class="text-subtitle-1 font-weight-bold mb-4" style="color: #29465b; text-transform: uppercase; letter-spacing: 0.05em;">
+          <h3 class="text-subtitle-1 font-weight-bold mb-4"
+            style="color: #29465b; text-transform: uppercase; letter-spacing: 0.05em;">
             Resource Specifications
           </h3>
-          
+
           <div class="d-flex flex-column ga-4">
-            
+
             <!-- Authoring Organization -->
             <div v-if="resource.taxonomies?.authoring_organization?.length">
               <div class="tax-label">Authoring Organization</div>
               <div class="d-flex flex-wrap ga-1">
-                <v-chip v-for="org in resource.taxonomies.authoring_organization" :key="org.slug" size="small" color="#29465b" variant="flat">
+                <v-chip v-for="org in resource.taxonomies.authoring_organization" :key="org.slug" size="small"
+                  color="#29465b" variant="flat">
                   {{ org.name }}
                 </v-chip>
               </div>
@@ -101,7 +109,8 @@
             <div v-if="resource.taxonomies?.topic?.length">
               <div class="tax-label">Topics</div>
               <div class="d-flex flex-wrap ga-1">
-                <v-chip v-for="topic in resource.taxonomies.topic" :key="topic.slug" size="small" color="#2f4356" variant="tonal">
+                <v-chip v-for="topic in resource.taxonomies.topic" :key="topic.slug" size="small" color="#2f4356"
+                  variant="tonal">
                   {{ topic.name }}
                 </v-chip>
               </div>
@@ -111,7 +120,8 @@
             <div v-if="resource.taxonomies?.country?.length">
               <div class="tax-label">Country</div>
               <div class="d-flex flex-wrap ga-1">
-                <v-chip v-for="c in resource.taxonomies.country" :key="c.slug" size="small" color="blue-grey-darken-2" variant="outlined">
+                <v-chip v-for="c in resource.taxonomies.country" :key="c.slug" size="small" color="blue-grey-darken-2"
+                  variant="outlined">
                   {{ c.name }}
                 </v-chip>
               </div>
@@ -121,7 +131,8 @@
             <div v-if="resource.taxonomies?.city_community?.length">
               <div class="tax-label">City / Community</div>
               <div class="d-flex flex-wrap ga-1">
-                <v-chip v-for="city in resource.taxonomies.city_community" :key="city.slug" size="small" variant="outlined">
+                <v-chip v-for="city in resource.taxonomies.city_community" :key="city.slug" size="small"
+                  variant="outlined">
                   {{ city.name }}
                 </v-chip>
               </div>
@@ -131,7 +142,8 @@
             <div v-if="resource.taxonomies?.source?.length">
               <div class="tax-label">Source</div>
               <div class="d-flex flex-wrap ga-1">
-                <v-chip v-for="src in resource.taxonomies.source" :key="src.slug" size="small" variant="text" class="border">
+                <v-chip v-for="src in resource.taxonomies.source" :key="src.slug" size="small" variant="text"
+                  class="border">
                   {{ src.name }}
                 </v-chip>
               </div>
@@ -141,7 +153,8 @@
             <div v-if="resource.taxonomies?.format?.length">
               <div class="tax-label">Format</div>
               <div class="d-flex flex-wrap ga-1">
-                <v-chip v-for="fmt in resource.taxonomies.format" :key="fmt.slug" size="small" color="grey-darken-3" variant="tonal">
+                <v-chip v-for="fmt in resource.taxonomies.format" :key="fmt.slug" size="small" color="grey-darken-3"
+                  variant="tonal">
                   {{ fmt.name }}
                 </v-chip>
               </div>
@@ -180,6 +193,8 @@ import { fetchResourceBySlug } from '@/api/services/wp.service'
 const route = useRoute()
 const resource = ref(null)
 const loading = ref(true)
+const selectedPdfUrl = ref('')
+const selectedPdfTitle = ref('')
 
 onMounted(() => {
   fetchSingleResource()
@@ -192,18 +207,28 @@ async function fetchSingleResource() {
     const slug = route.params.slug
 
     if (!slug) {
-        console.error('Missing slug param')
+      console.error('Missing slug param')
     }
 
     const res = await fetchResourceBySlug(slug)
 
     resource.value = res?.item || res?.items?.[0] || null
+    initPdfSelection()
 
   } catch (error) {
     console.error('Error fetching resource:', error)
     resource.value = null
   } finally {
     loading.value = false
+  }
+}
+
+function initPdfSelection() {
+  const files = resource.value?.acf?.upload_files || []
+  if (files.length) {
+    const first = files[0]?.file
+    selectedPdfUrl.value = first?.url || ''
+    selectedPdfTitle.value = first?.title || ''
   }
 }
 
@@ -256,7 +281,8 @@ function formatDate(date) {
 /* Manejo de contenedores de vídeo (iFrames responsivos) */
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+  padding-bottom: 56.25%;
+  /* Relación de aspecto 16:9 */
   height: 0;
   overflow: hidden;
   background: #000;
