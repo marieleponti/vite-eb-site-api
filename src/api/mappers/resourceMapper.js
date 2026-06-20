@@ -19,11 +19,12 @@ title:
   item.title?.rendered ??
   item.title ??
   'Untitled',
-
-permalink:
+  
+permalink: normalizePermalink(
   item.link ??
   item.permalink ??
-  '#',
+  '#'
+),
 
 excerpt: cleanHtml(
   item.excerpt?.rendered ??
@@ -92,4 +93,14 @@ total:
 totalPages:
   Number(response?.total_pages ?? 1),
 }
+}
+
+export function normalizePermalink(permalink) {
+  if (!permalink) return permalink
+  try {
+    const url = new URL(permalink)
+    return url.pathname // "/resources/.../..."
+  } catch {
+    return permalink // si ya era "/resources/..."
+  }
 }
