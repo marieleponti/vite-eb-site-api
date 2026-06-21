@@ -117,7 +117,7 @@ const hasAccess = computed(() => {
 const staticResearch = ref([
   {
     title: 'Border Externalization in the Americas',
-    permalink: '/research/border-externalization-in-americas',
+    permalink: '/featured-research/border-externalization-in-americas',
     featuredImage: 'src/assets/images/minibrief_border-ext.jpg',
     excerpt: 'Analysis of digital border infrastructure expansion.',
     author: 'Mizue Aizeki & S. Narváez',
@@ -125,7 +125,7 @@ const staticResearch = ref([
   },
   {
     title: 'Biometrics-Based Migration Management Infrastructures',
-    permalink: '/research/biometrics-based-migration-management',
+    permalink: '/featured-research/biometrics-based-migration-management',
     featuredImage: 'src/assets/images/minibrief_biometrics-migr-mgmt.jpg',
     excerpt: 'Surveillance and digital control tracking throughout Latin America.',
     author: 'Santiago Narváez',
@@ -133,7 +133,7 @@ const staticResearch = ref([
   },
   {
     title: 'Human Impacts',
-    permalink: '/research/human-impacts-brief',
+    permalink: '/featured-research/human-impacts-brief',
     featuredImage: 'src/assets/images/minibrief_human-impacts.png',
     excerpt: 'The cost of state deterrence policies on migrant populations.',
     author: 'Laura Bingham',
@@ -141,7 +141,7 @@ const staticResearch = ref([
   },
   {
     title: 'Biometrics & Borders',
-    permalink: '/research/biometrics-mx-ca',
+    permalink: '/featured-research/biometrics-mx-ca',
     featuredImage: 'src/assets/images/minibrief_biometrics-borders.jpg',
     excerpt: 'Examining biometric data extraction technologies.',
     author: 'Everywhere Border Project',

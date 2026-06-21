@@ -1,0 +1,313 @@
+<!-- src/components/Richcontent.vue
+  Recibe HTML semántico simple (h2/h3 con id, p, ul/ol, aside.stat-box,
+  ol.references) y lo pinta con tipografía propia del sitio. No depende
+  de ningún builder/CMS externo: el HTML que entra por la prop `html`
+  ya viene limpio (ver src/data/articles/*.html).
+
+  Además genera automáticamente un Índice (Tabla de Contenidos) leyendo
+  los <h2>/<h3> que tengan id.
+
+  Uso:
+    <Richcontent :html="item.content" />
+-->
+<template>
+  <div class="rc-layout">
+
+    <!-- Columna principal -->
+    <div ref="contentRef" class="rc-content" v-html="html"></div>
+
+    <!-- Columna lateral: TOC sticky (solo si hay headings con id) -->
+    <aside v-if="toc.length" class="rc-toc">
+      <div class="rc-toc-sticky">
+        <h5 class="rc-toc-title">Table of Contents</h5>
+        <nav>
+          <ol class="rc-toc-list">
+            <li
+              v-for="entry in toc"
+              :key="entry.id"
+              :class="`level-${entry.level}`"
+            >
+              <a
+                href="#"
+                :class="{ active: activeId === entry.id }"
+                @click.prevent="scrollTo(entry.id)"
+              >
+                {{ entry.text }}
+              </a>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </aside>
+
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
+
+const props = defineProps({
+  html: { type: String, default: '' },
+  tocLevels: { type: Array, default: () => ['h2', 'h3'] }
+})
+
+const contentRef = ref(null)
+const toc = ref([])
+const activeId = ref(null)
+
+let observer = null
+
+function buildToc() {
+  if (!contentRef.value) return
+  const selector = props.tocLevels.join(',')
+  const headings = contentRef.value.querySelectorAll(selector)
+
+  toc.value = Array.from(headings)
+    .filter(h => h.id)
+    .map(h => ({
+      id: h.id,
+      text: h.textContent.trim(),
+      level: Number(h.tagName.replace('H', ''))
+    }))
+}
+
+function scrollTo(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  window.scrollBy(0, -90)
+}
+
+function setupScrollSpy() {
+  if (!contentRef.value || !toc.value.length) return
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) activeId.value = entry.target.id
+      })
+    },
+    { rootMargin: '-30% 0px -60% 0px' }
+  )
+  toc.value.forEach(entry => {
+    const el = document.getElementById(entry.id)
+    if (el) observer.observe(el)
+  })
+}
+
+// Click en una nota al pie (<a class="footnote-ref">) hace scroll a la
+// referencia correspondiente en vez de navegar.
+function handleContentClick(e) {
+  const link = e.target.closest('a.footnote-ref')
+  if (!link) return
+  const href = link.getAttribute('href')
+  if (!href?.startsWith('#')) return
+  e.preventDefault()
+  const target = document.querySelector(href)
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    target.classList.add('highlight')
+    setTimeout(() => target.classList.remove('highlight'), 1500)
+  }
+}
+
+onMounted(async () => {
+  await nextTick()
+  buildToc()
+  setupScrollSpy()
+  contentRef.value?.addEventListener('click', handleContentClick)
+})
+
+watch(() => props.html, async () => {
+  if (observer) observer.disconnect()
+  await nextTick()
+  buildToc()
+  setupScrollSpy()
+})
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect()
+  contentRef.value?.removeEventListener('click', handleContentClick)
+})
+</script>
+
+<style scoped>
+.rc-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .rc-layout {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+/* ---------- TOC lateral ---------- */
+.rc-toc-sticky {
+  position: sticky;
+  top: 96px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.rc-toc-title {
+  font-family: "Staatliches", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.rc-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: toc-counter;
+}
+
+.rc-toc-list > li {
+  counter-increment: toc-counter;
+  margin-bottom: 0.5rem;
+}
+
+.rc-toc-list > li::before {
+  content: counter(toc-counter) ". ";
+  color: #002d62;
+  font-weight: 700;
+}
+
+.rc-toc-list .level-3 {
+  margin-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.rc-toc-list a {
+  color: #374151;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.rc-toc-list a:hover,
+.rc-toc-list a.active {
+  color: #002d62;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+/* ---------- Tipografía del cuerpo (HTML semántico propio) ---------- */
+.rc-content :deep(h2),
+.rc-content :deep(h3),
+.rc-content :deep(h4) {
+  font-family: "Staatliches", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #002d62;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  scroll-margin-top: 100px;
+}
+
+.rc-content :deep(h2) { font-size: 1.6rem; }
+.rc-content :deep(h3) { font-size: 1.3rem; }
+.rc-content :deep(h4) { font-size: 1.1rem; }
+
+.rc-content :deep(p) {
+  line-height: 1.8;
+  color: #2b2b2b;
+  margin-bottom: 1.1rem;
+}
+
+.rc-content :deep(a) {
+  color: #0a4fa3;
+  text-decoration: underline;
+}
+
+.rc-content :deep(a.footnote-ref) {
+  font-size: 0.8rem;
+  vertical-align: super;
+  text-decoration: none;
+  color: #002d62;
+  font-weight: 700;
+}
+
+.rc-content :deep(ul),
+.rc-content :deep(ol) {
+  margin: 1rem 0 1.25rem 1.25rem;
+  line-height: 1.7;
+}
+
+/* Pull-quotes: párrafos enteramente <strong><i>"..."</i></strong> */
+.rc-content :deep(p > strong:only-child > i:only-child),
+.rc-content :deep(p > i:only-child > strong:only-child) {
+  display: block;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: #002d62;
+  border-left: 4px solid #002d62;
+  padding-left: 1rem;
+}
+
+.rc-content :deep(figure) {
+  margin: 1.5rem 0;
+}
+
+.rc-content :deep(figure img) {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+}
+
+.rc-content :deep(figcaption) {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.4rem;
+}
+
+/* Bloque de estadísticas destacado */
+.rc-content :deep(aside.stat-box) {
+  border: 1px solid #d1e7dd;
+  background: #f5fbf7;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.rc-content :deep(aside.stat-box h5) {
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+/* Sección de Referencias */
+.rc-content :deep(ol.references) {
+  font-size: 0.85rem;
+  color: #555;
+  counter-reset: ref-counter;
+  list-style: none;
+  margin-left: 0;
+}
+
+.rc-content :deep(ol.references li) {
+  counter-increment: ref-counter;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+  scroll-margin-top: 100px;
+  transition: background-color 0.3s;
+}
+
+.rc-content :deep(ol.references li::before) {
+  content: counter(ref-counter) ".";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+  color: #002d62;
+}
+
+.rc-content :deep(ol.references li.highlight) {
+  background-color: #fff3cd;
+}
+</style>

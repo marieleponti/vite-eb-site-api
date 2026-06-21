@@ -46,7 +46,14 @@ const routes = [
   path: '/blog/:slug',
   name: 'BlogSingle',
   component: () => import('@/views/BlogSingle.vue')
+  },
+  {
+    path: '/featured-research/:slug',
+    name: 'MiniBriefSingle',
+    component: () => import('../views/MiniBriefSingle.vue'),
+    props: true
   }
+  
 ]
 
 const router = createRouter({
