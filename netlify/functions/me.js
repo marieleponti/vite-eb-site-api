@@ -17,26 +17,22 @@ exports.handler = async (event) => {
           error: 'Missing token',
         }),
       }
+    }
+
+    console.log('TOKEN:', token)
+    console.log('AUTH HEADER:', `Bearer ${token}`)
+
+    const res = await fetch(
+      `${WP}/wp-json/ebinforepo/v1/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
+    )
 
-      console.log('TOKEN:', token)
-
-      const res = await fetch(
-
-        console.log(
-          'AUTH HEADER:',
-          `Bearer ${token}`
-        )
-        
-        `${WP}/wp-json/ebinforepo/v1/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      if (!res.ok) {
-        return {
+    if (!res.ok) {
+      return {
         statusCode: 401,
         body: JSON.stringify({
           error: 'Invalid token',

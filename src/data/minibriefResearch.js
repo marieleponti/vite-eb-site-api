@@ -3,7 +3,7 @@
 // El listado usa excerpt/featuredImage.
 // El single (MiniBriefSingle.vue) usa content/slug completos.
 //
-// El contenido largo vive en archivos .html separados bajo ./articles/
+// El contenido largo vive en archivos .html separados bajo ./minibriefs/
 // y se importa con el sufijo `?raw` de Vite, que lo trae como string
 // plano (HTML semántico simple, sin clases de ningún framework/builder
 // externo).
@@ -18,7 +18,8 @@ export const minibriefResearch = [
     slug: 'border-externalization-in-americas',
     title: 'Border Externalization in the Americas',
     permalink: '/research/border-externalization-in-americas',
-    featuredImage: 'https://www.everywhereborder.org/wp-content/uploads/2025/02/colombia-1.jpg',
+    featuredImage: null,
+    heroEmbed: '<iframe src="https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?source=1nzqeOrx7kKc0715JnryKQECopm-8ywVC8RqmSJQFBME&font=Default&lang=en&initial_zoom=2&height=650" width="100%" height="650" loading="lazy" allowfullscreen style="border:0;display:block;"></iframe>',
     excerpt: 'Analysis of digital border infrastructure expansion.',
     content: borderExternalizationContent,
     author: 'Mizue Aizeki and Santiago Narváez',

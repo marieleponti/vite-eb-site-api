@@ -20,8 +20,9 @@
 
     <template v-else>
 
+      <div v-if="item.heroEmbed" class="hero-embed" v-html="item.heroEmbed"></div>
       <v-img
-        v-if="item.featuredImage"
+        v-else-if="item.featuredImage"
         :src="item.featuredImage"
         height="420"
         cover
@@ -203,5 +204,16 @@ watch(() => route.params.slug, (newSlug) => {
 
 .hero-img {
   border-bottom: 4px solid #002d62;
+}
+
+.hero-embed {
+  width: 100%;
+  border-bottom: 4px solid #002d62;
+  line-height: 0; /* evita espacio extra debajo del iframe */
+}
+
+.hero-embed :deep(iframe) {
+  width: 100%;
+  display: block;
 }
 </style>

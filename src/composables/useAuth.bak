@@ -55,12 +55,7 @@ export function useAuth() {
     if (!token.value) return null
 
     try {
-      // Antes esto le pegaba directo a '/wp-json/ebinforepo/v1/me',
-      // pero esa ruta no la intercepta ninguna Netlify Function — por
-      // eso siempre tiraba "Function not found". Ahora pasa por la
-      // función /me (netlify/functions/me.js), que reenvía el JWT a
-      // WordPress y devuelve la respuesta.
-      const data = await netlifyFetch('/me')
+      const data = await netlifyFetch('/wp-json/ebinforepo/v1/me')
 
       // Si el backend responde correctamente, sincronizamos roles
       if (data && Array.isArray(data.roles)) {
