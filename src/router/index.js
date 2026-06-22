@@ -49,8 +49,8 @@ const routes = [
   },
   {
     path: '/featured-research/:slug',
-    name: 'MiniBriefSingle',
-    component: () => import('../views/MiniBriefSingle.vue'),
+    name: 'MinibriefSingle',
+    component: () => import('../views/MinibriefSingle.vue'),
     props: true
   }
   

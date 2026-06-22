@@ -61,7 +61,12 @@
           </v-btn>
         </v-alert>
 
-        <Richcontent v-else :html="item.content" />
+        <Richcontent
+          v-else
+          :html="item.content"
+          :heading-overrides="tocOverrides"
+          :toc-structure="tocStructure"
+        />
 
       </v-container>
     </template>
@@ -85,6 +90,61 @@ const allowedRoles = ['ebteam', 'administrator', 'ebcommunity']
 const hasAccess = computed(() =>
   userRoles.value.some(role => allowedRoles.includes(role))
 )
+
+// La jerarquía de <h2>/<h3>/<h4> que viene de WordPress no siempre
+// refleja la estructura lógica del índice (este post en particular
+// trae "Containment" como h2 y "Conclusion" como h3, al revés de lo
+// que debería ser). Se corrige por slug, sin tocar el contenido en
+// WordPress ni el HTML que llega de la API.
+const TOC_OVERRIDES_BY_SLUG = {
+  'human-impacts-brief': {
+    Containment: 3,
+    Shutdown: 3,
+    Conclusion: 2
+  }
+}
+
+// Algunos artículos tienen un índice "a mano" que no se puede derivar
+// agrupando por nivel de heading (salta secciones, mezcla niveles).
+// Para esos casos se define el índice completo, explícito, acá.
+const TOC_STRUCTURE_BY_SLUG = {
+  'border-externalization-in-americas': [
+    { id: 'SecurityForces' },
+    { id: 'Securitization' },
+    { id: 'VerticalBorder' },
+    { id: 'SafeThirdCountry' },
+    { id: 'CBP' },
+    { id: 'ElSalvador' },
+    { id: 'Funding' },
+    { id: 'migrationcontrol' },
+    {
+      id: 'DH',
+      children: [
+        { id: 'ACA' },
+        { id: 'BSAs' },
+        { id: 'BDSP' },
+        { id: 'TANAWPA' }
+      ]
+    },
+    { id: 'migrationprotection' }
+  ],
+  // El TOC real de este post es una lista PLANA de 6 ítems: salta la
+  // sección "Mexico" por completo y no distingue niveles (mezcla h2,
+  // h3 y h4 en el cuerpo, pero en el índice todos quedan al mismo
+  // nivel). No se puede derivar agrupando por heading, así que se
+  // declara explícito.
+  'biometrics-based-migration-management': [
+    { id: 'biometricid' },
+    { id: 'TI' },
+    { id: 'ElSalvadorGuatemalaHonduras' },
+    { id: 'Guatemala' },
+    { id: 'ElSalvador' },
+    { id: 'Honduras' }
+  ]
+}
+
+const tocOverrides = computed(() => TOC_OVERRIDES_BY_SLUG[route.params.slug] || {})
+const tocStructure = computed(() => TOC_STRUCTURE_BY_SLUG[route.params.slug] || [])
 
 const item = ref(null)
 const loading = ref(true)

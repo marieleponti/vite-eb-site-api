@@ -54,7 +54,19 @@
 import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 
 const props = defineProps({
-  html: { type: String, default: '' }
+  html: { type: String, default: '' },
+  // Mapa { idDelHeading: nivelDeseado } para corregir jerarquías que
+  // vienen mal desde la fuente (WordPress, CMS, lo que sea). Ej:
+  // { Containment: 3, Shutdown: 3, Conclusion: 2 }
+  headingOverrides: { type: Object, default: () => ({}) },
+  // Índice EXPLÍCITO, para artículos donde el TOC real no se puede
+  // derivar agrupando por nivel de heading (por ejemplo: el TOC salta
+  // secciones, o mezcla niveles h2/h3 sin un patrón consistente).
+  // Si se pasa, tiene prioridad total sobre la detección automática.
+  // Formato: [{ id: 'SecurityForces', children: [] }, { id: 'DH', children: [{ id: 'ACA' }, ...] }]
+  // El texto de cada item se toma del heading real en el DOM (por su
+  // id), salvo que se pase `label` explícito en la entrada.
+  tocStructure: { type: Array, default: () => [] }
 })
 
 const contentRef = ref(null)
@@ -63,8 +75,42 @@ const activeId = ref(null)
 
 let observer = null
 
-function buildToc() {
+function applyHeadingOverrides() {
   if (!contentRef.value) return
+  Object.entries(props.headingOverrides).forEach(([id, level]) => {
+    const el = contentRef.value.querySelector(`#${id}`)
+    if (!el) return
+    const currentLevel = Number(el.tagName.replace('H', ''))
+    if (currentLevel === level) return
+    // No se puede cambiar el tagName de un elemento existente:
+    // creamos uno nuevo del tag correcto y lo reemplazamos.
+    const replacement = document.createElement(`h${level}`)
+    replacement.id = el.id
+    replacement.innerHTML = el.innerHTML
+    el.replaceWith(replacement)
+  })
+}
+
+function resolveLabel(id, fallback) {
+  const el = contentRef.value?.querySelector(`#${id}`)
+  return fallback || el?.textContent.trim() || id
+}
+
+function buildTocFromStructure(structure) {
+  return structure.map(entry => ({
+    id: entry.id,
+    text: resolveLabel(entry.id, entry.label),
+    level: 2,
+    children: (entry.children || []).map(child => ({
+      id: child.id,
+      text: resolveLabel(child.id, child.label),
+      level: 3,
+      children: []
+    }))
+  }))
+}
+
+function buildTocAuto() {
   const headings = contentRef.value.querySelectorAll('h2[id], h3[id]')
 
   const result = []
@@ -86,7 +132,14 @@ function buildToc() {
     }
   })
 
-  toc.value = result
+  return result
+}
+
+function buildToc() {
+  if (!contentRef.value) return
+  toc.value = props.tocStructure.length
+    ? buildTocFromStructure(props.tocStructure)
+    : buildTocAuto()
 }
 
 function scrollTo(id) {
@@ -131,6 +184,7 @@ function handleContentClick(e) {
 
 onMounted(async () => {
   await nextTick()
+  applyHeadingOverrides()
   buildToc()
   setupScrollSpy()
   contentRef.value?.addEventListener('click', handleContentClick)
@@ -139,6 +193,7 @@ onMounted(async () => {
 watch(() => props.html, async () => {
   if (observer) observer.disconnect()
   await nextTick()
+  applyHeadingOverrides()
   buildToc()
   setupScrollSpy()
 })
