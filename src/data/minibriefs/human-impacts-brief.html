@@ -1,15 +1,3 @@
-// src/data/minibriefResearch.js
-// Fuente única de verdad para los 4 research fijos.
-// El listado usa excerpt/featuredImage.
-// El single (SingleResearchView.vue) usa content/slug completos.
-//
-// El contenido largo vive en archivos .html separados bajo ./articles/
-// y se importa con el sufijo `?raw` de Vite, que lo trae como string
-// plano (HTML semántico simple, sin clases de ningún framework/builder
-// externo).
-
-
-const humanImpactsContent = `
 <h2 id="Introduction">Introduction: Fifty Years Later</h2>
 <p>On July 5, 2005, a team of inspectors from Guatemala's National Civil Police were dispatched to a local police base in a busy neighborhood in Guatemala City to transfer a cache of improperly stored weapons and explosives to a safer location. They accidentally discovered a vast archive of police records from the country's brutal 36-year civil war, meticulously documenting gruesome details of assassinations, torture, disappearances, and other atrocities committed by the former National Police. </p>
 <p>Among the records were documents recording decades of U.S. support to Guatemala's genocidal military and police forces, undertaken with full knowledge of the atrocities taking place. Thousands of agents received U.S. training in counterinsurgency, surveillance, interrogation and – to aid in tracking subversives and confirming their demise – cutting edge fingerprinting techniques. "Fingerprinting became a special focus of the program," notes Kate Doyle of the National Security Archive shortly after examining the National Police archives in 2007. Her account includes a chilling discovery from the Gabinete de Identificacion files. </p>
@@ -57,7 +45,7 @@ const humanImpactsContent = `
 <p>In 2024, Mexico's newly inaugurated president, Claudia Scheinbaum, began overseeing a further deconstruction of accountable democratic institutions through massive judicial reforms alongside the acceleration of militarization that began under her immediate predecessor and political forebear, Andrés Manuel López Obrador. </p>
 <p>Mexico's migration law affords ample discretion to authorities to arrest, detain, and expel foreigners. Sociologist David FitzGerald uses the metaphor of a "vertical frontier" effect, in which territorial access (at the political border) matters less than in the United States, and enforcement occurs fluidly, unpredictably, at internal points of containment. Wendy Vogt calls the same phenomenon an "arterial border" to express the fluidity of the threat and vulnerability experienced by people moving along the migration routes. "When the arterial border shifts, the actors and the rules change too."</p>
 <p>Two domains of migration control have increasingly fueled and fed off of discretionary power in the Americas: the transnational effects of what we call "border shutdown politics" emanating from the U.S. and the closely related U.S. political goal of migration "containment" as far away from the physical border and political imagination of U.S. voters as possible. Shutdown politics and containment fuel violence symbiotically, each siphoning more and more discretionary power from the economic, political, and cultural structures that hold them in place. </p>
-<h4 id="Shutdown">Shutdown Politics</h4>
+<h3 id="Shutdown">Shutdown Politics</h3>
 <p>In U.S. policy, from Remain in Mexico to Title 42 to the Biden administration's metered shutdown rule to the second Trump administration's efforts to unilaterally reinstate Remain in Mexico, border shutdown politics seizes on perceptions of extraordinary crises in regional migration and national security to implement "temporary" extraordinary measures, which have, by 2025, manifestly become permanent institutions. Another dimension of shutdown politics is economic: the threat of tariffs as a cudgel to push militarized policing south. The first iteration of Remain in Mexico was adopted under the threat of a border shutdown and tariffs on Mexican exports, in a deal that was kept secret even from the Mexican Ambassador to Washington at the time. </p>
 <p>Engineering the operational environment around the power to "close the border" creates an atmosphere of extraordinary discretion. Stephen Miller, the deputy White House chief of staff and architect of Trump's immigration agenda embraces this mentality wholesale, and is the author of hundreds of "shock and awe" prohibitionist executive orders. Border externalization is a natural consequence of shutdown politics, and, in Mexico and throughout Central America, it thrusts the actual act of migrating into lawless zones of containment and predation. In January 2023, when Mexico agreed to receive returns of nationals from Honduras, Cuba, El Salvador, and Guatemala it did not offer any guarantees of lawful status to non-Mexican deportees, "leaving such individuals vulnerable to arrest, detention, and deportation by Mexican immigration authorities," according to the Instituto para las Mujeres en la Migración (IMUMI). </p>
 <p>We heard multiple accounts that resonate with Grandin's depiction of 1980s U.S. covert operatives in the drug war and their untouchable bravado in carrying out their macabre work: of local police "guarding" migrant convoys and shelters; wearing special uniforms and acting with false authority, asking people for identification, often based on overt racial profiling; of INM, GN, and municipal police, without authority to do so, physically blocking access to ports of entry; of authorities telling bus drivers that they may be accused of smuggling if they transfer migrants (which is not legally true) (<a href="#ref-10" class="footnote-ref">10</a>).</p>
@@ -66,7 +54,7 @@ const humanImpactsContent = `
 <p>Technologies like the CBP One app and Safe Mobility Offices pressed policy into local social structures, while conspicuously leaning on the "nothing is off limits" atmosphere of policy enforcement. They offer a veneer of order, and were regularly invoked as enduring infrastructure. In Nogales, following the introduction of CBP One and the Biden Asylum Ban by executive action, the local social welfare agency office set up a shadow QR code system for separately metering the line of asylum seekers who approached the Dennis DeConcini port of entry. Without any authority to do so but responding to the externalities of the quasi-closed border, local authorities began telling asylum seekers that they couldn't request asylum without a QR code. </p>
 <p>An important caveat: while these policies and practices seep into functional permanence and long term political palatability, they have, at best, only temporary effects on the size and pace of migration flows in reality. Because migration will not stop, in an environment of inflated militarization, where people on the move are cast as part of the enemy threat, the use of force – both legitimate and extralegal – is an inescapable eventuality. The choice to militarize is not inevitable, but its consequences are locked-in.</p>
 
-<h2 id="Containment">Containment</h2>
+<h3 id="Containment">Containment</h3>
 <p>On March 27, 2023, 40 people in a Juarez migrant detention center died in a fire that engulfed the facility. Authorities were quick to blame the migrants contained there, asserting that the fire was caused when they burned their mattresses in protest against deportation. Rather, the fire and loss of life, products of structural violence, were a foregone conclusion. </p>
 <p>In his book about the August 3, 2019, white nationalism fueled massacre at an El Paso Walmart that left 23 people dead roughly 20 miles away from the Juarez detention center, Gilberto Rosas introduces the concept of "necrosubjection," which best captures what we mean by containment. Necrosubjection is the everyday lives of "those who are birthed in and experience killer politics," who are contending with "death worlds," "engulfed in an extraordinary other politics of death and life" that has become routinized in the "daily workings of state and the law. (<a href="#ref-12" class="footnote-ref">12</a>)" They are a kind of undead, marked for extinction but still alive. As a Juarez-based human rights officer named Gustavo de la Rosa told reporters fifteen years ago, the people who are dying have "no value in this war," and their deaths have "no explanation except as part of…social cleansing…the extermination of the lowest of the low."</p>
 <p>Again and again, we heard first-hand accounts of how physical containment within "death worlds" is being achieved in Mexico, and how digital technologies now serve these ends. Checkpoints "are the status quo on all the roads that go north," according to one researcher who works with people on the move in Mexico City, and they function as both a data-collection point, often with drones overhead, and a hunting ground for security forces and extortionists of every stripe. He called Tapachula, the southern border city also known as <i>la ciudad carcel </i>(prison city), "a super focal point" for containment: "If people cannot pass and do not have the physical capacity to use the non-surveilled roads, they have to stay and ask for asylum in Mexico." Mexico's asylum system is overwhelmed, experiencing a hundredfold increase in claims since 2013. Asylum cannot be claimed at ports of entry and applicants are required, and in reality are forced, to remain in the state where they lodge their request. The vast majority of requests occur in Chiapas, Mexico's poorest state with a poverty rate of 75.5 percent in 2020. Security forces bar asylum seekers from leaving the city of Tapachula. INM detains and returns people who manage to escape.</p>
@@ -120,7 +108,7 @@ const humanImpactsContent = `
 <p>Integrating CBP One as a metering method had several effects that may outlive the executive policy that ushered the app into widespread use in 2023-2024. First, CBP One brought territorial asylum seeking deeper into the frame of what migration scholars have referred to as "self-regulating" – in which the behavior of diasporic populations is socially engineered by both sending and receiving states. Under CBP One's logic, "lawful" asylum-seekers give themselves over to discipline from afar and accept a life of constant surveillance and remote control. Second, the CBP One geofence at least temporarily altered the arterial border within Mexico, concentrating the population and political economy of people on the move in Mexico City at an unprecedented scale, alongside the system of internal transfers and containment further south. Finally, although the touted high-tech efficiency failed to materialize while it was in use, CBP One proved most efficient as a switch, extinguishing 30,000 appointments before President Trump even began signing executive orders, taking calls from foreign heads of state, or meeting with U.S. legislators.</p>
 <p>The Trump administration has dropped any pretense that it intends to use "safe" or "humane" technology in its deportation and migration control operations, in line with its reprisal of the word "alien" in lieu of "non-citizen" or "migrant" as official protocol. A new rhetorical alignment is taking shape in border technology policy under the second Trump administration as well, between AI enabled derogatory targeting and heightened oblique anti-terrorism and national security justifications for border surveillance. </p>
 <p>Two days before Trump's second inauguration, Kevin Cohen, the CEO of Tel Aviv-based AI company RealEye secured a quote in the New York Post's coverage of an AI-powered national security border, positioning his start-up for lucrative federal contracts. He downplayed the utility of biometric-based surveillance alone: "You have somebody's fingerprint and that's it, […] There's no tracking of their digital presence…[to gauge] who these individuals are <i>before </i>they came into the country." Under Trump, the ability to aggregate and ascribe derogatory categories to people on the move takes on even higher salience. The technology and its suppliers have not changed. The industry is booming. The harms exacted remain an unmitigated disgrace.</p>
-<h3 id="Conclusion">Conclusion: On the Description and Classification of Harms</h3>
+<h2 id="Conclusion">Conclusion: On the Description and Classification of Harms</h2>
 <p>We describe the basic situation of people on the move trapped in Mexico as victims of "killer politics, (<a href="#ref-49" class="footnote-ref">49</a>)" marked for extinction. The notes offered above are expressions of that fundamental predicament. The foregoing reflects ongoing field and desk research in an evolving context. The purpose of this brief account, and the collective information repository we've assembled, is to frame a research agenda and encourage further documentation and information-sharing concerning the human impacts of border externalization and related technologies.</p>
 <p>Each dimension of violence explored finds root in the dehumanization of remote migration control in a time of unprecedented information power. Dehumanization is integral to violence, in peace and war. Technology accelerates dehumanization, putting physical and psychological distance between individual actions and mass death and despair, cultivating an alternate reality of remorseless violence and harm. These ideas are not new. A 1975 study found that 90% of U.S. citizen participants would inflict potentially lethal shocks on strangers if researchers explained it was the right thing to do, if their peers did it, and if their victims were presented as inferior. Thirteen years later, social psychologist Albert Bandura showed that after merely overhearing derogatory information about certain victims, people applied more intense shocks.</p>
 <p>The description of harms we've identified is not organized as a hierarchy (no vector of harm or suffering is bounded or intrinsically more severe than another), is by no means comprehensive, and has built-in limitations owing to the relatively short and modest scope of primary research conducted by our team to date and the recency of some of the policies and practices covered. The structure is used simply to document the most prominent forms of human suffering observed in our study at the time of writing.</p>
@@ -182,65 +170,3 @@ const humanImpactsContent = `
 <li id="ref-49">Rosas, <i>Unsettling</i>.</li>
 <li id="ref-50">Aid worker based in Tapachula near the Mexico-Guatemala border.</li>
 </ol>
-
-`
-
-export const minibriefResearch = [
-  {
-    slug: 'border-externalization-in-americas',
-    title: 'Border Externalization in the Americas',
-    permalink: '/research/border-externalization-in-americas',
-    featuredImage: 'src/assets/images/minibrief_border-ext.jpg',
-    excerpt: 'Analysis of digital border infrastructure expansion.',
-    // Pendiente: pegá aquí el HTML completo de este artículo (mismo
-    // formato que ./articles/human-impacts-brief.html: h2/h3 con id,
-    // p, ul, aside.stat-box, ol.references) y lo importás igual con
-    // `?raw` desde ./articles/border-externalization-in-americas.html
-    content: '<p><em>Pegá acá el HTML completo de este artículo.</em></p>',
-    author: 'Mizue Aizeki & S. Narváez',
-    date: '2024-03-01',
-    restricted: false
-  },
-  {
-    slug: 'biometrics-based-migration-management',
-    title: 'Biometrics-Based Migration Management Infrastructures',
-    permalink: '/research/biometrics-based-migration-management',
-    featuredImage: 'src/assets/images/minibrief_biometrics-migr-mgmt.jpg',
-    excerpt: 'Surveillance and digital control tracking throughout Latin America.',
-    content: `
-      <p>Surveillance and digital control tracking throughout Latin America,
-      mapping the biometric systems used to manage migration flows and the
-      actors responsible for deploying them.</p>
-      <p>Replace this paragraph with the full restricted-access body content.</p>
-    `,
-    author: 'Santiago Narváez',
-    date: '2024-05-12',
-    restricted: true
-  },
-  {
-    slug: 'human-impacts-brief',
-    title: 'Human Impacts',
-    permalink: '/research/human-impacts-brief',
-    featuredImage: 'https://www.everywhereborder.org/wp-content/uploads/2025/02/colombia-1.jpg',
-    excerpt: 'The cost of state deterrence policies on migrant populations.',
-    content: humanImpactsContent,
-    author: 'Laura Bingham',
-    date: '2024-06-20',
-    restricted: false
-  },
-  {
-    slug: 'biometrics-mx-ca',
-    title: 'Biometrics & Borders',
-    permalink: '/research/biometrics-mx-ca',
-    featuredImage: 'src/assets/images/minibrief_biometrics-borders.jpg',
-    excerpt: 'Examining biometric data extraction technologies.',
-    content: `
-      <p>Examining biometric data extraction technologies deployed at and
-      around the Mexico-Central America corridor.</p>
-      <p>Replace this paragraph with the full body content.</p>
-    `,
-    author: 'Everywhere Border Project',
-    date: '2024-07-08',
-    restricted: false
-  }
-]

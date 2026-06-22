@@ -1,4 +1,4 @@
-<!-- src/components/Richcontent.vue
+<!-- src/components/RichContent.vue
   Recibe HTML semántico simple (h2/h3 con id, p, ul/ol, aside.stat-box,
   ol.references) y lo pinta con tipografía propia del sitio. No depende
   de ningún builder/CMS externo: el HTML que entra por la prop `html`
@@ -8,7 +8,7 @@
   los <h2>/<h3> que tengan id.
 
   Uso:
-    <Richcontent :html="item.content" />
+    <RichContent :html="item.content" />
 -->
 <template>
   <div class="rc-layout">
@@ -22,18 +22,25 @@
         <h5 class="rc-toc-title">Table of Contents</h5>
         <nav>
           <ol class="rc-toc-list">
-            <li
-              v-for="entry in toc"
-              :key="entry.id"
-              :class="`level-${entry.level}`"
-            >
+            <li v-for="entry in toc" :key="entry.id">
               <a
-                href="#"
+                :href="`#${entry.id}`"
                 :class="{ active: activeId === entry.id }"
                 @click.prevent="scrollTo(entry.id)"
               >
                 {{ entry.text }}
               </a>
+              <ol v-if="entry.children.length" class="rc-toc-sublist">
+                <li v-for="child in entry.children" :key="child.id">
+                  <a
+                    :href="`#${child.id}`"
+                    :class="{ active: activeId === child.id }"
+                    @click.prevent="scrollTo(child.id)"
+                  >
+                    {{ child.text }}
+                  </a>
+                </li>
+              </ol>
             </li>
           </ol>
         </nav>
@@ -47,8 +54,7 @@
 import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 
 const props = defineProps({
-  html: { type: String, default: '' },
-  tocLevels: { type: Array, default: () => ['h2', 'h3'] }
+  html: { type: String, default: '' }
 })
 
 const contentRef = ref(null)
@@ -59,16 +65,28 @@ let observer = null
 
 function buildToc() {
   if (!contentRef.value) return
-  const selector = props.tocLevels.join(',')
-  const headings = contentRef.value.querySelectorAll(selector)
+  const headings = contentRef.value.querySelectorAll('h2[id], h3[id]')
 
-  toc.value = Array.from(headings)
-    .filter(h => h.id)
-    .map(h => ({
-      id: h.id,
-      text: h.textContent.trim(),
-      level: Number(h.tagName.replace('H', ''))
-    }))
+  const result = []
+  let currentParent = null
+
+  headings.forEach(h => {
+    if (h.id === 'References') return // la sección de Referencias no entra al índice
+
+    const level = Number(h.tagName.replace('H', ''))
+    const entry = { id: h.id, text: h.textContent.trim(), level, children: [] }
+
+    if (level === 2) {
+      currentParent = entry
+      result.push(entry)
+    } else if (currentParent) {
+      currentParent.children.push(entry)
+    } else {
+      result.push(entry) // h3 huérfano (sin h2 anterior): lo dejamos de primer nivel
+    }
+  })
+
+  toc.value = result
 }
 
 function scrollTo(id) {
@@ -80,6 +98,7 @@ function scrollTo(id) {
 
 function setupScrollSpy() {
   if (!contentRef.value || !toc.value.length) return
+  const flat = toc.value.flatMap(entry => [entry, ...entry.children])
   observer = new IntersectionObserver(
     (entries) => {
       entries.forEach(entry => {
@@ -88,7 +107,7 @@ function setupScrollSpy() {
     },
     { rootMargin: '-30% 0px -60% 0px' }
   )
-  toc.value.forEach(entry => {
+  flat.forEach(entry => {
     const el = document.getElementById(entry.id)
     if (el) observer.observe(el)
   })
@@ -162,27 +181,30 @@ onBeforeUnmount(() => {
   font-size: 1rem;
 }
 
-.rc-toc-list {
+.rc-toc-list,
+.rc-toc-sublist {
   list-style: none;
   margin: 0;
   padding: 0;
-  counter-reset: toc-counter;
+  counter-reset: toc;
 }
 
-.rc-toc-list > li {
-  counter-increment: toc-counter;
+.rc-toc-sublist {
+  margin: 0.4rem 0 0.6rem 1.1rem;
+  font-size: 0.9rem;
+}
+
+.rc-toc-list > li,
+.rc-toc-sublist > li {
+  counter-increment: toc;
   margin-bottom: 0.5rem;
 }
 
-.rc-toc-list > li::before {
-  content: counter(toc-counter) ". ";
+.rc-toc-list > li::before,
+.rc-toc-sublist > li::before {
+  content: counters(toc, ".") ". ";
   color: #002d62;
   font-weight: 700;
-}
-
-.rc-toc-list .level-3 {
-  margin-left: 1rem;
-  font-size: 0.9rem;
 }
 
 .rc-toc-list a {
