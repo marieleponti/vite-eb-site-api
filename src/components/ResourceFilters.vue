@@ -14,8 +14,10 @@
         Clear
       </v-btn>
 
-      <v-btn variant="outlined" color="#29465b" class="filter-btn">
-        Map View
+      <!-- El texto cambia según en qué vista estás: si ya estás en el
+           mapa, este botón te lleva de vuelta a la lista (y viceversa). -->
+      <v-btn variant="outlined" color="#29465b" class="filter-btn" @click="$emit('toggle-map')">
+        {{ currentView === 'map' ? 'List View' : 'Map View' }}
       </v-btn>
     </div>
 
@@ -41,7 +43,15 @@
 import { reactive, ref, computed, onMounted } from 'vue'
 import { fetchResourceFilters } from '@/api/services/wp.service'
 
-const emit = defineEmits(['update'])
+const props = defineProps({
+  // 'list' | 'map' — controla qué dice el botón de abajo
+  currentView: {
+    type: String,
+    default: 'list',
+  },
+})
+
+const emit = defineEmits(['update', 'toggle-map'])
 
 const taxonomies = ref([])
 

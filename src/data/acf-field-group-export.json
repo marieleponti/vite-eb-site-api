@@ -1,0 +1,125 @@
+[
+	{
+		"key": "group_resource_location",
+		"title": "Ubicaci\u00f3n",
+		"fields": [
+			{
+				"key": "field_location",
+				"label": "Ubicaci\u00f3n",
+				"name": "location",
+				"aria-label": "",
+				"type": "group",
+				"instructions": "",
+				"required": 0,
+				"conditional_logic": 0,
+				"wrapper": {
+					"width": "",
+					"class": "",
+					"id": ""
+				},
+				"layout": "block",
+				"sub_fields": [
+					{
+						"key": "field_location_search",
+						"label": "Buscar ciudad o pa\u00eds",
+						"name": "search",
+						"aria-label": "",
+						"type": "text",
+						"instructions": "Escrib\u00ed una ciudad o pa\u00eds y eleg\u00ed una sugerencia de la lista. Pod\u00e9s ajustar el pin a mano haciendo click en el mapa de abajo.",
+						"required": 0,
+						"conditional_logic": 0,
+						"wrapper": {
+							"width": "",
+							"class": "inforepo-location-search",
+							"id": ""
+						},
+						"default_value": "",
+						"maxlength": "",
+						"placeholder": "",
+						"prepend": "",
+						"append": ""
+					},
+					{
+						"key": "field_location_lat",
+						"label": "Latitud",
+						"name": "lat",
+						"aria-label": "",
+						"type": "number",
+						"instructions": "",
+						"required": 0,
+						"conditional_logic": 0,
+						"wrapper": {
+							"width": "",
+							"class": "",
+							"id": ""
+						},
+						"default_value": "",
+						"min": "",
+						"max": "",
+						"step": "0.000001",
+						"placeholder": "",
+						"prepend": "",
+						"append": ""
+					},
+					{
+						"key": "field_location_lng",
+						"label": "Longitud",
+						"name": "lng",
+						"aria-label": "",
+						"type": "number",
+						"instructions": "",
+						"required": 0,
+						"conditional_logic": 0,
+						"wrapper": {
+							"width": "",
+							"class": "",
+							"id": ""
+						},
+						"default_value": "",
+						"min": "",
+						"max": "",
+						"step": "0.000001",
+						"placeholder": "",
+						"prepend": "",
+						"append": ""
+					},
+					{
+						"key": "field_location_map",
+						"label": "Mapa (click para ajustar el pin)",
+						"name": "map_placeholder",
+						"aria-label": "",
+						"type": "message",
+						"instructions": "",
+						"required": 0,
+						"conditional_logic": 0,
+						"wrapper": {
+							"width": "",
+							"class": "",
+							"id": ""
+						},
+						"message": "<div class=\"inforepo-location-map\"></div>",
+						"new_lines": "",
+						"esc_html": 0
+					}
+				]
+			}
+		],
+		"location": [
+			[
+				{
+					"param": "post_type",
+					"operator": "==",
+					"value": "inforepo_resource"
+				}
+			]
+		],
+		"menu_order": 0,
+		"position": "normal",
+		"style": "default",
+		"label_placement": "top",
+		"instruction_placement": "label",
+		"hide_on_screen": "",
+		"active": true,
+		"description": "Reemplaza el campo Mapster. Autocompletado v\u00eda Nominatim + mapa Leaflet para ajuste fino (ver assets/admin/location-picker.js)."
+	}
+]

@@ -10,18 +10,47 @@ export async function fetchPosts(query = '') {
 // RESOURCES (LIST)
 export async function fetchResources(query = '') {
   const res = await netlifyFetch('/resources', query)
-
-  // return {
-  //   items: Array.isArray(res?.items)
-  //     ? res.items
-  //     : Array.isArray(res)
-  //       ? res
-  //       : [],
-
-  //   total: res?.total ?? 0,
-  //   total_pages: res?.total_pages ?? 1,
-  // }
   return normalizeResourcesResponse(res)
+}
+
+/**
+ * RESOURCES (TODAS, sin paginar) — para el mapa.
+ *
+ * El endpoint /resources pagina de a 16 (o lo que mandes en per_page).
+ * El mapa necesita ver todos los pines a la vez, así que esto pide
+ * páginas grandes hasta agotar total_pages. `filters` usa el mismo shape
+ * que emite ResourceFilters.vue (igual a lo que useContent.js ya espera).
+ */
+export async function fetchAllResources(filters = {}, { perPage = 50, safetyLimitPages = 10 } = {}) {
+  let page = 1
+  let totalPages = 1
+  const items = []
+
+  do {
+    const query = new URLSearchParams()
+    query.set('page', String(page))
+    query.set('per_page', String(perPage))
+
+    if (filters.s?.trim()) {
+      query.set('search', filters.s.trim())
+    }
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (key === 's') return
+      if (Array.isArray(value) && value.length) {
+        query.set(key, value.join(','))
+      } else if (value !== null && value !== undefined && value !== '') {
+        query.set(key, value)
+      }
+    })
+
+    const result = await fetchResources(query.toString())
+    items.push(...result.items)
+    totalPages = result.totalPages
+    page += 1
+  } while (page <= totalPages && page <= safetyLimitPages)
+
+  return { items, total: items.length, totalPages: 1 }
 }
 
 // RESOURCES (SINGLE BY SLUG)

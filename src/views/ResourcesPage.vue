@@ -26,73 +26,88 @@
     <v-row>
       <!-- Filters -->
       <v-col cols="12" md="3">
-        <ResourceFilters @update="onFiltersUpdate" />
+        <ResourceFilters :current-view="view" @update="onFiltersUpdate" @toggle-map="onToggleMap" />
       </v-col>
 
       <!-- Results -->
       <v-col cols="12" md="9">
 
-        <v-row v-if="loading">
-          <v-col v-for="n in 6" :key="n" cols="12" md="6" lg="4">
-            <v-skeleton-loader type="image, article, actions" class="rounded-lg" />
-          </v-col>
-        </v-row>
+        <!-- ===================== -->
+        <!-- VISTA MAPA            -->
+        <!-- ===================== -->
+        <ResourceMap
+          v-if="view === 'map'"
+          :resources="mapItems"
+          :loading="mapLoading"
+          :visible="view === 'map'"
+        />
 
-        <v-row v-else-if="items.length">
-          <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
-            <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
+        <!-- ===================== -->
+        <!-- VISTA LISTA (grilla)  -->
+        <!-- ===================== -->
+        <template v-else>
+          <v-row v-if="loading">
+            <v-col v-for="n in 6" :key="n" cols="12" md="6" lg="4">
+              <v-skeleton-loader type="image, article, actions" class="rounded-lg" />
+            </v-col>
+          </v-row>
 
-              <v-img v-if="item.featuredImage" :src="item.featuredImage" :alt="item.title" height="220" cover />
+          <v-row v-else-if="items.length">
+            <v-col v-for="item in items" :key="item.id" cols="12" md="6" lg="4">
+              <v-card class="resource-card h-100 d-flex flex-column" elevation="2" rounded="lg">
 
-              <v-card-item>
-                <v-card-title class="resource-title">
-                  <router-link v-if="item.slug" :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
-                    {{ item.title }}
-                  </router-link>
-                </v-card-title>
+                <v-img v-if="item.featuredImage" :src="item.featuredImage" :alt="item.title" height="220" cover />
 
-                <v-card-subtitle class="resource-meta">
-                  {{ formatDate(item.date) }}
-                </v-card-subtitle>
-              </v-card-item>
+                <v-card-item>
+                  <v-card-title class="resource-title">
+                    <router-link v-if="item.slug" :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
+                      {{ item.title }}
+                    </router-link>
+                  </v-card-title>
 
-              <v-card-text class="resource-content">
-                <div class="resource-excerpt">
-                  {{ item.excerpt || item.content }}
-                </div>
-              </v-card-text>
+                  <v-card-subtitle class="resource-meta">
+                    {{ formatDate(item.date) }}
+                  </v-card-subtitle>
+                </v-card-item>
 
-              <v-spacer />
+                <v-card-text class="resource-content">
+                  <div class="resource-excerpt">
+                    {{ item.excerpt || item.content }}
+                  </div>
+                </v-card-text>
 
-              <v-card-actions>
-                <v-btn v-if="item.slug" color="#2f4356" variant="text"
-                  :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
-                  View Resource
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
+                <v-spacer />
 
-        <v-row v-if="!loading && meta.totalPages > 1" class="mt-8">
-          <v-col cols="12" class="d-flex justify-center align-center flex-wrap ga-2">
-            <v-btn variant="text" class="pagination-nav" :disabled="page === 1" @click="changePage(page - 1)">
-              « Previous
-            </v-btn>
+                <v-card-actions>
+                  <v-btn v-if="item.slug" color="#2f4356" variant="text"
+                    :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
+                    View Resource
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
 
-            <v-btn v-for="n in meta.totalPages" :key="n" :variant="page === n ? 'flat' : 'outlined'"
-              :color="page === n ? '#2f4356' : undefined" class="pagination-number" @click="changePage(n)">
-              {{ n }}
-            </v-btn>
+          <v-row v-if="!loading && meta.totalPages > 1" class="mt-8">
+            <v-col cols="12" class="d-flex justify-center align-center flex-wrap ga-2">
+              <v-btn variant="text" class="pagination-nav" :disabled="page === 1" @click="changePage(page - 1)">
+                « Previous
+              </v-btn>
 
-            <v-btn variant="text" class="pagination-nav" :disabled="page === totalPages" @click="changePage(page + 1)">
-              Next »
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-alert v-if="!loading && !items.length" type="info" variant="tonal">
-          No resources found.
-        </v-alert>
+              <v-btn v-for="n in meta.totalPages" :key="n" :variant="page === n ? 'flat' : 'outlined'"
+                :color="page === n ? '#2f4356' : undefined" class="pagination-number" @click="changePage(n)">
+                {{ n }}
+              </v-btn>
+
+              <v-btn variant="text" class="pagination-nav" :disabled="page === totalPages" @click="changePage(page + 1)">
+                Next »
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-alert v-if="!loading && !items.length" type="info" variant="tonal">
+            No resources found.
+          </v-alert>
+        </template>
       </v-col>
     </v-row>
   </v-container>
@@ -101,7 +116,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import ResourceFilters from '@/components/ResourceFilters.vue'
+import ResourceMap from '@/components/ResourceMap.vue'
 import { useContent } from '@/composables/useContent'
+import { fetchAllResources } from '@/api/services/wp.service'
 
 // Desestructuramos la función fetch renombrándola para evitar colisiones de nombres
 const { items, fetch: cargarContenido, loading, meta } = useContent()
@@ -109,6 +126,36 @@ const { items, fetch: cargarContenido, loading, meta } = useContent()
 const currentFilters = ref({})
 const page = ref(1)
 const perPage = 15
+
+// ===================== VISTA MAPA =====================
+// Toggle de vista. Reemplaza lo que en el WP original eran dos URLs
+// distintas (/resources y /resources-map con full reload): acá es un
+// solo ref local, sin recargar la página.
+const view = ref('list') // 'list' | 'map'
+const mapItems = ref([])
+const mapLoading = ref(false)
+let mapLoaded = false
+
+function onToggleMap() {
+  view.value = view.value === 'list' ? 'map' : 'list'
+  if (view.value === 'map' && !mapLoaded) {
+    loadMapResources()
+  }
+}
+
+async function loadMapResources() {
+  mapLoading.value = true
+  try {
+    const result = await fetchAllResources(currentFilters.value)
+    mapItems.value = result.items
+    mapLoaded = true
+  } catch (error) {
+    console.error('Error cargando recursos para el mapa:', error)
+  } finally {
+    mapLoading.value = false
+  }
+}
+// ========================================================
 
 onMounted(() => {
   fetchResources()
@@ -119,6 +166,12 @@ async function onFiltersUpdate(filtersEmitidos) {
   page.value = 1
   currentFilters.value = filtersEmitidos
   await fetchResources(filtersEmitidos)
+
+  // si la vista mapa ya está activa, los filtros también deben afectarla
+  if (view.value === 'map') {
+    mapLoaded = false
+    await loadMapResources()
+  }
 }
 
 async function fetchResources(filters = {}) {
