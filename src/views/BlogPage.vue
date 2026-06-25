@@ -58,8 +58,11 @@
               <v-spacer />
 
               <v-card-actions>
-                <v-btn color="primary" variant="text" @click="view(post)">
-                  Read More
+                <!-- CAMBIO: estilo real de .eb-mn-tarjeta-post-boton-leer del
+                     sitio viejo — link bold, sin underline, sin radius,
+                     color #2B3F47, no es un botón con fondo. -->
+                <v-btn color="#2f4356" variant="text" class="read-more-btn" @click="view(post)">
+                  read more
                 </v-btn>
               </v-card-actions>
 
@@ -200,5 +203,23 @@ function formatDate(date) {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Fiel a .eb-mn-tarjeta-post-boton-leer del sitio viejo:
+   link bold, sin underline, sin radius, color #2B3F47, sin fondo/borde. */
+.read-more-btn {
+  color: #2B3F47 !important;
+  font-weight: bold !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline !important;
 }
 </style>

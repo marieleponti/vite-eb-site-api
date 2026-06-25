@@ -79,9 +79,9 @@
                 <v-spacer />
 
                 <v-card-actions>
-                  <v-btn v-if="item.slug" color="#2f4356" variant="text"
+                  <v-btn v-if="item.slug" color="#2f4356" variant="text" class="read-more-btn"
                     :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
-                    View Resource
+                    view resource
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -287,5 +287,23 @@ function formatDate(date) {
     font-size: 1rem;
     line-height: 1.7;
   }
+}
+
+/* Fiel a .eb-mn-tarjeta-post-boton-leer del sitio viejo:
+   link bold, sin underline, sin radius, color #2B3F47, sin fondo/borde. */
+.read-more-btn {
+  color: #2B3F47 !important;
+  font-weight: bold !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline !important;
 }
 </style>
