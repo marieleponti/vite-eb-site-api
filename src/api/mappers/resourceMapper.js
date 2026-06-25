@@ -1,4 +1,5 @@
-import { cleanHtml } from './cleanHtml'
+import { cleanHtml, sanitizeContent } from './cleanHtml'
+import { decodeHtmlEntities } from '../../utils/decodeHtmlEntities'
 
 export function normalizeResource(item) {
 
@@ -10,10 +11,11 @@ export function normalizeResource(item) {
       .filter(Boolean)
       .pop() || '',
 
-    title:
+    title: decodeHtmlEntities(
       item.title?.rendered ??
       item.title ??
-      'Untitled',
+      'Untitled'
+    ),
 
     permalink: normalizePermalink(
       item.link ??
@@ -27,7 +29,7 @@ export function normalizeResource(item) {
       ''
     ),
 
-    content: cleanHtml(
+    content: sanitizeContent(
       item.content?.rendered ??
       item.content ??
       ''

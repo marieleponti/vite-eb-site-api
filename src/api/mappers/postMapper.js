@@ -1,27 +1,34 @@
-import { cleanHtml } from './cleanHtml'
+import { cleanHtml, sanitizeContent } from './cleanHtml'
+import { decodeHtmlEntities } from '../../utils/decodeHtmlEntities'
 
 export function mapPost(post) {
   return {
     id: post.id,
     slug: post.slug ?? '',
 
-    title:
+    title: decodeHtmlEntities(
       post.title?.rendered ??
       post.title ??
-      'Untitled',
+      'Untitled'
+    ),
 
     permalink:
       post.link ??
       post.permalink ??
       '#',
 
+    // Texto plano — para previews/cards (interpolación de texto, no v-html)
     excerpt: cleanHtml(
       post.excerpt?.rendered ??
       post.excerpt ??
       ''
     ),
 
-    content: cleanHtml(
+    // HTML preservado (sanitizado) — para el cuerpo completo en la página
+    // de detalle, que se renderiza con v-html. Antes esto pasaba por
+    // cleanHtml() y perdía TODOS los tags (párrafos, links, negritas,
+    // imágenes) antes de llegar a v-html.
+    content: sanitizeContent(
       post.content?.rendered ??
       post.content ??
       ''

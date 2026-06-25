@@ -41,7 +41,7 @@ export function useResourceMap(containerRef, options = {}) {
   }
 
   /**
-   * @param {Array<{title, permalink, lat, lng}>} resources
+   * @param {Array<{title, permalink, lat, lng, locationLabel}>} resources
    * @param {{fit?: boolean, singleZoom?: number}} opts
    */
   function setMarkers(resources, { fit = true, singleZoom = 6 } = {}) {
@@ -51,10 +51,8 @@ export function useResourceMap(containerRef, options = {}) {
     resources.forEach((resource) => {
       if (resource.lat == null || resource.lng == null) return
 
-      const popupHtml = `<a href="${escapeAttr(resource.permalink)}">${escapeHtml(resource.title)}</a>`
-
       const marker = L.marker([resource.lat, resource.lng], { icon: customIcon })
-        .bindPopup(popupHtml)
+        .bindPopup(buildPopupHtml(resource))
         .addTo(map.value)
 
       markers.value.push(marker)
@@ -86,6 +84,18 @@ export function useResourceMap(containerRef, options = {}) {
   }
 
   return { map, init, setMarkers, clearMarkers, invalidateSize, destroy }
+}
+
+function buildPopupHtml(resource) {
+  const title = `<a class="inforepo-map-popup__title" href="${escapeAttr(resource.permalink)}">${escapeHtml(resource.title)}</a>`
+
+  const location = resource.locationLabel
+    ? `<div class="inforepo-map-popup__meta">${escapeHtml(resource.locationLabel)}</div>`
+    : ''
+
+  const cta = `<a class="inforepo-map-popup__cta" href="${escapeAttr(resource.permalink)}">View resource</a>`
+
+  return `<div class="inforepo-map-popup">${title}${location}${cta}</div>`
 }
 
 function escapeHtml(str = '') {
