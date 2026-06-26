@@ -18,9 +18,6 @@
       <!-- COLUMNA PRINCIPAL (Izquierda): Información y Media -->
       <v-col cols="12" md="8">
         <article>
-          <!-- Imagen Destacada -->
-          <v-img v-if="resource.featuredImage" :src="resource.featuredImage" :alt="resource.title" max-height="400"
-            class="rounded-lg mb-6" cover />
 
           <!-- Título Principal -->
           <h1 class="resource-title-single mb-2">{{ resource.title }}</h1>
@@ -35,7 +32,9 @@
 
           <!-- Descripción del recurso (ACF description) -->
           <div class="resource-content-single mb-8"
-            v-html="resource.acf?.description || 'No description available for this resource.'"></div>
+            v-html="resource.acf?.description || ''"></div>
+          <!-- Contenido nativo de WP (post_content) — embeds legado, iframes, etc. -->
+          <div v-if="resource.content" class="resource-content-single mb-8" v-html="resource.content"></div>
 
           <!-- Video Embebido Adaptativo (ACF embed_video) -->
           <div v-if="resource.acf?.video_embed" class="video-container mb-8 rounded-lg overflow-hidden">
@@ -299,7 +298,10 @@ function formatDate(date) {
   border: 0;
 }
 
-:deep(.resource-content-single p) {
-  margin-bottom: 1.5rem;
+:deep(.resource-content-single iframe) {
+  max-width: 100%;
+  width: 100%;
+  aspect-ratio: 4 / 3; /* o 16/9 según el embed predominante */
+  border: 0;
 }
 </style>

@@ -1,6 +1,6 @@
 import { netlifyFetch } from '@/api/clients/netlifyClient'
 import { mapPost } from '@/api/mappers/postMapper'
-import { normalizeResourcesResponse } from '@/api/mappers/resourceMapper'
+import { normalizeResourcesResponse, normalizeResource } from '@/api/mappers/resourceMapper'
 
 // POSTS
 export async function fetchPosts(query = '') {
@@ -56,9 +56,10 @@ export async function fetchAllResources(filters = {}, { perPage = 50, safetyLimi
 // RESOURCES (SINGLE BY SLUG)
 export async function fetchResourceBySlug(slug) {
   const res = await netlifyFetch('/resources', `slug=${slug}`)
+  const rawItem = res?.items?.[0] || null
 
   return {
-    item: res?.items?.[0] || null,
+    item: rawItem ? normalizeResource(rawItem) : null,
     meta: res
   }
 }

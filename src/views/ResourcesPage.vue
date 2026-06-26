@@ -72,7 +72,7 @@
 
                 <v-card-text class="resource-content">
                   <div class="resource-excerpt">
-                    {{ item.excerpt || item.content }}
+                    {{ item.excerpt }}
                   </div>
                 </v-card-text>
 
