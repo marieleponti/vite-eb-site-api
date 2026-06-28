@@ -32,6 +32,7 @@ const ALLOWED_IFRAME_HOSTS = [
   'player.vimeo.com',
   'documentcloud.org',
   'www.documentcloud.org',
+  'rbt-map.onrender.com'
 ]
 
 function isAllowedIframeSrc(src = '') {

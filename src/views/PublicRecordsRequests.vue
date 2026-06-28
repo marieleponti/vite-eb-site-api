@@ -1,120 +1,143 @@
 <template>
-  <v-container fluid class="eb-public-records-requests-page-container pa-0">
-    
-    <div class="px-4 pt-4 mb-4">
-      <h2 class="secondfont section-title border-bottom-prr pb-2 mb-4">
+  <div class="container eb-public-records-requests-page-container">
+
+    <div class="public-records-requests-heading section-heading">
+      <h2 class="eb-default-font section-title">
         Public Records Requests
       </h2>
     </div>
 
-    <v-container fluid class="px-4 pt-0 pb-4">
-      <p class="intro-text">
-        Most of the policies, practices, and players associated with US border externalization are intentionally 
-        obscured and those proliferating harmful impacts can act with impunity. There have been numerous efforts by advocates to learn 
-        more about US border policing and externalization processes. Below is a collection of public records requests on these issues.
-      </p>
-    </v-container>
+    <p class="intro-text">
+      Most of the policies, practices, and players associated with US border externalization are intentionally
+      obscured and those proliferating harmful impacts can act with impunity. There have been numerous efforts by advocates to learn
+      more about US border policing and externalization processes. Below is a collection of public records requests on these issues.
+    </p>
 
-    <v-container fluid class="px-4 pb-8">
-      <h3 class="secondfont mb-4 section-title-underlined">Featured Cases</h3>
-      
-      <v-row v-if="loadingFeatured">
-        <v-col v-for="n in 3" :key="n" cols="12" md="4">
-          <v-skeleton-loader type="article" class="rounded-0 border" />
-        </v-col>
-      </v-row>
-
-      <v-row v-else-if="featuredCases.length">
-        <v-col v-for="item in featuredCases" :key="item.id" cols="12" md="4">
-          <v-card class="case-item h-100 d-flex flex-column rounded-0" elevation="1" variant="outlined">
-            <v-card-item class="flex-grow-1 pa-4">
-              <v-card-title class="post-title text-wrap eb-mn-tarjeta-post-titulo mb-2">
-                <a :href="item.permalink || item.link" target="_blank" rel="noopener noreferrer">
-                  {{ item.title?.rendered || item.title }}
-                </a>
-              </v-card-title>
-              
-              <v-card-text class="pa-0 prr-item-description eb-mn-tarjeta-post-descripcion text-body-2">
-                {{ obtenerDescripcion(item) }}
-              </v-card-text>
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <div class="read-more eb-mn-tarjeta-post-boton-leer-container mt-4">
-        <v-btn 
-          href="#!" 
-          variant="outlined" 
-          class="eb-mn-tarjeta-post-boton-leer rounded-0 text-none font-weight-bold"
-          color="#2b3f47"
-        >
-          more cases
-        </v-btn>
+    <!-- Featured Cases -->
+    <section class="featured-cases">
+      <div class="section-heading">
+        <h2 class="eb-default-font section-title">Featured Cases</h2>
       </div>
-    </v-container>
 
-    <v-container fluid class="px-4 pb-8 bg-updates-section">
-      <h3 class="secondfont mb-4 section-title-underlined">Updates</h3>
+      <div class="case-list">
+        <template v-if="loadingFeatured">
+          <div v-for="n in 3" :key="n" class="case-item">
+            <div class="skeleton-line skeleton-line--title"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line--short"></div>
+          </div>
+        </template>
 
-      <v-row v-if="loadingUpdates">
-        <v-col v-for="n in 3" :key="n" cols="12" md="4">
-          <v-skeleton-loader type="article" class="rounded-0" />
-        </v-col>
-      </v-row>
+        <template v-else>
+          <div v-for="item in featuredCases" :key="item.id" class="case-item">
+            <a :href="item.permalink || item.link" target="_blank" rel="noopener noreferrer">
+              <h5 class="post-title eb-mn-tarjeta-post-titulo">
+                {{ item.title?.rendered || item.title }}
+              </h5>
+            </a>
 
-      <v-row v-else-if="updates.length">
-        <v-col v-for="item in updates" :key="item.id" cols="12" md="4">
-          <div class="news-item pb-4">
-            <h5 class="post-title eb-mn-tarjeta-post-titulo mb-2 font-weight-bold">
+            <div v-if="obtenerDescripcion(item)">
+              <div class="prr-item-description eb-mn-tarjeta-post-descripcion">
+                {{ obtenerDescripcion(item) }}
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div v-if="!loadingFeatured && !featuredCases.length" class="empty-state">
+        No featured cases available at the moment.
+      </div>
+
+      <div v-if="featuredHasMore" class="read-more eb-mn-tarjeta-post-boton-leer-container">
+        <a
+          href="#!"
+          id="load-more"
+          class="eb-mn-tarjeta-post-boton-leer rounded-0"
+          :class="{ 'is-loading': loadingMoreFeatured }"
+          @click.prevent="loadMoreFeaturedCases"
+        >
+          {{ loadingMoreFeatured ? 'loading...' : 'more cases' }}
+        </a>
+      </div>
+    </section>
+
+    <!-- Updates -->
+    <section class="latest-news">
+      <div class="section-heading">
+        <h2 class="eb-default-font section-title">Updates</h2>
+      </div>
+
+      <div class="news-list">
+        <template v-if="loadingUpdates">
+          <div v-for="n in 3" :key="n" class="news-item">
+            <div class="skeleton-line skeleton-line--title"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line--short"></div>
+          </div>
+        </template>
+
+        <template v-else-if="updates.length">
+          <div v-for="item in updates" :key="item.id" class="news-item">
+            <h5 class="post-title eb-mn-tarjeta-post-titulo">
               {{ item.title?.rendered || item.title }}
             </h5>
-            
-            <p class="prr-item-description eb-mn-tarjeta-post-descripcion text-body-2 mb-2 text-grey-darken-2">
-              {{ obtenerDescripcion(item) }}
-            </p>
 
-            <div 
-              class="updates-prr-content text-body-2" 
+            <div v-if="obtenerDescripcion(item)">
+              <div class="prr-item-description eb-mn-tarjeta-post-descripcion">
+                {{ obtenerDescripcion(item) }}
+              </div>
+            </div>
+
+            <div
+              class="updates-prr-content"
               v-html="item.content?.rendered || item.content"
             ></div>
           </div>
-        </v-col>
-      </v-row>
+        </template>
 
-      <v-alert v-else type="info" variant="tonal" class="rounded-0">
-        No news available at the moment.
-      </v-alert>
-    </v-container>
+        <p v-else>No news available at the moment.</p>
+      </div>
+    </section>
 
-    <v-container fluid class="px-4 pb-8" id="docket">
-      <h3 class="secondfont mb-4 section-title-underlined">Our Docket</h3>
+    <!-- Our Docket -->
+    <section class="docket-feed">
+      <div class="section-heading">
+        <h2 class="eb-default-font section-title" id="docket">Our Docket</h2>
+      </div>
 
-      <v-row v-if="loadingDocket">
-        <v-col v-for="n in 3" :key="n" cols="12" md="4">
-          <v-skeleton-loader type="article" class="rounded-0 border" />
-        </v-col>
-      </v-row>
+      <div class="docket-list">
+        <template v-if="loadingDocket">
+          <div v-for="n in 3" :key="n" class="docket-item">
+            <div class="skeleton-line skeleton-line--title"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line--short"></div>
+          </div>
+        </template>
 
-      <v-row v-else-if="docketFeed.length">
-        <v-col v-for="item in docketFeed" :key="item.id" cols="12" md="4">
-          <v-card class="docket-item h-100 d-flex flex-column rounded-0" elevation="1" variant="outlined">
-            <v-card-item class="flex-grow-1 pa-4">
-              <v-card-title class="post-title text-wrap eb-mn-tarjeta-post-titulo mb-2">
-                <a :href="item.permalink || item.link" target="_blank" rel="noopener noreferrer">
-                  {{ item.title?.rendered || item.title }}
-                </a>
-              </v-card-title>
-              
-              <v-card-text class="pa-0 prr-item-description eb-mn-tarjeta-post-descripcion text-body-2">
+        <template v-else-if="docketFeed.length">
+          <div v-for="item in docketFeed" :key="item.id" class="docket-item">
+            <a :href="item.permalink || item.link" target="_blank" rel="noopener noreferrer">
+              <h5 class="post-title eb-mn-tarjeta-post-titulo">
+                {{ item.title?.rendered || item.title }}
+              </h5>
+            </a>
+
+            <div v-if="obtenerDescripcion(item)">
+              <div class="prr-item-description eb-mn-tarjeta-post-descripcion">
                 {{ obtenerDescripcion(item) }}
-              </v-card-text>
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
+              </div>
+            </div>
+          </div>
+        </template>
 
-      <div v-if="totalPages > 1" class="eb-mn-pagination mt-6 d-flex justify-center">
+        <div v-else class="empty-state">
+          No docket items available at the moment.
+        </div>
+      </div>
+
+      <div v-if="totalPages > 1" id="inforepo-pagination" class="eb-mn-pagination">
         <v-pagination
           v-model="currentPage"
           :length="totalPages"
@@ -125,18 +148,21 @@
           rounded="0"
         />
       </div>
-    </v-container>
+    </section>
 
-  </v-container>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { fetchResources, fetchPosts } from '@/api/services/wp.service'
 
 // Estados Reactivos
 const featuredCases = ref([])
 const loadingFeatured = ref(true)
+const featuredPage = ref(1)
+const featuredTotalPages = ref(1)
+const loadingMoreFeatured = ref(false)
 const updates = ref([])
 const loadingUpdates = ref(true)
 const docketFeed = ref([])
@@ -144,12 +170,28 @@ const loadingDocket = ref(true)
 const currentPage = ref(1)
 const totalPages = ref(1)
 
-// Replicando la lógica de substr de PHP para descripciones de 300 caracteres
+const featuredHasMore = computed(() => featuredPage.value < featuredTotalPages.value)
+
+// Replicando la lógica de substr de PHP para descripciones de 300
+// caracteres, pero cortando en el último espacio en vez de a mitad de
+// palabra (PHP original también cortaba feo, esto es una mejora).
 function obtenerDescripcion(item) {
   const descRaw = item.acf?.description || item.excerpt?.rendered || item.content?.rendered || ''
   const sinHtml = descRaw.replace(/<[^>]*>/g, '').trim()
   if (sinHtml.length <= 300) return sinHtml
-  return sinHtml.substring(0, 300) + ' ...'
+
+  const cortado = sinHtml.substring(0, 300)
+  const ultimoEspacio = cortado.lastIndexOf(' ')
+  const sinCortarPalabra = ultimoEspacio > 0 ? cortado.substring(0, ultimoEspacio) : cortado
+
+  return sinCortarPalabra + ' ...'
+}
+
+function formatDate(date) {
+  if (!date) return ''
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  })
 }
 
 // SECCIÓN 1: Trae de resources.js (Retorna objeto estructurado con propiedad .items)
@@ -159,10 +201,34 @@ async function getFeaturedCases() {
     const query = '?page=1&per_page=3&source=public-records-requests&special-content=featured'
     const response = await fetchResources(query)
     featuredCases.value = response?.items || []
+    featuredPage.value = 1
+    featuredTotalPages.value = response?.totalPages || 1
   } catch (err) {
     console.error('Error en Featured Cases:', err)
   } finally {
     loadingFeatured.value = false
+  }
+}
+
+// "more cases": antes era un link sin funcionalidad (href="#!"). Ahora
+// pide la siguiente página y AGREGA esos resultados a los que ya hay
+// (no reemplaza), y el botón se esconde solo cuando no queda nada más
+// para traer (ver featuredHasMore).
+async function loadMoreFeaturedCases() {
+  if (!featuredHasMore.value || loadingMoreFeatured.value) return
+
+  loadingMoreFeatured.value = true
+  try {
+    const nextPage = featuredPage.value + 1
+    const query = `?page=${nextPage}&per_page=3&source=public-records-requests&special-content=featured`
+    const response = await fetchResources(query)
+    featuredCases.value = [...featuredCases.value, ...(response?.items || [])]
+    featuredPage.value = nextPage
+    featuredTotalPages.value = response?.totalPages || featuredTotalPages.value
+  } catch (err) {
+    console.error('Error cargando más Featured Cases:', err)
+  } finally {
+    loadingMoreFeatured.value = false
   }
 }
 
@@ -173,22 +239,22 @@ async function getUpdates() {
     // Pedimos los posts a Netlify sin query de búsqueda para que no se active el escudo estricto de JS
     const query = '?per_page=100'
     const response = await fetchPosts(query)
-    
+
     const listaPosts = Array.isArray(response) ? response : (response?.items || [])
 
     // Filtramos en Vue buscando el slug exacto de tu categoría de WordPress
     const categoriaObjetivo = 'records-requests-news-and-analysis'
-    
+
     const postsFiltrados = listaPosts.filter(post => {
       // 1. Intentar buscar en pure_taxonomies (común en respuestas optimizadas de WP)
       if (post.pure_taxonomies?.category) {
         return post.pure_taxonomies.category.some(cat => cat.slug === categoriaObjetivo)
       }
-      
+
       // 2. Intentar buscar en el _embedded nativo de WordPress REST API
       if (post._embedded?.['wp:term']) {
         // Los términos son una matriz de matrices (categorías, tags, etc.)
-        return post._embedded['wp:term'].flat().some(term => 
+        return post._embedded['wp:term'].flat().some(term =>
           term.taxonomy === 'category' && term.slug === categoriaObjetivo
         )
       }
@@ -199,7 +265,7 @@ async function getUpdates() {
       }
 
       // Si no encuentra las taxonomías, dejamos pasar el post temporalmente para no vaciar la sección
-      return true 
+      return true
     })
 
     // Replicamos el 'posts_per_page' => 3 del PHP original haciendo un slice
@@ -218,7 +284,7 @@ async function getDocketFeed() {
   try {
     const query = '?page=1&per_page=3&source=public-records-requests&research-team=eb-research'
     const response = await fetchResources(query)
-    
+
     docketFeed.value = response?.items || []
   } catch (err) {
     console.error('Error en Docket Feed:', err)
@@ -226,16 +292,6 @@ async function getDocketFeed() {
     loadingDocket.value = false
   }
 }
-//  loadingFeatured.value = true
-//   try {
-//     const query = '?page=1&per_page=3&source=public-records-requests&special-content=featured'
-//     const response = await fetchResources(query)
-//     featuredCases.value = response?.items || []
-//   } catch (err) {
-//     console.error('Error en Featured Cases:', err)
-//   } finally {
-//     loadingFeatured.value = false
-//   }
 
 function cambiarPaginaDocket(targetPage) {
   currentPage.value = targetPage
@@ -252,51 +308,186 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.secondfont {
-  font-family: "Staatliches", sans-serif;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+/* .container venía del CSS viejo del tema WP (style.css), que esta app
+   Vue probablemente nunca carga -- por eso no centraba ni limitaba el
+   ancho. Se define acá mismo para no depender de que exista afuera. */
+.container {
+  width: min(95%, 120rem);
+  margin: 0 auto;
 }
+
+/* Tipografía Cormorant para headings, como en el original (no Staatliches) */
+.eb-default-font {
+  font-family: 'Cormorant', serif;
+}
+
 .section-title {
   color: #2b3f47 !important;
+  margin: 0;
 }
-.border-bottom-prr {
-  border-bottom: 3px solid #6c757d !important;
-}
-.section-title-underlined {
-  color: #2b3f47;
+
+/* Reemplaza las utilidades de Bootstrap (h4 pb-2 mb-4 border-bottom
+   border-secondary border-3) que el original usaba y que este proyecto
+   no tiene cargadas (acá es Vuetify, no Bootstrap). */
+.section-heading {
+  margin-top: 3rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
   border-bottom: 3px solid #6c757d;
-  padding-bottom: 4px;
 }
+
+.public-records-requests-heading {
+  margin-top: 2rem;
+}
+
 .intro-text {
   font-size: 1rem;
   line-height: 1.6;
   color: #212529;
+  margin: 0 0 2rem 0;
 }
-.post-title a {
-  color: #2b3f47;
-  text-decoration: none;
+
+/* Skeletons de carga: CSS propio, sin depender de las variables de
+   color del theme de Vuetify (de ahí venía el rosado). */
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: #e9ecef;
+  margin-bottom: 10px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-line--title {
+  height: 20px;
+  width: 60%;
+  margin-bottom: 16px;
+}
+
+.skeleton-line--short {
+  width: 40%;
+  margin-bottom: 0;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Secciones: en el original cada <section> tiene su propio padding,
+   fondo blanco, max-width centrado y separación entre secciones — acá
+   antes se usaba <v-container fluid>, que no trae nada de esto. */
+section {
+  padding: 70px 20px;
+  background-color: #fff;
+  margin-bottom: 40px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.latest-news {
+  background-color: #fcfdfc;
+}
+
+/* Items: en el original NO van en tarjetas con borde/elevación de
+   Material — son bloques simples apilados verticalmente (no grid de
+   3 columnas), con sombra suave nomás. */
+.case-item,
+.news-item,
+.docket-item {
+  background-color: #ffffff;
+  padding: 30px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  display: block;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* Hover sutil: solo en las que son clickeables (tienen <a> adentro,
+   es decir case-item y docket-item -- news-item no tiene link propio) */
+.case-item:has(a):hover,
+.docket-item:has(a):hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+.case-item:last-child,
+.news-item:last-child,
+.docket-item:last-child {
+  margin-bottom: 0;
+}
+
+.case-item-meta {
+  margin-bottom: 8px;
+}
+
+.item-date {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.empty-state {
+  color: #6c757d;
+  font-style: italic;
+  padding: 1rem 0;
+}
+
+.post-title.eb-mn-tarjeta-post-titulo {
+  margin: 0 0 12px 0;
   font-size: 1.15rem;
   font-weight: 700;
+}
+
+.post-title a,
+a .post-title {
+  text-decoration: none;
+  color: #2b3f47;
   transition: color 0.2s ease;
 }
-.post-title a:hover {
-  color: #03a87c;
+
+.post-title:hover {
+  color: #f5c670;
 }
+
 .prr-item-description {
   color: #4b5563;
 }
-.bg-updates-section {
-  background-color: #fcfdfc;
-}
+
 .updates-prr-content :deep(p) {
   margin-top: 8px;
   margin-bottom: 8px;
   font-size: 0.9rem;
   color: #333;
 }
+
+/* "more cases": en el original es texto en negrita, no un botón */
+.eb-mn-tarjeta-post-boton-leer-container {
+  margin-top: 1rem;
+}
+
 .eb-mn-tarjeta-post-boton-leer {
-  border: 1px solid #2b3f47 !important;
+  display: inline-block;
   color: #2b3f47 !important;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.eb-mn-tarjeta-post-boton-leer:hover {
+  color: #f5c670 !important;
+}
+
+.eb-mn-tarjeta-post-boton-leer.is-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.eb-mn-pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
 }
 </style>
