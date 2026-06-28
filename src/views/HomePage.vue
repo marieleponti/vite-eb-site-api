@@ -1,4 +1,3 @@
-
 <template>
   <div class="website-container">
 
@@ -61,14 +60,61 @@
 <section class="content-section">
   <h2 class="section-title">Featured Content</h2>
 
-  <div class="featured-card">
-    <img src="/featured.jpg" alt="Featured" />
+  <!-- Skeleton mientras cargan posts/resources featured -->
+  <div v-if="loadingFeatured" class="featured-card">
+    <div class="featured-skeleton-img"></div>
     <div>
-      <h3>Seeking Refuge in Canada</h3>
-      <p>What We Know About US-Canada Data Sharing</p>
-      <button class="join-btn">Read More</button>
+      <div class="featured-skeleton-line" style="width: 70%;"></div>
+      <div class="featured-skeleton-line" style="width: 90%;"></div>
     </div>
   </div>
+
+  <!-- Slider: posts y resources marcados como featured -->
+  <div v-else-if="featuredContent.length" class="featured-slider">
+    <div
+      class="featured-slider-track"
+      :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
+    >
+      <div
+        v-for="item in featuredContent"
+        :key="`${item.type}-${item.id || item.slug}`"
+        class="featured-card featured-slide"
+      >
+        <img :src="item.featuredImage || '/featured.jpg'" :alt="item.title" />
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ trimExcerpt(item.excerpt, 20) }}</p>
+          <a :href="item.permalink" target="_blank" rel="noopener noreferrer" class="join-btn featured-link">
+            Read More
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flechas (solo si hay más de una tarjeta) -->
+    <template v-if="featuredContent.length > 1">
+      <button class="slider-arrow slider-arrow-prev" @click="prevSlide" aria-label="Previous featured item">
+        &#8249;
+      </button>
+      <button class="slider-arrow slider-arrow-next" @click="nextSlide" aria-label="Next featured item">
+        &#8250;
+      </button>
+
+      <div class="slider-dots">
+        <button
+          v-for="(item, i) in featuredContent"
+          :key="`dot-${i}`"
+          class="slider-dot"
+          :class="{ active: i === currentSlide }"
+          :aria-label="`Go to slide ${i + 1}`"
+          @click="goToSlide(i)"
+        ></button>
+      </div>
+    </template>
+  </div>
+
+  <!-- Estado vacío: ningún post/resource marcado como featured -->
+  <p v-else class="section-text">No featured content available right now.</p>
 </section>
 
     <!-- Another Dashed Line -->
@@ -86,7 +132,111 @@
 </template>
 
 <script setup>
-// Vue 3 Composition API - No additional logic needed for this static page
+import { computed, onMounted, ref, watch } from 'vue'
+import { useContent } from '@/composables/useContent'
+
+// "Featured Content" ya no es una tarjeta hardcodeada: trae los posts
+// del blog Y los resources que estén marcados como featured en WP
+// (mismo filtro 'special-content': 'featured' que usa ResearchSection.vue
+// para los minibriefs), y los combina en una sola lista, mostrada en
+// un slider.
+//
+// useContent() arma un store local nuevo cada vez que se llama, así que
+// usamos dos instancias independientes -- una por tipo de contenido --
+// y las combinamos en el computed `featuredContent`.
+
+const {
+  items: featuredPosts,
+  fetch: fetchFeaturedPosts,
+  loading: loadingPosts
+} = useContent()
+
+const {
+  items: featuredResources,
+  fetch: fetchFeaturedResources,
+  loading: loadingResources
+} = useContent()
+
+const loadingFeatured = computed(() => loadingPosts.value || loadingResources.value)
+
+const FEATURED_LIMIT = 6 // cuántas tarjetas trae el slider como máximo
+
+const featuredContent = computed(() => {
+  const posts = featuredPosts.value.map(item => normalizeFeaturedItem(item, 'post'))
+  const resources = featuredResources.value.map(item => normalizeFeaturedItem(item, 'resource'))
+
+  // Más reciente primero, mezclando ambos tipos
+  return [...posts, ...resources]
+    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+    .slice(0, FEATURED_LIMIT)
+})
+
+// ---------- Slider ----------
+const currentSlide = ref(0)
+
+function nextSlide() {
+  if (!featuredContent.value.length) return
+  currentSlide.value = (currentSlide.value + 1) % featuredContent.value.length
+}
+
+function prevSlide() {
+  if (!featuredContent.value.length) return
+  currentSlide.value =
+    (currentSlide.value - 1 + featuredContent.value.length) % featuredContent.value.length
+}
+
+function goToSlide(index) {
+  currentSlide.value = index
+}
+
+// Si la lista cambia (llega de la API, o queda más corta), volvemos al inicio
+// para no quedar apuntando a un índice que ya no existe.
+watch(featuredContent, () => {
+  currentSlide.value = 0
+})
+
+function normalizeFeaturedItem(item, type) {
+  return {
+    type,
+    id: item.id,
+    slug: item.slug,
+    title: item.title?.rendered || item.title,
+    excerpt: item.excerpt?.rendered || item.excerpt || item.content,
+    featuredImage: item.featuredImage || item._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+    permalink: item.permalink || item.link,
+    date: item.date
+  }
+}
+
+function trimExcerpt(text, wordLimit) {
+  if (!text) return ''
+  const stripped = text.replace(/<[^>]*>/g, '').trim()
+  const words = stripped.split(/\s+/)
+  if (words.length <= wordLimit) return stripped
+  return words.slice(0, wordLimit).join(' ') + '...'
+}
+
+onMounted(() => {
+  fetchFeaturedPosts({
+    type: 'posts',
+    page: 1,
+    perPage: FEATURED_LIMIT,
+    filters: {
+      s: '',
+      'special-content': 'featured'
+    }
+  })
+
+  fetchFeaturedResources({
+    type: 'resources',
+    page: 1,
+    perPage: FEATURED_LIMIT,
+    filters: {
+      s: '',
+      'special-content': 'featured'
+    }
+  })
+})
 </script>
 
 <style scoped>
@@ -420,6 +570,107 @@
 .featured-card div {
   padding: 20px;
   text-align: left;
+}
+
+.featured-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* Slider de Featured Content */
+.featured-slider {
+  position: relative;
+  max-width: 900px;
+  margin: 40px auto;
+  overflow: hidden;
+}
+
+.featured-slider-track {
+  display: flex;
+  transition: transform 0.4s ease;
+}
+
+.featured-slider-track .featured-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  margin: 0; /* el margin lo maneja .featured-slider, no cada slide */
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(43, 59, 71, 0.85);
+  color: #F4D06F;
+  border: 1px solid #F4D06F;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  z-index: 2;
+}
+
+.slider-arrow:hover {
+  background-color: #F4D06F;
+  color: #2B3B47;
+}
+
+.slider-arrow-prev {
+  left: -8px;
+}
+
+.slider-arrow-next {
+  right: -8px;
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.slider-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid #F4D06F;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s;
+}
+
+.slider-dot.active {
+  background-color: #F4D06F;
+}
+
+@media (max-width: 600px) {
+  .slider-arrow-prev {
+    left: 4px;
+  }
+  .slider-arrow-next {
+    right: 4px;
+  }
+}
+
+/* Skeleton de carga para Featured Content */
+.featured-skeleton-img {
+  width: 40%;
+  background: rgba(245, 245, 245, 0.08);
+}
+
+.featured-skeleton-line {
+  height: 14px;
+  margin: 12px 20px;
+  border-radius: 4px;
+  background: rgba(245, 245, 245, 0.08);
 }
 
 </style>

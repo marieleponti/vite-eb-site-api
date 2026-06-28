@@ -31,10 +31,9 @@
           <v-divider class="mb-6"></v-divider>
 
           <!-- Descripción del recurso (ACF description) -->
-          <div class="resource-content-single mb-8"
-            v-html="resource.acf?.description || ''"></div>
+          <div class="resource-content-single mb-8" v-html="sanitizeContent(resource.acf?.description) || ''"></div>
           <!-- Contenido nativo de WP (post_content) — embeds legado, iframes, etc. -->
-          <div v-if="resource.content" class="resource-content-single mb-8" v-html="resource.content"></div>
+          <div v-if="resource.content" class="resource-content-single mb-8" v-html="sanitizeContent(resource.content)"></div>
 
           <!-- Video Embebido Adaptativo (ACF embed_video) -->
           <div v-if="resource.acf?.video_embed" class="video-container mb-8 rounded-lg overflow-hidden">
@@ -188,6 +187,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchResourceBySlug } from '@/api/services/wp.service'
+import { sanitizeContent } from '@/api/mappers/cleanHtml'
 
 const route = useRoute()
 const resource = ref(null)

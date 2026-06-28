@@ -47,19 +47,34 @@ export function normalizeResource(item) {
       null,
 
     topics:
-      item.topic ?? [],
+      item.taxonomies?.topic ?? item.topic ?? [],
 
     formats:
-      item.format ?? [],
+      item.taxonomies?.format ?? item.format ?? [],
 
     countries:
-      item.country ?? [],
+      item.taxonomies?.country ?? item.country ?? [],
 
     languages:
-      item.language ?? [],
+      item.taxonomies?.language ?? item.language ?? [],
 
     status:
       item.status ?? 'publish',
+
+    // FALTABA: ResourceSingle.vue lee directo de `resource.acf.*`
+    // (description, video_embed, author, upload_files). Sin esto,
+    // todo ese contenido quedaba undefined sin importar qué tuviera
+    // WordPress -- por eso el single solo mostraba título y fecha.
+    // El backend (helpers.php / inforepo_format_resources_response)
+    // ya manda esto bien armado: es pass-through directo.
+    acf: item.acf ?? {},
+
+    // FALTABA: el sidebar "Resource Specifications" de ResourceSingle.vue
+    // lee de `resource.taxonomies.<nombre>`. El backend YA devuelve este
+    // objeto con la forma exacta (authoring_organization, country, topic,
+    // source, format, city_community, language) -- es pass-through
+    // directo, no hay que reconstruirlo desde campos planos.
+    taxonomies: item.taxonomies ?? {},
 
     // Lat/lng del nuevo campo "location" (reemplaza Mapster — ver
     // wp-location-picker/). label es la ciudad/país elegida en el
