@@ -200,6 +200,10 @@ function formatDate(date) {
 .resource-single-page {
   background: #ffffff;
   min-height: 100vh;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-left: 60px;
+  padding-right: 0px;
 }
 
 .resource-title-single {
@@ -333,4 +337,10 @@ function formatDate(date) {
     gap: 0.5rem;
   }
 }
+
+:deep(.container),
+:deep(.v-container) {
+  max-width: 1100px !important;
+}
+
 </style>

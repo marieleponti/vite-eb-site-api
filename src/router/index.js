@@ -52,6 +52,12 @@ const routes = [
     name: 'MinibriefSingle',
     component: () => import('../views/MinibriefSingle.vue'),
     props: true
+  },
+  {
+    path: '/public-records-requests/:slug',
+    name: 'PublicRecordsRequestSingle',
+    component: () => import('../views/PublicRecordsRequestSingle.vue'),
+    props: true
   }
   
 ]

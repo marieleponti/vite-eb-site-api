@@ -30,13 +30,13 @@
 
         <template v-else>
           <div v-for="item in featuredCases" :key="item.id" class="case-item">
-            <a :href="item.permalink || item.link" target="_blank" rel="noopener noreferrer">
+            <router-link :to="{ name: 'PublicRecordsRequestSingle', params: { slug: item.slug } }">
               <h5 class="post-title eb-mn-tarjeta-post-titulo">
                 {{ item.title?.rendered || item.title }}
               </h5>
-            </a>
+            </router-link>
 
-            <div v-if="obtenerDescripcion(item)">
+              <div v-if="obtenerDescripcion(item)">
               <div class="prr-item-description eb-mn-tarjeta-post-descripcion">
                 {{ obtenerDescripcion(item) }}
               </div>
@@ -118,11 +118,12 @@
 
         <template v-else-if="docketFeed.length">
           <div v-for="item in docketFeed" :key="item.id" class="docket-item">
-            <a :href="item.permalink || item.link" target="_blank" rel="noopener noreferrer">
+            <router-link 
+              :to="{ name: 'PublicRecordsRequestSingle', params: { slug: item.slug } }">
               <h5 class="post-title eb-mn-tarjeta-post-titulo">
                 {{ item.title?.rendered || item.title }}
               </h5>
-            </a>
+            </router-link>
 
             <div v-if="obtenerDescripcion(item)">
               <div class="prr-item-description eb-mn-tarjeta-post-descripcion">
