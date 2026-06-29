@@ -40,9 +40,8 @@
             <div v-html="resource.acf.video_embed"></div>
           </div>
 
-          <!-- PDFs: selector + viewer (no aplica a Public Records Requests,
-               que muestran sus archivos como "Legal Filings and Production" más abajo) -->
-<div v-if="resource?.acf?.upload_files?.length && !isPublicRecordsRequest" class="mb-8">
+          <!-- PDFs: selector + viewer -->
+<div v-if="resource?.acf?.upload_files?.length" class="mb-8">
   <v-select
     v-model="selectedPdfUrl"
     :items="resource.acf.upload_files.map(x => ({ title: x.file.title, value: x.file.url }))"
@@ -81,33 +80,27 @@
   </v-btn>
 </div>
 
-          <!-- Legal Filings and Production: usa el MISMO repeater
-               upload_files (no es un campo separado). El "caption" de
-               cada archivo es la fecha mostrada; "title" es la
-               descripción en naranja; "description" es texto opcional
-               extra (flp-description en el shortcode original). -->
-          <div v-if="isPublicRecordsRequest && resource?.acf?.upload_files?.length" class="legal-filings-section mb-8">
+          <!-- Legal Filings and Production: solo para resources con
+               taxonomía source = public-records-requests (no es parte
+               del single genérico de cualquier resource). -->
+          <div v-if="isPublicRecordsRequest && resource?.acf?.legal_filings?.length" class="legal-filings-section mb-8">
             <h2 class="legal-filings-title">Legal Filings and Production</h2>
 
             <div class="legal-filings-prod-list">
               <div
-                v-for="(item, index) in resource.acf.upload_files"
+                v-for="(filing, index) in resource.acf.legal_filings"
                 :key="index"
                 class="legal-filings-production-prr-post"
               >
                 <div class="filings-caption-date">
-                  <p class="flp-caption-date">{{ item.file?.caption }}</p>
+                  <p class="flp-caption-date">{{ formatDate(filing.date) }}</p>
                 </div>
 
                 <div class="filing-title flp-title">
-                  {{ item.file?.title }}
+                  {{ filing.title }}
 
-                  <p v-if="item.file?.description" class="flp-description">
-                    {{ item.file.description }}
-                  </p>
-
-                  <div v-if="item.file?.url" class="download-button-container">
-                    <a :href="item.file.url" target="_blank" rel="noopener noreferrer" class="download-button">
+                  <div v-if="filing.file_url" class="download-button-container">
+                    <a :href="filing.file_url" target="_blank" rel="noopener noreferrer" class="download-button">
                       <v-icon size="18">mdi-download</v-icon>
                       <span class="download-button__text">Download</span>
                     </a>
@@ -117,6 +110,96 @@
             </div>
           </div>
         </article>
+      </v-col>
+
+      <!-- COLUMNA LATERAL (Derecha): Especificaciones del Recurso (Taxonomías) -->
+      <v-col cols="12" md="4">
+        <v-card variant="outlined" class="pa-5 rounded-lg bg-details-box" style="border-color: #c7cdd4 !important;">
+          <h3 class="text-subtitle-1 font-weight-bold mb-4"
+            style="color: #29465b; text-transform: uppercase; letter-spacing: 0.05em;">
+            Resource Specifications
+          </h3>
+
+          <div class="d-flex flex-column ga-4">
+
+            <!-- Authoring Organization -->
+            <div v-if="resource.taxonomies?.authoring_organization?.length">
+              <div class="tax-label">Authoring Organization</div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip v-for="org in resource.taxonomies.authoring_organization" :key="org.slug" size="small"
+                  color="#29465b" variant="flat">
+                  {{ org.name }}
+                </v-chip>
+              </div>
+            </div>
+
+            <!-- Topics -->
+            <div v-if="resource.taxonomies?.topic?.length">
+              <div class="tax-label">Topics</div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip v-for="topic in resource.taxonomies.topic" :key="topic.slug" size="small" color="#2f4356"
+                  variant="tonal">
+                  {{ topic.name }}
+                </v-chip>
+              </div>
+            </div>
+
+            <!-- Country -->
+            <div v-if="resource.taxonomies?.country?.length">
+              <div class="tax-label">Country</div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip v-for="c in resource.taxonomies.country" :key="c.slug" size="small" color="blue-grey-darken-2"
+                  variant="outlined">
+                  {{ c.name }}
+                </v-chip>
+              </div>
+            </div>
+
+            <!-- City / Community -->
+            <div v-if="resource.taxonomies?.city_community?.length">
+              <div class="tax-label">City / Community</div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip v-for="city in resource.taxonomies.city_community" :key="city.slug" size="small"
+                  variant="outlined">
+                  {{ city.name }}
+                </v-chip>
+              </div>
+            </div>
+
+            <!-- Source -->
+            <div v-if="resource.taxonomies?.source?.length">
+              <div class="tax-label">Source</div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip v-for="src in resource.taxonomies.source" :key="src.slug" size="small" variant="text"
+                  class="border">
+                  {{ src.name }}
+                </v-chip>
+              </div>
+            </div>
+
+            <!-- Format -->
+            <div v-if="resource.taxonomies?.format?.length">
+              <div class="tax-label">Format</div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip v-for="fmt in resource.taxonomies.format" :key="fmt.slug" size="small" color="grey-darken-3"
+                  variant="tonal">
+                  {{ fmt.name }}
+                </v-chip>
+              </div>
+            </div>
+
+            <!-- Language -->
+            <div v-if="resource.taxonomies?.language?.length">
+              <div class="tax-label">Language</div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip v-for="lang in resource.taxonomies.language" :key="lang.slug" size="small" variant="tonal">
+                  {{ lang.name }}
+                </v-chip>
+              </div>
+            </div>
+
+          </div>
+        </v-card>
       </v-col>
     </v-row>
 
@@ -294,12 +377,6 @@ function formatDate(date) {
   font-weight: 700;
   color: #f38a4e;
   line-height: 1.4;
-}
-
-.flp-description {
-  font-weight: 400;
-  color: #4b5563;
-  margin-top: 0.5rem;
 }
 
 .download-button-container {

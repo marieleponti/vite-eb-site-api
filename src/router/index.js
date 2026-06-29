@@ -32,7 +32,7 @@ const routes = [
     component: () => import('../views/FeaturedResearch.vue')
   },
   {
-    path: '/prr',
+    path: '/public-records-requests',
     name: 'public_records_requests',
     component: () => import('../views/PublicRecordsRequests.vue')
   },

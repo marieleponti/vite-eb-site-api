@@ -26,7 +26,7 @@
               <v-list-item-title>Featured Research</v-list-item-title>
             </v-list-item>
 
-            <v-list-item to="/prr" link>
+            <v-list-item to="/public-records-requests" link>
               <v-list-item-title>Public Records Requests</v-list-item-title>
             </v-list-item>
 
