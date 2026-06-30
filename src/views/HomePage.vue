@@ -23,7 +23,7 @@
     </section>
 
     <!-- Dashed wave decoration mid-page -->
-    <DashedPath :progress="walkProgress" />
+    <DashedPath />
 
     <!-- Halftone wall + fence photo -->
     <div class="halftone-photo">
@@ -141,50 +141,19 @@ import { computed, onMounted, onUnmounted, ref, watch, h } from 'vue'
 import { useContent } from '@/composables/useContent'
 
 /* -------------------------------------------------------------------- */
-/* Scroll-driven "walker" position                                      */
-/* -------------------------------------------------------------------- */
-/* The little figure that walks along every dashed line on the page is  */
-/* tied to overall page scroll: as the user scrolls down, the figure    */
-/* keeps walking forward (0 → 100%) and loops back to keep walking on   */
-/* every dashed line shown on the page (matching the legacy site).      */
-
-const walkProgress = ref(0)
-
-function updateWalkProgress() {
-  const scrollTop = window.scrollY || document.documentElement.scrollTop
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight
-  const ratio = docHeight > 0 ? scrollTop / docHeight : 0
-  // Loop the walk cycle every ~35% of total scroll so the figure keeps
-  // "walking" forward, starting from the left edge when ratio is 0.
-  const cycle = (ratio / 0.35) % 1
-  walkProgress.value = cycle
-}
-
-let ticking = false
-function onScroll() {
-  if (ticking) return
-  ticking = true
-  requestAnimationFrame(() => {
-    updateWalkProgress()
-    ticking = false
-  })
-}
-
-onMounted(() => {
-  updateWalkProgress()
-  window.addEventListener('scroll', onScroll, { passive: true })
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll)
-})
-
-/* -------------------------------------------------------------------- */
 /* DashedPath - reusable dashed wave decoration with walking figure     */
 /* -------------------------------------------------------------------- */
+/* Self-contained: instead of listening for a 'scroll' event (which can */
+/* silently fail to fire if the app scrolls inside a nested container   */
+/* rather than the window), this polls the element's own position       */
+/* relative to the viewport via getBoundingClientRect on every animation*/
+/* frame. That works no matter what actually scrolls.                   */
 const DashedPath = {
-  props: { progress: { type: Number, default: 0 } },
-  setup(props) {
+  setup() {
+    const wrapRef = ref(null)
+    const progress = ref(0)
+    let rafId = null
+
     // A gentle wave path the figure travels along, expressed as a
     // viewBox of 0 0 1200 60. We sample a point on the sine-like wave
     // for the given progress (0-1) to place the walker.
@@ -200,8 +169,14 @@ const DashedPath = {
       .join(' ')
 
     function positionAt(t) {
+      // Start the walker at center-left (35% across) instead of the
+      // very left edge, and advance toward the right as the section
+      // travels up through the viewport.
+      const START_FRAC = 0.35
+      const effectiveT = START_FRAC + t * (1 - START_FRAC)
+
       const totalLen = points.length - 1
-      const pos = t * totalLen
+      const pos = effectiveT * totalLen
       const idx = Math.min(Math.floor(pos), totalLen - 1)
       const localT = pos - idx
       const [x1, y1] = points[idx]
@@ -209,9 +184,32 @@ const DashedPath = {
       return { x: x1 + (x2 - x1) * localT, y: y1 + (y2 - y1) * localT }
     }
 
+    function updateProgress() {
+      const el = wrapRef.value
+      if (el) {
+        const rect = el.getBoundingClientRect()
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+        // 0 when the element's top has just entered the bottom of the
+        // viewport, 1 once it has fully scrolled past the top.
+        const total = viewportHeight + rect.height
+        const traveled = viewportHeight - rect.top
+        const ratio = total > 0 ? traveled / total : 0
+        progress.value = Math.min(1, Math.max(0, ratio))
+      }
+      rafId = requestAnimationFrame(updateProgress)
+    }
+
+    onMounted(() => {
+      rafId = requestAnimationFrame(updateProgress)
+    })
+
+    onUnmounted(() => {
+      if (rafId) cancelAnimationFrame(rafId)
+    })
+
     return () => {
-      const { x, y } = positionAt(props.progress)
-      return h('div', { class: 'dashed-path-wrap' }, [
+      const { x, y } = positionAt(progress.value)
+      return h('div', { class: 'dashed-path-wrap', ref: wrapRef }, [
         h('img', {
           src: '/terrain_yellow.png',
           alt: '',
@@ -320,7 +318,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Cormorant:600,700&family=Work+Sans:300,400,500,600,700&display=swap');
+/* Fonts (Cormorant, Work Sans) are loaded globally in index.html —
+   see the <link> snippet provided separately. Avoid per-component
+   @import, which can be unreliable (CSP, duplicate loads, timing). */
 
 /* -------------------------------------------------------------------- */
 /* Tokens (exact values from the legacy Divi CSS)                       */
@@ -353,6 +353,8 @@ onMounted(() => {
   background-color: var(--color-teal);
   line-height: 0;
   position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
 }
 
 .dashed-path-line {
@@ -383,7 +385,7 @@ onMounted(() => {
 
 .hero-content {
   max-width: 1100px;
-  margin: 0 auto;
+  margin: 0;
   padding-left: 80px;
   position: relative;
   z-index: 1;
@@ -434,9 +436,9 @@ onMounted(() => {
 /* Content Sections                                                     */
 /* -------------------------------------------------------------------- */
 .content-section {
-  padding: 90px 40px;
-  max-width: 1100px;
-  margin: 0 auto;
+  padding: 90px 40px 90px 80px;
+  max-width: 1180px;
+  margin: 0;
 }
 
 .content-section--overlap {

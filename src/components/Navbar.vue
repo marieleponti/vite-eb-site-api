@@ -78,7 +78,8 @@ function handleLogout() {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Montserrat:600,700&display=swap');
+/* Montserrat is loaded globally in index.html — see the <link> snippet
+   provided separately. Avoid per-component @import. */
 
 .header {
   /* Legacy uses terrain_yellow.png as the section's own background image
