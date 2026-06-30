@@ -10,12 +10,11 @@
         <p class="hero-text">
           This info repository supports and reflects collaboration across borders. It contains original research, documentation, and analysis on border externalization policies and practices of multiple countries in the region, and the ever-growing tech and data infrastructure that support them, often made of opaque and inaccessible systems. Resources draw from the work of civil society organizations, academic research, financial investigation, and public records requests. The info repository is a collective work in progress—we welcome contributions from activists, researchers, and civil society organizations.
         </p>
-        <button class="join-btn">JOIN THE COMMUNITY</button>
       </div>
-      <div class="fence-decoration"></div>
+      <img src="/wire.png" alt="" class="fence-decoration" aria-hidden="true" />
     </section>
 
-    <!-- Content Section -->
+    <!-- "Why" Section -->
     <section class="content-section">
       <h2 class="section-title">Why the Everywhere Border?</h2>
       <p class="section-text">
@@ -23,128 +22,220 @@
       </p>
     </section>
 
-    <!-- Border Explanation Section -->
-<section class="content-section">
-  <p class="section-text">
-        The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
-  </p>
-</section>
+    <!-- Dashed wave decoration mid-page -->
+    <DashedPath :progress="walkProgress" />
 
-<!-- Icons Image -->
-<div class="image-center">
-  <img src="/border_icons.png" alt="Icons" />
-</div>
-
-<!-- Bullet Section -->
-<section class="content-section">
-  <p class="section-text">This is “The Everywhere Border”:</p>
-
-  <ul class="bullet-list">
-    <li>It enables the policing of people wherever they are, based on race, nationality, ethnicity, class, gender, and other social markers.</li>
-    <li>It relies on public narratives, laws, and politics to reinforce hierarchies of belonging,  thereby allowing governments to more easily limit people’s freedom of movement, ability to stay, and to live freely.</li>
-    <li>It plays a fundamental role in disrupting the social fabric of origin, transit, and destination countries, making communities surveilled, policed and unsafe.</li>
-  </ul>
-  <p class="section-text">We invite you to explore the resources available here, leverage them in your work, and share information with others.
-
-</p>
-
-  <button class="join-btn">Explore the Database</button>
-</section>
-
-<!-- Full Width Image -->
-<div class="full-image">
-  <img src="/traincart.png" alt="Train" />
-</div>
-
-<!-- Featured Content -->
-<section class="content-section">
-  <h2 class="section-title">Featured Content</h2>
-
-  <!-- Skeleton mientras cargan posts/resources featured -->
-  <div v-if="loadingFeatured" class="featured-card">
-    <div class="featured-skeleton-img"></div>
-    <div>
-      <div class="featured-skeleton-line" style="width: 70%;"></div>
-      <div class="featured-skeleton-line" style="width: 90%;"></div>
+    <!-- Halftone wall + fence photo -->
+    <div class="halftone-photo">
+      <img src="/border_wall.png" alt="Border wall and fence" />
     </div>
-  </div>
 
-  <!-- Slider: posts y resources marcados como featured -->
-  <div v-else-if="featuredContent.length" class="featured-slider">
-    <div
-      class="featured-slider-track"
-      :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
-    >
-      <div
-        v-for="item in featuredContent"
-        :key="`${item.type}-${item.id || item.slug}`"
-        class="featured-card featured-slide"
-      >
-        <img :src="item.featuredImage || '/featured.jpg'" :alt="item.title" />
+    <!-- Border Explanation Section -->
+    <section class="content-section content-section--overlap">
+      <p class="section-text">
+        The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
+      </p>
+
+      <!-- Process Icons -->
+      <div class="icon-row">
+        <img src="/border_icons.png" alt="" class="icon-row-image" />
+      </div>
+    </section>
+
+    <!-- Bullet Section -->
+    <section class="content-section">
+      <p class="section-text section-text--bold">This is &ldquo;The Everywhere Border&rdquo;:</p>
+
+      <ul class="bullet-list">
+        <li>It enables the policing of people wherever they are, based on race, nationality, ethnicity, class, gender, and other social markers.</li>
+        <li>It relies on public narratives, laws, and politics to reinforce hierarchies of belonging, thereby allowing governments to more easily limit people&rsquo;s freedom of movement, ability to stay, and to live freely.</li>
+        <li>It plays a fundamental role in disrupting the social fabric of origin, transit, and destination countries, making communities surveilled, policed and unsafe.</li>
+      </ul>
+
+      <p class="section-text">
+        We invite you to explore the resources available here, leverage them in your work, and share information with others.
+      </p>
+
+      <div class="center-btn-wrap">
+        <button class="outline-btn">Explore the Database</button>
+      </div>
+    </section>
+
+    <!-- Full Width Image -->
+    <div class="full-image">
+      <img src="/traincart.png" alt="People riding a freight train" />
+    </div>
+
+    <!-- Featured Content -->
+    <section class="content-section">
+      <h2 class="section-title section-title--light">Featured Content</h2>
+
+      <!-- Skeleton mientras cargan posts/resources featured -->
+      <div v-if="loadingFeatured" class="featured-card">
+        <div class="featured-skeleton-img"></div>
         <div>
-          <h3>{{ item.title }}</h3>
-          <p>{{ trimExcerpt(item.excerpt, 20) }}</p>
-          <a :href="item.permalink" target="_blank" rel="noopener noreferrer" class="join-btn featured-link">
-            Read More
-          </a>
+          <div class="featured-skeleton-line" style="width: 70%;"></div>
+          <div class="featured-skeleton-line" style="width: 90%;"></div>
         </div>
       </div>
-    </div>
 
-    <!-- Flechas (solo si hay más de una tarjeta) -->
-    <template v-if="featuredContent.length > 1">
-      <button class="slider-arrow slider-arrow-prev" @click="prevSlide" aria-label="Previous featured item">
-        &#8249;
-      </button>
-      <button class="slider-arrow slider-arrow-next" @click="nextSlide" aria-label="Next featured item">
-        &#8250;
-      </button>
+      <!-- Slider: posts y resources marcados como featured -->
+      <div v-else-if="featuredContent.length" class="featured-slider">
+        <div
+          class="featured-slider-track"
+          :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
+        >
+          <div
+            v-for="item in featuredContent"
+            :key="`${item.type}-${item.id || item.slug}`"
+            class="featured-card featured-slide"
+          >
+            <img :src="item.featuredImage || '/featured.jpg'" :alt="item.title" />
+            <div>
+              <h3>{{ item.title }}</h3>
+              <p>{{ trimExcerpt(item.excerpt, 20) }}</p>
+              <a :href="item.permalink" target="_blank" rel="noopener noreferrer" class="featured-link">
+                Read More
+              </a>
+            </div>
+          </div>
+        </div>
 
-      <div class="slider-dots">
-        <button
-          v-for="(item, i) in featuredContent"
-          :key="`dot-${i}`"
-          class="slider-dot"
-          :class="{ active: i === currentSlide }"
-          :aria-label="`Go to slide ${i + 1}`"
-          @click="goToSlide(i)"
-        ></button>
+        <!-- Flechas (solo si hay más de una tarjeta) -->
+        <template v-if="featuredContent.length > 1">
+          <button class="slider-arrow slider-arrow-prev" @click="prevSlide" aria-label="Previous featured item">
+            &#8249;
+          </button>
+          <button class="slider-arrow slider-arrow-next" @click="nextSlide" aria-label="Next featured item">
+            &#8250;
+          </button>
+
+          <div class="slider-dots">
+            <button
+              v-for="(item, i) in featuredContent"
+              :key="`dot-${i}`"
+              class="slider-dot"
+              :class="{ active: i === currentSlide }"
+              :aria-label="`Go to slide ${i + 1}`"
+              @click="goToSlide(i)"
+            ></button>
+          </div>
+        </template>
       </div>
-    </template>
-  </div>
 
-  <!-- Estado vacío: ningún post/resource marcado como featured -->
-  <p v-else class="section-text">No featured content available right now.</p>
-</section>
+      <!-- Estado vacío: ningún post/resource marcado como featured -->
+      <p v-else class="section-text">No featured content available right now.</p>
+    </section>
 
-    <!-- Another Dashed Line -->
-    <div class="dashed-line-decoration"></div>
-
-    <!-- Footer with Patterns -->
+    <!-- Footer -->
     <footer class="footer">
-      <div class="pattern-section">
-        <div class="halftone-pattern"></div>
-        <div class="vertical-bars"></div>
-      </div>
-      
+      <div class="halftone-pattern"></div>
+      <div class="vertical-bars"></div>
     </footer>
+
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, h } from 'vue'
 import { useContent } from '@/composables/useContent'
 
-// "Featured Content" ya no es una tarjeta hardcodeada: trae los posts
-// del blog Y los resources que estén marcados como featured en WP
-// (mismo filtro 'special-content': 'featured' que usa ResearchSection.vue
-// para los minibriefs), y los combina en una sola lista, mostrada en
-// un slider.
-//
-// useContent() arma un store local nuevo cada vez que se llama, así que
-// usamos dos instancias independientes -- una por tipo de contenido --
-// y las combinamos en el computed `featuredContent`.
+/* -------------------------------------------------------------------- */
+/* Scroll-driven "walker" position                                      */
+/* -------------------------------------------------------------------- */
+/* The little figure that walks along every dashed line on the page is  */
+/* tied to overall page scroll: as the user scrolls down, the figure    */
+/* keeps walking forward (0 → 100%) and loops back to keep walking on   */
+/* every dashed line shown on the page (matching the legacy site).      */
 
+const walkProgress = ref(0)
+
+function updateWalkProgress() {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight
+  const ratio = docHeight > 0 ? scrollTop / docHeight : 0
+  // Loop the walk cycle every ~35% of total scroll so the figure keeps
+  // "walking" forward, starting from the left edge when ratio is 0.
+  const cycle = (ratio / 0.35) % 1
+  walkProgress.value = cycle
+}
+
+let ticking = false
+function onScroll() {
+  if (ticking) return
+  ticking = true
+  requestAnimationFrame(() => {
+    updateWalkProgress()
+    ticking = false
+  })
+}
+
+onMounted(() => {
+  updateWalkProgress()
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
+})
+
+/* -------------------------------------------------------------------- */
+/* DashedPath - reusable dashed wave decoration with walking figure     */
+/* -------------------------------------------------------------------- */
+const DashedPath = {
+  props: { progress: { type: Number, default: 0 } },
+  setup(props) {
+    // A gentle wave path the figure travels along, expressed as a
+    // viewBox of 0 0 1200 60. We sample a point on the sine-like wave
+    // for the given progress (0-1) to place the walker.
+    const points = []
+    const segments = 12
+    for (let i = 0; i <= segments; i++) {
+      const x = (1200 / segments) * i
+      const y = 30 + Math.sin(i * 1.3) * 14
+      points.push([x, y])
+    }
+    const d = points
+      .map((p, i) => (i === 0 ? `M${p[0]},${p[1]}` : `L${p[0]},${p[1]}`))
+      .join(' ')
+
+    function positionAt(t) {
+      const totalLen = points.length - 1
+      const pos = t * totalLen
+      const idx = Math.min(Math.floor(pos), totalLen - 1)
+      const localT = pos - idx
+      const [x1, y1] = points[idx]
+      const [x2, y2] = points[Math.min(idx + 1, totalLen)]
+      return { x: x1 + (x2 - x1) * localT, y: y1 + (y2 - y1) * localT }
+    }
+
+    return () => {
+      const { x, y } = positionAt(props.progress)
+      return h('div', { class: 'dashed-path-wrap' }, [
+        h('img', {
+          src: '/terrain_yellow.png',
+          alt: '',
+          'aria-hidden': 'true',
+          class: 'dashed-path-line',
+        }),
+        h('img', {
+          src: '/isotype_loop.gif',
+          alt: '',
+          'aria-hidden': 'true',
+          class: 'walker-img',
+          style: {
+            left: `${(x / 1200) * 100}%`,
+            top: `${(y / 60) * 100}%`,
+          },
+        }),
+      ])
+    }
+  },
+}
+
+/* -------------------------------------------------------------------- */
+/* Featured Content                                                      */
+/* -------------------------------------------------------------------- */
 const {
   items: featuredPosts,
   fetch: fetchFeaturedPosts,
@@ -159,19 +250,16 @@ const {
 
 const loadingFeatured = computed(() => loadingPosts.value || loadingResources.value)
 
-const FEATURED_LIMIT = 6 // cuántas tarjetas trae el slider como máximo
+const FEATURED_LIMIT = 6
 
 const featuredContent = computed(() => {
   const posts = featuredPosts.value.map(item => normalizeFeaturedItem(item, 'post'))
   const resources = featuredResources.value.map(item => normalizeFeaturedItem(item, 'resource'))
-
-  // Más reciente primero, mezclando ambos tipos
   return [...posts, ...resources]
     .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
     .slice(0, FEATURED_LIMIT)
 })
 
-// ---------- Slider ----------
 const currentSlide = ref(0)
 
 function nextSlide() {
@@ -189,8 +277,6 @@ function goToSlide(index) {
   currentSlide.value = index
 }
 
-// Si la lista cambia (llega de la API, o queda más corta), volvemos al inicio
-// para no quedar apuntando a un índice que ya no existe.
 watch(featuredContent, () => {
   currentSlide.value = 0
 })
@@ -221,367 +307,286 @@ onMounted(() => {
     type: 'posts',
     page: 1,
     perPage: FEATURED_LIMIT,
-    filters: {
-      s: '',
-      'special-content': 'featured'
-    }
+    filters: { s: '', 'special-content': 'featured' }
   })
 
   fetchFeaturedResources({
     type: 'resources',
     page: 1,
     perPage: FEATURED_LIMIT,
-    filters: {
-      s: '',
-      'special-content': 'featured'
-    }
+    filters: { s: '', 'special-content': 'featured' }
   })
 })
 </script>
 
 <style scoped>
-/* Color Variables */
+@import url('https://fonts.googleapis.com/css?family=Cormorant:600,700&family=Work+Sans:300,400,500,600,700&display=swap');
+
+/* -------------------------------------------------------------------- */
+/* Tokens (exact values from the legacy Divi CSS)                       */
+/* -------------------------------------------------------------------- */
+.website-container {
+  --color-teal: #2b3f47;
+  --color-teal-deep: #1f2e35;
+  --color-gold: #f5c670;
+  --color-orange-light: #f5c670;
+  --color-orange-deep: #f38a4e;
+  --color-body-on-dark: #FFFFFF;
+  --color-body-on-light: #000000;
+  --font-display: 'Cormorant', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
+
+  min-height: 100vh;
+  background-color: var(--color-teal);
+  color: #F5F5F5;
+  font-family: var(--font-sans);
+}
+
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-.website-container {
-  min-height: 100vh;
-  background-color: #2B3B47;
-  color: #F5F5F5;
-  font-family: 'Arial', sans-serif;
-}
-
-/* Header Styles */
-.header {
-  background-color: #2B3B47;
-  padding: 20px 40px;
-  border-top: 2px solid #F4D06F;
-  border-bottom: 1px solid transparent;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.logo-svg {
-  width: 60px;
-  height: 60px;
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.logo-text-bold {
-  font-family: 'Arial', sans-serif;
-  font-weight: bold;
-  color: #F4D06F;
-  font-size: 14px;
-  letter-spacing: 1px;
-}
-
-.navigation {
-  display: flex;
-  gap: 20px;
-}
-
-.nav-link {
-  color: #F4D06F;
-  text-decoration: none;
-  font-family: 'Arial', sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  transition: border-bottom 0.3s;
-}
-
-.nav-link:hover {
-  border-bottom: 2px solid #F4D06F;
-}
-
-.submit-btn {
-  background-color: #F4D06F;
-  color: #2B3B47;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 12px;
-}
-
-.submit-btn:hover {
-  background-color: #F79456;
-}
-
-/* Dashed Line Decoration */
-.dashed-line-decoration {
-  height: 2px;
-  background-image: 
-    linear-gradient(45deg, #F4D06F 25%, transparent 25%),
-    linear-gradient(-45deg, #F4D06F 25%, transparent 25%);
-  background-size: 20px 20px;
-  background-repeat: repeat-x;
-  margin: 0;
-}
-
-/* Hero Section */
-.hero-section {
-  background: linear-gradient(135deg, #F79456, #FDBB80);
-  padding: 60px 40px;
+/* -------------------------------------------------------------------- */
+/* Dashed path decoration (scroll-driven walker)                        */
+/* -------------------------------------------------------------------- */
+.dashed-path-wrap {
+  background-color: var(--color-teal);
+  line-height: 0;
   position: relative;
-  min-height: 400px;
-  display: flex;
-  align-items: center;
+}
+
+.dashed-path-line {
+  width: 100%;
+  height: 60px;
+  display: block;
+  object-fit: cover;
+}
+
+.walker-img {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------- */
+/* Hero Section                                                         */
+/* -------------------------------------------------------------------- */
+.hero-section {
+  /* Legacy: linear-gradient(180deg,#f5c670 0%,#f38a4e 100%) — top to bottom, not diagonal */
+  background: linear-gradient(180deg, var(--color-orange-light) 0%, var(--color-orange-deep) 100%);
+  padding: 70px 40px 90px;
+  position: relative;
+  overflow: hidden;
 }
 
 .hero-content {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
-  width: 100%;
+  padding-left: 80px;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-text {
-  font-family: 'Arial', sans-serif;
-  font-size: 13px;
-  line-height: 1.8;
-  color: #2B3B47;
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.8em;
+  color: #000000;
   margin-bottom: 20px;
 }
 
-.join-btn {
-  background-color: #2B3B47;
-  color: #FFFFFF;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 14px;
-  margin-top: 20px;
+.center-btn-wrap {
+  text-align: center;
+  margin-top: 30px;
 }
 
-.join-btn:hover {
-  background-color: #2B3B47;
-  opacity: 0.9;
+.outline-btn {
+  background-color: transparent;
+  color: var(--color-gold);
+  border: 2px solid var(--color-gold);
+  padding: 10px 24px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.outline-btn:hover {
+  background-color: var(--color-gold);
+  color: var(--color-teal-deep);
 }
 
 .fence-decoration {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 200px;
-  height: 200px;
-  background-image: 
-    linear-gradient(45deg, #2B3B47 25%, transparent 25%),
-    linear-gradient(-45deg, #2B3B47 25%, transparent 25%);
-  background-size: 20px 20px;
-  opacity: 0.1;
+  width: 380px;
+  max-width: 45%;
+  height: auto;
+  pointer-events: none;
 }
 
-/* Content Section */
+/* -------------------------------------------------------------------- */
+/* Content Sections                                                     */
+/* -------------------------------------------------------------------- */
 .content-section {
-  padding: 80px 40px;
-  max-width: 1400px;
+  padding: 90px 40px;
+  max-width: 1100px;
   margin: 0 auto;
+}
+
+.content-section--overlap {
+  padding-top: 60px;
 }
 
 .section-title {
-  font-family: 'Georgia', serif;
-  font-size: 32px;
-  color: #F4D06F;
-  margin-bottom: 30px;
-  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 38px;
+  color: var(--color-gold);
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.section-title--light {
+  color: #FFFFFF;
 }
 
 .section-text {
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
-  line-height: 1.8;
-  color: #F5F5F5;
-  text-align: center;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-/* Footer */
-.footer {
-  background-color: #2B3B47;
-  padding: 60px 40px;
-  position: relative;
-  min-height: 300px;
-}
-
-.pattern-section {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 300px;
-  overflow: hidden;
-}
-
-.halftone-pattern {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: radial-gradient(#F4D06F 1px, transparent 1px);
-  background-size: 4px 4px;
-  opacity: 0.2;
-}
-
-.vertical-bars {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    90deg,
-    #F4D06F 0px,
-    #F4D06F 2px,
-    transparent 2px,
-    transparent 10px
-  );
-  opacity: 0.3;
-}
-
-.footer-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding-top: 300px;
-}
-
-.footer-text {
-  font-family: 'Arial', sans-serif;
-  font-size: 12px;
-  line-height: 1.8;
-  color: #F5F5F5;
-  text-align: center;
-  margin-bottom: 40px;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.icon-row {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-}
-
-.icon-circle {
-  width: 60px;
-  height: 60px;
-  border: 2px solid #F4D06F;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #F4D06F;
-}
-
-.icon-circle svg {
-  width: 30px;
-  height: 30px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .navigation {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .hero-section,
-  .content-section,
-  .footer {
-    padding: 40px 20px;
-  }
-  
-  .pattern-section {
-    height: 150px;
-  }
-  
-  .footer-content {
-    padding-top: 150px;
-  }
-}
-
-/* Center image */
-.image-center {
-  text-align: center;
-  margin: 40px 0;
-}
-
-.image-center img {
-  max-width: 600px;
-  width: 100%;
-}
-
-/* Bullet list */
-.bullet-list {
-  max-width: 800px;
-  margin: 20px auto;
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.6em;
+  color: var(--color-body-on-dark);
   text-align: left;
-  line-height: 1.8;
+  max-width: 1000px;
 }
 
-/* Full image */
+.section-text--bold {
+  font-weight: 600;
+  color: #F5F5F5;
+  margin-bottom: 10px;
+}
+
+/* -------------------------------------------------------------------- */
+/* Halftone wall+fence photo                                            */
+/* -------------------------------------------------------------------- */
+.halftone-photo {
+  width: 100%;
+  line-height: 0;
+}
+
+.halftone-photo img {
+  width: 100%;
+  display: block;
+}
+
+/* -------------------------------------------------------------------- */
+/* Icon row                                                              */
+/* -------------------------------------------------------------------- */
+.icon-row {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.icon-row-image {
+  max-width: 739px;
+  width: 100%;
+  height: auto;
+}
+
+/* -------------------------------------------------------------------- */
+/* Bullet list                                                          */
+/* -------------------------------------------------------------------- */
+.bullet-list {
+  max-width: 1000px;
+  margin: 18px 0 24px;
+  padding-left: 20px;
+  text-align: left;
+  line-height: 1.85;
+  color: var(--color-body-on-dark);
+  font-size: 15px;
+}
+
+.bullet-list li {
+  margin-bottom: 10px;
+}
+
+/* -------------------------------------------------------------------- */
+/* Full width image                                                     */
+/* -------------------------------------------------------------------- */
+.full-image {
+  width: 100%;
+  line-height: 0;
+}
+
 .full-image img {
   width: 100%;
   display: block;
-  margin: 40px 0;
 }
 
-/* Featured card */
+/* -------------------------------------------------------------------- */
+/* Featured card / slider                                                */
+/* -------------------------------------------------------------------- */
 .featured-card {
   display: flex;
-  max-width: 900px;
-  margin: 40px auto;
-  background: #1f2a33;
-  border: 1px solid #F4D06F;
+  align-items: center;
+  gap: 50px;
+  max-width: 1000px;
+  margin: 50px auto 0;
 }
 
 .featured-card img {
-  width: 40%;
+  width: 42%;
+  max-width: 380px;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
-.featured-card div {
-  padding: 20px;
+.featured-card > div {
   text-align: left;
+}
+
+.featured-card h3 {
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 30px;
+  color: #F5F5F5;
+  margin-bottom: 12px;
+}
+
+.featured-card p {
+  color: var(--color-body-on-dark);
+  font-size: 14px;
+  margin-bottom: 22px;
+  line-height: 1.7;
 }
 
 .featured-link {
   display: inline-block;
   text-decoration: none;
+  border: 1.5px solid var(--color-gold);
+  color: #F5F5F5;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 2px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Slider de Featured Content */
+.featured-link:hover {
+  background-color: var(--color-gold);
+  color: var(--color-teal-deep);
+}
+
 .featured-slider {
   position: relative;
-  max-width: 900px;
-  margin: 40px auto;
+  max-width: 1000px;
+  margin: 0 auto;
   overflow: hidden;
 }
 
@@ -593,16 +598,16 @@ onMounted(() => {
 .featured-slider-track .featured-slide {
   flex: 0 0 100%;
   width: 100%;
-  margin: 0; /* el margin lo maneja .featured-slider, no cada slide */
+  margin: 0;
 }
 
 .slider-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(43, 59, 71, 0.85);
-  color: #F4D06F;
-  border: 1px solid #F4D06F;
+  background: rgba(31, 44, 51, 0.85);
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -612,65 +617,120 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease;
   z-index: 2;
 }
 
 .slider-arrow:hover {
-  background-color: #F4D06F;
-  color: #2B3B47;
+  background-color: var(--color-gold);
+  color: var(--color-teal-deep);
 }
 
-.slider-arrow-prev {
-  left: -8px;
-}
-
-.slider-arrow-next {
-  right: -8px;
-}
+.slider-arrow-prev { left: -8px; }
+.slider-arrow-next { right: -8px; }
 
 .slider-dots {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 28px;
 }
 
 .slider-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 1px solid #F4D06F;
+  border: 1px solid var(--color-gold);
   background: transparent;
   cursor: pointer;
   padding: 0;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease;
 }
 
 .slider-dot.active {
-  background-color: #F4D06F;
+  background-color: var(--color-gold);
 }
 
-@media (max-width: 600px) {
-  .slider-arrow-prev {
-    left: 4px;
-  }
-  .slider-arrow-next {
-    right: 4px;
-  }
-}
-
-/* Skeleton de carga para Featured Content */
 .featured-skeleton-img {
-  width: 40%;
+  width: 42%;
+  max-width: 380px;
+  aspect-ratio: 4 / 3;
   background: rgba(245, 245, 245, 0.08);
 }
 
 .featured-skeleton-line {
   height: 14px;
-  margin: 12px 20px;
+  margin: 12px 0;
   border-radius: 4px;
   background: rgba(245, 245, 245, 0.08);
 }
 
+/* -------------------------------------------------------------------- */
+/* Footer                                                                */
+/* -------------------------------------------------------------------- */
+.footer {
+  background-color: var(--color-teal);
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+}
+
+.halftone-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--color-gold) 1px, transparent 1px);
+  background-size: 5px 5px;
+  opacity: 0.18;
+}
+
+.vertical-bars {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-gold) 0px,
+    var(--color-gold) 2px,
+    transparent 2px,
+    transparent 12px
+  );
+  opacity: 0.25;
+  clip-path: polygon(60% 0, 100% 0, 100% 100%, 75% 100%);
+}
+
+/* -------------------------------------------------------------------- */
+/* Responsive                                                            */
+/* -------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .featured-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .featured-card img {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .hero-section,
+  .content-section {
+    padding: 50px 20px;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+
+  .fence-decoration {
+    width: 220px;
+    height: 220px;
+    right: -30px;
+  }
+}
 </style>
