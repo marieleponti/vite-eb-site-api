@@ -15,11 +15,13 @@
     </section>
 
     <!-- "Why" Section -->
-    <section class="content-section">
-      <h2 class="section-title">Why the Everywhere Border?</h2>
-      <p class="section-text">
-        The border is not a fixed territorial boundary. It is an all-encompassing system of ideas, policies, practices, and infrastructures that reach deep into the interior of origin and transit countries through externalization processes, with the goal of controlling the movement of the majority of humans, reserving free movement to reach territorial frontiers and cross political boundaries for a select few. The US has been a key actor in advancing this vision and practice, which has a tremendous impact on targeted countries, facilitating and increasing militarization, state violence, and corporate power.
-      </p>
+    <section class="content-section why-section" ref="whySectionRef">
+      <div class="why-content">
+        <h2 class="section-title">Why the Everywhere Border?</h2>
+        <p class="section-text">
+          The border is not a fixed territorial boundary. It is an all-encompassing system of ideas, policies, practices, and infrastructures that reach deep into the interior of origin and transit countries through externalization processes, with the goal of controlling the movement of the majority of humans, reserving free movement to reach territorial frontiers and cross political boundaries for a select few. The US has been a key actor in advancing this vision and practice, which has a tremendous impact on targeted countries, facilitating and increasing militarization, state violence, and corporate power.
+        </p>
+      </div>
     </section>
 
     <!-- Dashed wave decoration mid-page -->
@@ -141,22 +143,63 @@ import { computed, onMounted, onUnmounted, ref, watch, h } from 'vue'
 import { useContent } from '@/composables/useContent'
 
 /* -------------------------------------------------------------------- */
+/* Why section parallax                                                  */
+/* -------------------------------------------------------------------- */
+/* The content inside the "Why" section moves slightly slower than the  */
+/* scroll, creating more blue space above when entering and below when  */
+/* leaving — matching the legacy Divi translateY motion effect.         */
+let whyCleanup = null
+
+function getScrollParent(node) {
+  if (!node || node === document.body || node === document.documentElement) return null
+  const style = window.getComputedStyle(node)
+  const overflow = style.overflowY
+  if ((overflow === 'auto' || overflow === 'scroll') && node.scrollHeight > node.clientHeight) {
+    return node
+  }
+  return getScrollParent(node.parentElement)
+}
+
+onMounted(() => {
+  const section = document.querySelector('.why-section')
+  const content = document.querySelector('.why-content')
+  if (!section || !content) return
+
+  // Walk up DOM to find the real scroll container
+  const scrollParent = getScrollParent(section.parentElement)
+  const scrollTarget = scrollParent || window
+
+  function update() {
+    let containerHeight, sectionTop
+    if (!scrollParent) {
+      containerHeight = window.innerHeight
+      sectionTop = section.getBoundingClientRect().top
+    } else {
+      containerHeight = scrollParent.clientHeight
+      sectionTop = section.getBoundingClientRect().top - scrollParent.getBoundingClientRect().top
+    }
+    const t = (containerHeight - sectionTop) / (containerHeight + section.offsetHeight)
+    const clamped = Math.max(0, Math.min(1, t))
+    content.style.transform = `translateY(${50 - clamped * 100}px)`
+  }
+
+  scrollTarget.addEventListener('scroll', update, { passive: true })
+  update()
+  whyCleanup = () => scrollTarget.removeEventListener('scroll', update)
+})
+
+onUnmounted(() => {
+  if (whyCleanup) whyCleanup()
+})
+
+/* -------------------------------------------------------------------- */
 /* DashedPath - reusable dashed wave decoration with walking figure     */
 /* -------------------------------------------------------------------- */
-/* Self-contained: instead of listening for a 'scroll' event (which can */
-/* silently fail to fire if the app scrolls inside a nested container   */
-/* rather than the window), this polls the element's own position       */
-/* relative to the viewport via getBoundingClientRect on every animation*/
-/* frame. That works no matter what actually scrolls.                   */
 const DashedPath = {
   setup() {
     const wrapRef = ref(null)
     const progress = ref(0)
-    let rafId = null
 
-    // A gentle wave path the figure travels along, expressed as a
-    // viewBox of 0 0 1200 60. We sample a point on the sine-like wave
-    // for the given progress (0-1) to place the walker.
     const points = []
     const segments = 12
     for (let i = 0; i <= segments; i++) {
@@ -164,76 +207,107 @@ const DashedPath = {
       const y = 30 + Math.sin(i * 1.3) * 14
       points.push([x, y])
     }
-    const d = points
-      .map((p, i) => (i === 0 ? `M${p[0]},${p[1]}` : `L${p[0]},${p[1]}`))
-      .join(' ')
+
+    // Smoothed progress with easing for softer movement
+    const smoothProgress = ref(0)
+    let rafSmooth = null
 
     function positionAt(t) {
-      // Start the walker at center-left (35% across) instead of the
-      // very left edge, and advance toward the right as the section
-      // travels up through the viewport.
-      const START_FRAC = 0.35
-      const effectiveT = START_FRAC + t * (1 - START_FRAC)
-
+      const START_FRAC = 0.30   // a bit further right
+      const END_FRAC = 0.48     // narrower range = slower movement
+      const effectiveT = START_FRAC + t * (END_FRAC - START_FRAC)
       const totalLen = points.length - 1
       const pos = effectiveT * totalLen
       const idx = Math.min(Math.floor(pos), totalLen - 1)
       const localT = pos - idx
       const [x1, y1] = points[idx]
       const [x2, y2] = points[Math.min(idx + 1, totalLen)]
-      return { x: x1 + (x2 - x1) * localT, y: y1 + (y2 - y1) * localT }
+      // Shift Y upward by 12px so figure rides higher on the line
+      return { x: x1 + (x2 - x1) * localT, y: (y1 + (y2 - y1) * localT) - 12 }
     }
 
     function updateProgress() {
       const el = wrapRef.value
-      if (el) {
-        const rect = el.getBoundingClientRect()
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight
-        // 0 when the element's top has just entered the bottom of the
-        // viewport, 1 once it has fully scrolled past the top.
-        const total = viewportHeight + rect.height
-        const traveled = viewportHeight - rect.top
-        const ratio = total > 0 ? traveled / total : 0
-        progress.value = Math.min(1, Math.max(0, ratio))
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const vh = window.innerHeight || document.documentElement.clientHeight
+      const total = vh + rect.height
+      const traveled = vh - rect.top
+      progress.value = Math.min(1, Math.max(0, total > 0 ? traveled / total : 0))
+    }
+
+    // Ease toward the target progress each frame for smooth deceleration
+    function smoothStep() {
+      const diff = progress.value - smoothProgress.value
+      if (Math.abs(diff) > 0.0005) {
+        smoothProgress.value += diff * 0.04  // lower = smoother/slower
+      } else {
+        smoothProgress.value = progress.value
       }
-      rafId = requestAnimationFrame(updateProgress)
+      rafSmooth = requestAnimationFrame(smoothStep)
+    }
+
+    function onScroll() {
+      requestAnimationFrame(updateProgress)
     }
 
     onMounted(() => {
-      rafId = requestAnimationFrame(updateProgress)
+      updateProgress()
+      rafSmooth = requestAnimationFrame(smoothStep)
+      document.addEventListener('scroll', onScroll, { passive: true, capture: true })
+      window.addEventListener('scroll', onScroll, { passive: true })
     })
 
     onUnmounted(() => {
-      if (rafId) cancelAnimationFrame(rafId)
+      if (rafSmooth) cancelAnimationFrame(rafSmooth)
+      document.removeEventListener('scroll', onScroll, { capture: true })
+      window.removeEventListener('scroll', onScroll)
     })
 
+    // setup() returns a render function — this is required for runtime-only
+    // Vue builds (Vite default). The ref: wrapRef binding works correctly here.
     return () => {
-      const { x, y } = positionAt(progress.value)
-      return h('div', { class: 'dashed-path-wrap', ref: wrapRef }, [
+      const { x, y } = positionAt(smoothProgress.value)
+      return h('div', {
+        ref: wrapRef,
+        style: {
+          backgroundColor: '#2b3f47',
+          lineHeight: '0',
+          position: 'relative',
+          width: '100vw',
+          marginLeft: 'calc(50% - 50vw)',
+          paddingBottom: '24px',
+        }
+      }, [
         h('img', {
           src: '/terrain_yellow.png',
           alt: '',
           'aria-hidden': 'true',
-          class: 'dashed-path-line',
+          style: {
+            width: '100%',
+            height: '52px',
+            display: 'block',
+            objectFit: 'fill',
+          },
         }),
         h('img', {
           src: '/isotype_loop.gif',
           alt: '',
           'aria-hidden': 'true',
-          class: 'walker-img',
           style: {
+            position: 'absolute',
+            width: '65px',
+            height: '65px',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
             left: `${(x / 1200) * 100}%`,
-            top: `${(y / 60) * 100}%`,
+            top: `${(y / 52) * 100}%`,
           },
         }),
       ])
     }
   },
 }
-
-/* -------------------------------------------------------------------- */
-/* Featured Content                                                      */
-/* -------------------------------------------------------------------- */
 const {
   items: featuredPosts,
   fetch: fetchFeaturedPosts,
@@ -436,9 +510,20 @@ onMounted(() => {
 /* Content Sections                                                     */
 /* -------------------------------------------------------------------- */
 .content-section {
-  padding: 90px 40px 90px 80px;
-  max-width: 1180px;
-  margin: 0;
+  padding: 90px 75px 90px 75px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.why-section {
+  padding-top: 35vh;
+  padding-bottom: 35vh;
+  overflow: hidden;
+}
+
+.why-content {
+  will-change: transform;
+  transition: transform 0.15s ease-out;
 }
 
 .content-section--overlap {
@@ -448,7 +533,7 @@ onMounted(() => {
 .section-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 38px;
+  font-size: 44px;
   color: var(--color-gold);
   margin-bottom: 28px;
   text-align: left;
@@ -465,7 +550,6 @@ onMounted(() => {
   line-height: 1.6em;
   color: var(--color-body-on-dark);
   text-align: left;
-  max-width: 1000px;
 }
 
 .section-text--bold {
