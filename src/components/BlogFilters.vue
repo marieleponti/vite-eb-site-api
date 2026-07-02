@@ -36,59 +36,6 @@
   </v-btn>
 </div>
 
-<v-expansion-panels multiple variant="accordion">
-
-  <!-- Categories -->
-  <v-expansion-panel
-    class="filter-panel"
-    elevation="0"
-  >
-    <v-expansion-panel-title>
-      Categories
-    </v-expansion-panel-title>
-
-    <v-expansion-panel-text>
-
-      <v-checkbox
-        v-for="cat in taxonomies.categories"
-        :key="cat.id"
-        v-model="filters.categories"
-        :label="cat.name"
-        :value="cat.id"
-        class="taxonomy-checkbox"
-        hide-details
-      />
-
-    </v-expansion-panel-text>
-  </v-expansion-panel>
-
-  <!-- Tags -->
-  <v-expansion-panel
-    class="filter-panel"
-    elevation="0"
-  >
-    <v-expansion-panel-title>
-      Tags
-    </v-expansion-panel-title>
-
-    <v-expansion-panel-text>
-
-      <v-checkbox
-        v-for="tag in taxonomies.tags"
-        :key="tag.id"
-        v-model="filters.tags"
-        :label="tag.name"
-        :value="tag.id"
-        class="taxonomy-checkbox"
-        hide-details
-      />
-
-    </v-expansion-panel-text>
-  </v-expansion-panel>
-
-</v-expansion-panels>
-
-
   </v-card>
 </template>
 
