@@ -15,13 +15,11 @@
     </section>
 
     <!-- "Why" Section -->
-    <section class="content-section why-section" ref="whySectionRef">
-      <div class="why-content">
-        <h2 class="section-title">Why the Everywhere Border?</h2>
-        <p class="section-text">
-          The border is not a fixed territorial boundary. It is an all-encompassing system of ideas, policies, practices, and infrastructures that reach deep into the interior of origin and transit countries through externalization processes, with the goal of controlling the movement of the majority of humans, reserving free movement to reach territorial frontiers and cross political boundaries for a select few. The US has been a key actor in advancing this vision and practice, which has a tremendous impact on targeted countries, facilitating and increasing militarization, state violence, and corporate power.
-        </p>
-      </div>
+    <section class="content-section">
+      <h2 class="section-title">Why the Everywhere Border?</h2>
+      <p class="section-text">
+        The border is not a fixed territorial boundary. It is an all-encompassing system of ideas, policies, practices, and infrastructures that reach deep into the interior of origin and transit countries through externalization processes, with the goal of controlling the movement of the majority of humans, reserving free movement to reach territorial frontiers and cross political boundaries for a select few. The US has been a key actor in advancing this vision and practice, which has a tremendous impact on targeted countries, facilitating and increasing militarization, state violence, and corporate power.
+      </p>
     </section>
 
     <!-- Dashed wave decoration mid-page -->
@@ -29,7 +27,7 @@
 
     <!-- Halftone wall + fence photo -->
     <div class="halftone-photo">
-      <img src="/border_wall.png" alt="Border wall and fence" />
+      <img src="/border_wall.png" alt="" />
     </div>
 
     <!-- Border Explanation Section -->
@@ -37,8 +35,6 @@
       <p class="section-text">
         The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
       </p>
-
-      <!-- Process Icons -->
       <div class="icon-row">
         <img src="/border_icons.png" alt="" class="icon-row-image" />
       </div>
@@ -47,17 +43,14 @@
     <!-- Bullet Section -->
     <section class="content-section">
       <p class="section-text section-text--bold">This is &ldquo;The Everywhere Border&rdquo;:</p>
-
       <ul class="bullet-list">
         <li>It enables the policing of people wherever they are, based on race, nationality, ethnicity, class, gender, and other social markers.</li>
         <li>It relies on public narratives, laws, and politics to reinforce hierarchies of belonging, thereby allowing governments to more easily limit people&rsquo;s freedom of movement, ability to stay, and to live freely.</li>
         <li>It plays a fundamental role in disrupting the social fabric of origin, transit, and destination countries, making communities surveilled, policed and unsafe.</li>
       </ul>
-
       <p class="section-text">
         We invite you to explore the resources available here, leverage them in your work, and share information with others.
       </p>
-
       <div class="center-btn-wrap">
         <button class="outline-btn">Explore the Database</button>
       </div>
@@ -129,12 +122,6 @@
       <p v-else class="section-text">No featured content available right now.</p>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="halftone-pattern"></div>
-      <div class="vertical-bars"></div>
-    </footer>
-
   </div>
 </template>
 
@@ -150,43 +137,7 @@ import { useContent } from '@/composables/useContent'
 /* leaving — matching the legacy Divi translateY motion effect.         */
 let whyCleanup = null
 
-function getScrollParent(node) {
-  if (!node || node === document.body || node === document.documentElement) return null
-  const style = window.getComputedStyle(node)
-  const overflow = style.overflowY
-  if ((overflow === 'auto' || overflow === 'scroll') && node.scrollHeight > node.clientHeight) {
-    return node
-  }
-  return getScrollParent(node.parentElement)
-}
-
-onMounted(() => {
-  const section = document.querySelector('.why-section')
-  const content = document.querySelector('.why-content')
-  if (!section || !content) return
-
-  // Walk up DOM to find the real scroll container
-  const scrollParent = getScrollParent(section.parentElement)
-  const scrollTarget = scrollParent || window
-
-  function update() {
-    let containerHeight, sectionTop
-    if (!scrollParent) {
-      containerHeight = window.innerHeight
-      sectionTop = section.getBoundingClientRect().top
-    } else {
-      containerHeight = scrollParent.clientHeight
-      sectionTop = section.getBoundingClientRect().top - scrollParent.getBoundingClientRect().top
-    }
-    const t = (containerHeight - sectionTop) / (containerHeight + section.offsetHeight)
-    const clamped = Math.max(0, Math.min(1, t))
-    content.style.transform = `translateY(${50 - clamped * 100}px)`
-  }
-
-  scrollTarget.addEventListener('scroll', update, { passive: true })
-  update()
-  whyCleanup = () => scrollTarget.removeEventListener('scroll', update)
-})
+onMounted(() => {})
 
 onUnmounted(() => {
   if (whyCleanup) whyCleanup()
@@ -229,10 +180,12 @@ const DashedPath = {
     function updateProgress() {
       const el = wrapRef.value
       if (!el) return
+      const scrollTop = document.documentElement.scrollTop
+      const vh = document.documentElement.clientHeight
       const rect = el.getBoundingClientRect()
-      const vh = window.innerHeight || document.documentElement.clientHeight
+      const sectionDocTop = rect.top + scrollTop
       const total = vh + rect.height
-      const traveled = vh - rect.top
+      const traveled = scrollTop + vh - sectionDocTop
       progress.value = Math.min(1, Math.max(0, total > 0 ? traveled / total : 0))
     }
 
@@ -254,14 +207,12 @@ const DashedPath = {
     onMounted(() => {
       updateProgress()
       rafSmooth = requestAnimationFrame(smoothStep)
-      document.addEventListener('scroll', onScroll, { passive: true, capture: true })
-      window.addEventListener('scroll', onScroll, { passive: true })
+      document.addEventListener('scroll', onScroll, { passive: true })
     })
 
     onUnmounted(() => {
       if (rafSmooth) cancelAnimationFrame(rafSmooth)
-      document.removeEventListener('scroll', onScroll, { capture: true })
-      window.removeEventListener('scroll', onScroll)
+      document.removeEventListener('scroll', onScroll)
     })
 
     // setup() returns a render function — this is required for runtime-only
@@ -516,14 +467,12 @@ onMounted(() => {
 }
 
 .why-section {
-  padding-top: 35vh;
-  padding-bottom: 35vh;
-  overflow: hidden;
+  padding-top: 90px;
+  padding-bottom: 90px;
 }
 
 .why-content {
   will-change: transform;
-  transition: transform 0.15s ease-out;
 }
 
 .content-section--overlap {
@@ -557,6 +506,78 @@ onMounted(() => {
   color: #F5F5F5;
   margin-bottom: 10px;
 }
+
+/* -------------------------------------------------------------------- */
+/* Wall section: img tag with content overlaid via absolute positioning */
+/* -------------------------------------------------------------------- */
+.wall-section {
+  position: relative;
+  width: 100%;
+}
+
+.wall-img {
+  width: 100%;
+  display: block;
+}
+
+.wall-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 75px;
+}
+
+.wall-text {
+  color: #FFFFFF;
+  margin-bottom: 50px;
+  max-width: 1000px;
+}
+
+.bullet-box {
+  background-color: var(--color-gold);
+  margin: 0 auto;
+  max-width: 900px;
+  width: 100%;
+  padding: 50px 60px;
+  margin-top: 30px;
+}
+
+.bullet-bold {
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--color-teal);
+  margin-bottom: 16px;
+}
+
+.bullet-list--dark {
+  color: var(--color-teal);
+}
+
+.bullet-invite {
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--color-teal);
+  margin-top: 20px;
+  line-height: 1.6em;
+}
+
+.outline-btn--dark {
+  color: var(--color-teal);
+  border-color: var(--color-teal);
+}
+
+.outline-btn--dark:hover {
+  background-color: var(--color-teal);
+  color: var(--color-gold);
+}
+
 
 /* -------------------------------------------------------------------- */
 /* Halftone wall+fence photo                                            */
@@ -819,4 +840,4 @@ onMounted(() => {
     right: -30px;
   }
 }
-</style>
+</style>s

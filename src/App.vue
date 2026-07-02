@@ -1,5 +1,7 @@
 <script setup>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
+
 </script>
 
 <template>
@@ -10,11 +12,7 @@ import Navbar from './components/Navbar.vue'
 
     <router-view />
 
-    <footer class="footer">
-      <div class="pattern-section">
-        <div class="halftone-pattern"></div>
-        <div class="vertical-bars"></div>
-      </div>
-    </footer>
+     <Footer />
+
   </div>
 </template>
