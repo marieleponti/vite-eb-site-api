@@ -10,7 +10,7 @@
           <router-link to="/">Home</router-link>
           <router-link to="/resources">Library</router-link>
           <router-link to="/featured-research">Featured Research</router-link>
-          <router-link to="/eb-public-records-requests">Public Records Requests</router-link>
+          <router-link to="/public-records-requests">Public Records Requests</router-link>
           <router-link to="/blog">Blog</router-link>
           <router-link to="/about">About</router-link>
         </nav>
