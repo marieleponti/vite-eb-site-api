@@ -28,20 +28,18 @@
     <!-- Dashed wave decoration mid-page -->
     <DashedPath />
 
-    <!-- Halftone wall + fence photo -->
-    <div class="halftone-photo">
-      <img src="/border_wall.png" alt="" />
-    </div>
-
-    <!-- Border Explanation Section -->
-    <section class="content-section content-section--overlap">
-      <p class="section-text">
-        The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
-      </p>
-      <div class="icon-row">
-        <img src="/border_icons.png" alt="" class="icon-row-image" />
+    <!-- Teal block: wall image on top, text and icons below -->
+    <div class="wall-section">
+      <img src="/border_wall.png" alt="" class="wall-section-img" aria-hidden="true" />
+      <div class="wall-section-content">
+        <p class="section-text wall-section-text">
+          The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
+        </p>
+        <div class="icon-row">
+          <img src="/border_icons.png" alt="" class="icon-row-image" />
+        </div>
       </div>
-    </section>
+    </div>
 
     <!-- Bullet Section — full width, gold background, before train image -->
     <div class="bullet-full">
@@ -367,6 +365,30 @@ onMounted(() => {
 /* -------------------------------------------------------------------- */
 /* Halftone photo                                                        */
 /* -------------------------------------------------------------------- */
+.wall-section {
+  background-color: var(--color-teal);
+}
+
+.wall-section-img {
+  width: 100%;
+  display: block;
+}
+
+.wall-section-content {
+  background-color: var(--color-teal);
+  padding: 60px 75px 80px;
+  margin-top: -900px;
+  margin-left: 8%;
+  margin-right: 8%;
+  position: relative;
+  z-index: 1;
+}
+
+.wall-section-text {
+  margin: 0 auto 50px;
+  text-align: left;
+}
+
 .halftone-photo { width: 100%; line-height: 0; }
 .halftone-photo img { width: 100%; display: block; }
 
@@ -382,7 +404,7 @@ onMounted(() => {
 .bullet-full {
   background-color: var(--color-gold);
   width: 100%;
-  padding: 60px 220px 60px 220px;
+  padding: 500px 220px 60px 220px;
   font-family: var(--font-sans);
 }
 
