@@ -351,7 +351,7 @@ onMounted(() => {
 .bullet-full {
   background-color: var(--color-gold);
   width: 100%;
-  padding: 60px 160px 60px 160px;
+  padding: 60px 220px 60px 220px;
   font-family: var(--font-sans);
 }
 
@@ -379,7 +379,7 @@ onMounted(() => {
   font-weight: 700;
   color: #000000;
   line-height: 1.6em;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .bullet-btn {
@@ -393,7 +393,7 @@ onMounted(() => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
 
