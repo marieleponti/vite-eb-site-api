@@ -10,6 +10,9 @@
         <p class="hero-text">
           This info repository supports and reflects collaboration across borders. It contains original research, documentation, and analysis on border externalization policies and practices of multiple countries in the region, and the ever-growing tech and data infrastructure that support them, often made of opaque and inaccessible systems. Resources draw from the work of civil society organizations, academic research, financial investigation, and public records requests. The info repository is a collective work in progress—we welcome contributions from activists, researchers, and civil society organizations.
         </p>
+        <div class="hero-btn-wrap">
+          <router-link to="/resources" class="hero-btn">EXPLORE THE LIBRARY</router-link>
+        </div>
       </div>
       <img src="/wire.png" alt="" class="fence-decoration" aria-hidden="true" />
     </section>
@@ -52,7 +55,7 @@
         We invite you to explore the resources available here, leverage them in your work, and share information with others.
       </p>
       <div class="center-btn-wrap">
-        <button class="bullet-btn">EXPLORE THE DATABASE</button>
+        <router-link to="/resources" class="bullet-btn">EXPLORE THE DATABASE</router-link>
       </div>
     </div>
 
@@ -292,6 +295,34 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
+.hero-btn-wrap {
+  text-align: center;
+  margin-top: 50px;
+  position: relative;
+  z-index: 1;
+  padding-right: 80px;
+}
+
+.hero-btn {
+  display: inline-block;
+  text-decoration: none;
+  background-color: var(--color-teal);
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 36px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.hero-btn:hover {
+  background-color: var(--color-teal-deep);
+}
+
 .fence-decoration {
   position: absolute;
   right: 0;
@@ -357,7 +388,7 @@ onMounted(() => {
 
 .bullet-title {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
   color: #000000;
   margin-bottom: 16px;
   display: block;
@@ -376,13 +407,15 @@ onMounted(() => {
 
 .bullet-invite {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
   color: #000000;
   line-height: 1.6em;
   margin-bottom: 50px;
 }
 
 .bullet-btn {
+  display: inline-block;
+  text-decoration: none;
   background-color: var(--color-teal);
   color: #FFFFFF;
   border: none;
@@ -393,7 +426,7 @@ onMounted(() => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 3px;
   transition: all 0.2s ease;
 }
 
