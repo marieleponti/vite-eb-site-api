@@ -31,5 +31,35 @@
     "prevSlideAria": "Previous featured item",
     "nextSlideAria": "Next featured item",
     "goToSlideAria": "Go to slide {n}"
+  },
+  "about": {
+    "pageTitle": "About",
+    "projectHeading": "The project",
+    "projectIntroHtml": "The Everywhere Border project is led by the <a href=\"https://law.temple.edu/ilit/\" target=\"_blank\">Institute for Law, Innovation and Technology at Temple University</a>, the <a href=\"https://r3d.mx\" target=\"_blank\">Red en Defensa de los Derechos Digitales (R3D)</a>, and <a href=\"https://thecrcr.org\" target=\"_blank\">the Collaborative Research Center for Resilience</a>.",
+    "projectPara2": "We came together in 2023 after a consultation with civil society advocates throughout the Americas. They articulated a need to increase transnational knowledge sharing and collaboration to combat border externalization and its pernicious effects on the ground. Through documentation, research and information sharing, we developed this collaboration to make infrastructures used to surveil and police migrants visible and situate them in their geopolitical context. By deepening networks and consolidating resources, we seek to facilitate strategies that challenge state violence and exclusionary practices.",
+    "projectPara3": "We provide information and resources to support civil society to hold responsible actors accountable for the human rights violations and immense suffering they enact, showcase the risks to peaceful societies, the rule of law, and democracy that migration control infrastructures—both digital and non-digital—present, and advance a vision for a world in which all people can move freely and thrive.",
+    "projectPara4": "In addition to working with civil society organizations, we ground our knowledge building in collaboration and consultation with social justice and migrant rights groups, humanitarian and legal aid groups, human rights defenders, and activists in the territories and contexts we research.",
+    "projectPara5": "Our goal is to strengthen transnational solidarities to more effectively challenge migration control regimes and infrastructures that undermine our collective rights.",
+    "projectPara6": "The increase in militarization and policing that accompanies externalized bordering not only undermines the freedom, safety, and rights of people on the move, but also erodes and impacts the struggles for indigenous rights, workers\u2019 rights, those organizing for climate and ecological justice, and, ultimately, democracy and the rule of law. In this way, border externalization becomes a key means for state and corporate actors to engage in widescale repression and amass power with little to no accountability.",
+    "projectPara7": "We thank all contributors to this info repository for sharing resources, information, and expertise. We thank all contributors to this info repository for sharing resources, information, and expertise. We also thank Open Society Foundations for providing the support to enable us to launch the Everywhere Border Project.",
+    "approachHeading": "Our Approach",
+    "approachPara1": "Our approach is to expand collective knowledge on border externalization by cultivating resources from a variety of sources—including civil society-led research, public records requests, public writing, and scholarship—as well as collaborating in ongoing documentation with groups working at the intersection of migration, surveillance, and technology in the Americas, where our work is grounded.",
+    "approachPara2": "Our research covers a set of primary questions concerning processes of border militarization and policing, at and beyond the US border, and the role of digital infrastructure in these processes.",
+    "approachQ1": "What are key surveillance infrastructures in the Americas?",
+    "approachQ2": "What geopolitical contexts enable them?",
+    "approachQ3": "How does this manifest in Latin America?",
+    "approachQ4": "Who are the industry actors?",
+    "approachQ5": "What are the human impacts?",
+    "approachPara3": "We have been exploring these questions through a mix of desk research, interviews with scholars, activists, and social justice groups, financial investigation research, and context-based research in select cities in Mexico. To see how we have applied our methodology, check out \u201cThe Everywhere Border\u201d research outputs.",
+    "networkHeading": "The Everywhere Border Network",
+    "networkPara1": "As part of this project, we convene a transnational network of civil society organizations, social justice groups, researchers, academics, and activists from Brazil, Colombia, Costa Rica, Mexico, Paraguay, India, the US, the UK, and the European Union, working across multiple geographies to support information exchange, and strategic narrative and advocacy interventions.",
+    "networkPara2": "Contact the Everywhere Border team below.",
+    "formNamePlaceholder": "Name",
+    "formEmailPlaceholder": "Email Address",
+    "formMessagePlaceholder": "Message",
+    "formSubmit": "Submit"
+  },
+  "footer": {
+    "copyright": "© {year} Everywhere Border. All rights reserved."
   }
 }

@@ -7,18 +7,18 @@
           <img src="/logo.png" alt="Everywhere Border" class="footer-logo-img" />
         </div>
         <nav class="footer-nav">
-          <router-link to="/">Home</router-link>
-          <router-link to="/resources">Library</router-link>
-          <router-link to="/featured-research">Featured Research</router-link>
-          <router-link to="/public-records-requests">Public Records Requests</router-link>
-          <router-link to="/blog">Blog</router-link>
-          <router-link to="/about">About</router-link>
+          <router-link to="/">{{ $t('nav.home') }}</router-link>
+          <router-link to="/resources">{{ $t('nav.library') }}</router-link>
+          <router-link to="/featured-research">{{ $t('nav.featuredResearch') }}</router-link>
+          <router-link to="/public-records-requests">{{ $t('nav.publicRecordsRequests') }}</router-link>
+          <router-link to="/blog">{{ $t('nav.blog') }}</router-link>
+          <router-link to="/about">{{ $t('nav.about') }}</router-link>
         </nav>
       </div>
 
       <div class="footer-bottom">
         <p class="footer-copy">
-          © {{ year }} Everywhere Border. All rights reserved.
+          {{ $t('footer.copyright', { year }) }}
         </p>
       </div>
 
