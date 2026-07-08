@@ -69,5 +69,17 @@
     "previous": "anterior",
     "next": "próxima",
     "noResourcesFound": "no se encuentra"
+  },
+   "resourceFilters": {
+    "searchLabel": "Palabras claves",
+    "searchBtn": "Buscar",
+    "clearBtn": "Borrar",
+    "listView": "Lista",
+    "mapView": "Mapa"
+  },
+  "blogFilters": {
+    "searchLabel": "Palabras claves",
+    "searchBtn": "Buscar",
+    "clearBtn": "Borrar"
   }
 }

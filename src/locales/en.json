@@ -69,5 +69,17 @@
     "previous": "\u00ab Previous",
     "next": "Next \u00bb",
     "noResourcesFound": "No resources found."
+  },
+   "resourceFilters": {
+    "searchLabel": "Key Terms",
+    "searchBtn": "Search",
+    "clearBtn": "Clear",
+    "listView": "List View",
+    "mapView": "Map View"
+  },
+  "blogFilters": {
+    "searchLabel": "Search Posts",
+    "searchBtn": "Search",
+    "clearBtn": "Clear"
   }
 }

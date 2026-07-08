@@ -79,13 +79,13 @@
             </v-col>
           </v-row>
 
-          <v-row v-if="!loading && meta.totalPages > 1" class="mt-8">
+          <v-row v-if="!loading && totalPages > 1" class="mt-8">
             <v-col cols="12" class="d-flex justify-center align-center flex-wrap ga-2">
               <v-btn variant="text" class="pagination-nav" :disabled="page === 1" @click="changePage(page - 1)">
                 {{ $t('resources.previous') }}
               </v-btn>
 
-              <v-btn v-for="n in meta.totalPages" :key="n" :variant="page === n ? 'flat' : 'outlined'"
+              <v-btn v-for="n in totalPages" :key="n" :variant="page === n ? 'flat' : 'outlined'"
                 :color="page === n ? '#2f4356' : undefined" class="pagination-number" @click="changePage(n)">
                 {{ n }}
               </v-btn>
@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import ResourceFilters from '@/components/ResourceFilters.vue'
 import ResourceMap from '@/components/ResourceMap.vue'
 import { useContent } from '@/composables/useContent'
@@ -117,6 +117,13 @@ const { items, fetch: cargarContenido, loading, meta } = useContent()
 const currentFilters = ref({})
 const page = ref(1)
 const perPage = 15
+
+// El backend devuelve meta.totalPages mal calculado (siempre 1),
+// así que lo calculamos nosotros mismos a partir de meta.total, que sí es correcto.
+const totalPages = computed(() => {
+  const total = meta.value?.total || 0
+  return Math.max(1, Math.ceil(total / perPage))
+})
 
 // ===================== VISTA MAPA =====================
 // Toggle de vista. Reemplaza lo que en el WP original eran dos URLs
@@ -201,9 +208,6 @@ function formatDate(date) {
   min-height: 100vh;
 }
 
-/* Elimina TODO el CSS anterior de v-pagination.
-   Solo deja este bloque para la paginación personalizada */
-
 .pagination-nav {
   color: #2f4356 !important;
   text-transform: none !important;
@@ -280,8 +284,6 @@ function formatDate(date) {
   }
 }
 
-/* Fiel a .eb-mn-tarjeta-post-boton-leer del sitio viejo:
-   link bold, sin underline, sin radius, color #2B3F47, sin fondo/borde. */
 .read-more-btn {
   color: #2B3F47 !important;
   font-weight: bold !important;

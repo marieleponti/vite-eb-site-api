@@ -5,7 +5,7 @@
 <!-- Search -->
 <v-text-field
   v-model="filters.s"
-  label="Search Posts"
+  :label="$t('blogFilters.searchLabel')"
   variant="outlined"
   density="comfortable"
   prepend-inner-icon="mdi-magnify"
@@ -23,7 +23,7 @@
     class="filter-btn"
     @click="apply"
   >
-    Search
+    {{ $t('blogFilters.searchBtn') }}
   </v-btn>
 
   <v-btn
@@ -32,7 +32,7 @@
     class="filter-btn"
     @click="clear"
   >
-    Clear
+    {{ $t('blogFilters.clearBtn') }}
   </v-btn>
 </div>
 

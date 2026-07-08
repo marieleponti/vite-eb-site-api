@@ -1,23 +1,23 @@
 <template>
   <v-card flat class="resource-filters pa-6">
     <!-- Search -->
-    <v-text-field v-model="filters.s" label="Key Terms" variant="outlined" density="comfortable"
+    <v-text-field v-model="filters.s" :label="$t('resourceFilters.searchLabel')" variant="outlined" density="comfortable"
       prepend-inner-icon="mdi-magnify" clearable hide-details class="mb-6" @keyup.enter="emitFilters" />
 
     <!-- Actions -->
     <div class="filter-actions mb-6">
       <v-btn variant="outlined" color="#29465b" class="filter-btn" @click="emitFilters">
-        Search
+        {{ $t('resourceFilters.searchBtn') }}
       </v-btn>
 
       <v-btn variant="outlined" color="#29465b" class="filter-btn" @click="clearFilters">
-        Clear
+        {{ $t('resourceFilters.clearBtn') }}
       </v-btn>
 
       <!-- El texto cambia según en qué vista estás: si ya estás en el
            mapa, este botón te lleva de vuelta a la lista (y viceversa). -->
       <v-btn variant="outlined" color="#29465b" class="filter-btn" @click="$emit('toggle-map')">
-        {{ currentView === 'map' ? 'List View' : 'Map View' }}
+        {{ currentView === 'map' ? $t('resourceFilters.listView') : $t('resourceFilters.mapView') }}
       </v-btn>
     </div>
 
