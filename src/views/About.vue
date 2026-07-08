@@ -24,23 +24,27 @@
         </p>
 
         <p>
-          We came together in 2023 after a consultation with civil society advocates throughout the Americas...
+          We came together in 2023 after a consultation with civil society advocates throughout the Americas. They articulated a need to increase transnational knowledge sharing and collaboration to combat border externalization and its pernicious effects on the ground. Through documentation, research and information sharing, we developed this collaboration to make infrastructures used to surveil and police migrants visible and situate them in their geopolitical context. By deepening networks and consolidating resources, we seek to facilitate strategies that challenge state violence and exclusionary practices.
         </p>
 
         <p>
-          We provide information and resources to support civil society...
+          We provide information and resources to support civil society to hold responsible actors accountable for the human rights violations and immense suffering they enact, showcase the risks to peaceful societies, the rule of law, and democracy that migration control infrastructures—both digital and non-digital—present, and advance a vision for a world in which all people can move freely and thrive.
         </p>
 
         <p>
-          Our goal is to strengthen transnational solidarities...
+          In addition to working with civil society organizations, we ground our knowledge building in collaboration and consultation with social justice and migrant rights groups, humanitarian and legal aid groups, human rights defenders, and activists in the territories and contexts we research.
         </p>
 
         <p>
-          The increase in militarization and policing that accompanies externalized bordering...
+          Our goal is to strengthen transnational solidarities to more effectively challenge migration control regimes and infrastructures that undermine our collective rights. 
         </p>
 
         <p>
-          We thank all contributors to this info repository for sharing resources...
+          The increase in militarization and policing that accompanies externalized bordering not only undermines the freedom, safety, and rights of people on the move, but also erodes and impacts the struggles for indigenous rights, workers’ rights, those organizing for climate and ecological justice, and, ultimately, democracy and the rule of law. In this way, border externalization becomes a key means for state and corporate actors to engage in widescale repression and amass power with little to no accountability. 
+        </p>
+
+        <p>
+          We thank all contributors to this info repository for sharing resources, information, and expertise. We thank all contributors to this info repository for sharing resources, information, and expertise. We also thank Open Society Foundations for providing the support to enable us to launch the Everywhere Border Project.
         </p>
       </div>
 
@@ -48,11 +52,11 @@
 
       <div class="content">
         <p>
-          Our approach is to expand collective knowledge on border externalization...
+          Our approach is to expand collective knowledge on border externalization by cultivating resources from a variety of sources—including civil society-led research, public records requests, public writing, and scholarship—as well as collaborating in ongoing documentation with groups working at the intersection of migration, surveillance, and technology in the Americas, where our work is grounded. 
         </p>
 
         <p>
-          Our research covers a set of primary questions concerning processes of border militarization...
+          Our research covers a set of primary questions concerning processes of border militarization and policing, at and beyond the US border, and the role of digital infrastructure in these processes. 
         </p>
 
         <ul>
@@ -64,7 +68,7 @@
         </ul>
 
         <p>
-          We have been exploring these questions through desk research, interviews, and fieldwork...
+          We have been exploring these questions through a mix of desk research, interviews with scholars, activists, and social justice groups, financial investigation research, and context-based research in select cities in Mexico. To see how we have applied our methodology, check out “The Everywhere Border” research outputs.
         </p>
       </div>
 
@@ -72,11 +76,11 @@
 
       <div class="content">
         <p>
-          As part of this project, we convene a transnational network of civil society organizations...
+          As part of this project, we convene a transnational network of civil society organizations, social justice groups, researchers, academics, and activists from Brazil, Colombia, Costa Rica, Mexico, Paraguay, India, the US, the UK, and the European Union, working across multiple geographies to support information exchange, and strategic narrative and advocacy interventions.
         </p>
 
         <p>
-          Are you interested in joining? Contact the Everywhere Border team below.
+          Contact the Everywhere Border team below.
         </p>
 
         <form class="form" @submit.prevent="submit">
