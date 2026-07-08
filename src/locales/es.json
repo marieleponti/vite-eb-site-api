@@ -81,5 +81,12 @@
     "searchLabel": "Palabras claves",
     "searchBtn": "Buscar",
     "clearBtn": "Borrar"
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "introText": "Explorar articulos, actualizaciones, y comentarios del proyecto de la Frontera Omnipresente y sus contribuidores.",
+    "postsFound": "{count} resultados",
+    "readMore": "",
+    "noPostsFound": ""
   }
 }

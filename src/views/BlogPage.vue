@@ -5,11 +5,11 @@
     <v-card flat class="resources-intro mb-8">
       <div class="resources-intro__inner">
         <h1 class="resources-intro__title">
-          Blog
+          {{ $t('blog.pageTitle') }}
         </h1>
 
         <p class="resources-intro__text">
-          Explore articles, analysis, updates, and commentary from the Everywhere Border project and our contributors.
+          {{ $t('blog.introText') }}
         </p>
       </div>
     </v-card>
@@ -24,7 +24,7 @@
       <v-col cols="12" md="9">
 
         <v-card flat class="results-summary mb-6 pa-4">
-          <strong>{{ items.length }}</strong> posts found
+          {{ $t('blog.postsFound', { count: items.length }) }}
         </v-card>
 
         <v-row v-if="loading">
@@ -62,7 +62,7 @@
                      sitio viejo — link bold, sin underline, sin radius,
                      color #2B3F47, no es un botón con fondo. -->
                 <v-btn color="#2f4356" variant="text" class="read-more-btn" @click="view(post)">
-                  read more
+                  {{ $t('blog.readMore') }}
                 </v-btn>
               </v-card-actions>
 
@@ -71,7 +71,7 @@
         </v-row>
 
         <v-alert v-if="!loading && !items.length" type="info" variant="tonal">
-          No posts found.
+          {{ $t('blog.noPostsFound') }}
         </v-alert>
 
       </v-col>

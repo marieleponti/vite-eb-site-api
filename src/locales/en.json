@@ -81,5 +81,12 @@
     "searchLabel": "Search Posts",
     "searchBtn": "Search",
     "clearBtn": "Clear"
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "introText": "Explore articles, analysis, updates, and commentary from the Everywhere Border project and our contributors.",
+    "postsFound": "{count} posts found",
+    "readMore": "read more",
+    "noPostsFound": "No posts found."
   }
 }
