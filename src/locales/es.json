@@ -3,8 +3,8 @@
     "home": "Inicio",
     "repository": "Repositorio",
     "library": "Biblioteca",
-    "featuredResearch": "Investigaciones Destacadas",
-    "publicRecordsRequests": "Solicitudes de informacion Pública",
+    "featuredResearch": "Investigaciones destacadas",
+    "publicRecordsRequests": "Solicitudes de informacion pública",
     "blog": "Blog",
     "about": "Acerca de",
     "login": "Iniciar sesión",
@@ -61,5 +61,13 @@
   },
   "footer": {
     "copyright": ""
+  },
+  "resources": {
+    "pageTitle": "Biblioteca",
+    "introText": "Bienvenido a la biblioteca de recursos de La Frontera Omnipresente. Aquí usted encontrará una recopilación completa y en constante expansión de diversas produciones de investigación, como informes, white papers, artículos académicos, análisis y otros recursos, así como documentación original relacionada con el manejo de las fronteras y la externalización, las tecnologías fronterizas, la securitización, la militarización, los actores corporativos, las fuentes de financiación, los impactos humanos y mucho más, con un foco especial en a las Américas. Se trata de una biblioteca curada, lo que significa que los recursos aquí reunidos han sido elegidos por su relevancia e importancia para los temas en cuestión. Si usted desea enviar un recurso para nuestra consideración, rellene este formulario.",
+    "viewResource": "ver",
+    "previous": "anterior",
+    "next": "próxima",
+    "noResourcesFound": "no se encuentra"
   }
 }

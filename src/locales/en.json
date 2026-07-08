@@ -61,5 +61,13 @@
   },
   "footer": {
     "copyright": "© {year} Everywhere Border. All rights reserved."
+  },
+  "resources": {
+    "pageTitle": "Resources Library",
+    "introText": "Welcome to The Everywhere Border resource library. Here you will find a comprehensive and expanding compilation of diverse research outputs, such as reports, white papers, academic articles, analyses and other resources, as well as original source documentation related to border enforcement and externalization, border technologies, securitization, militarization, corporate actors, funding streams, human impacts and more, with a particular focus in the Americas. This is a curated library, meaning, the resources gathered here have been selected given their relevance and importance to the issues in question. If you want to submit a resource for consideration, please fill out this form.",
+    "viewResource": "view resource",
+    "previous": "\u00ab Previous",
+    "next": "Next \u00bb",
+    "noResourcesFound": "No resources found."
   }
 }

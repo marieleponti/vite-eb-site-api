@@ -5,20 +5,11 @@
     <v-card flat class="resources-intro mb-8">
       <div class="resources-intro__inner">
         <h1 class="resources-intro__title">
-          Resources Library
+          {{ $t('resources.pageTitle') }}
         </h1>
 
         <p class="resources-intro__text">
-          Welcome to The Everywhere Border resource library. Here you will find a comprehensive and expanding
-          compilation of diverse research outputs,
-          such as reports, white papers, academic articles, analyses and other resources, as well as original source
-          documentation related to border
-          enforcement and externalization, border technologies, securitization, militarization, corporate actors,
-          funding streams, human impacts and more,
-          with a particular focus in the Americas. This is a curated library, meaning, the resources gathered here have
-          been selected given their relevance
-          and importance to the issues in question. If you want to submit a resource for consideration, please fill out
-          this form.
+          {{ $t('resources.introText') }}
         </p>
       </div>
     </v-card>
@@ -81,7 +72,7 @@
                 <v-card-actions>
                   <v-btn v-if="item.slug" color="#2f4356" variant="text" class="read-more-btn"
                     :to="{ name: 'ResourceSingle', params: { slug: item.slug } }">
-                    view resource
+                    {{ $t('resources.viewResource') }}
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -91,7 +82,7 @@
           <v-row v-if="!loading && meta.totalPages > 1" class="mt-8">
             <v-col cols="12" class="d-flex justify-center align-center flex-wrap ga-2">
               <v-btn variant="text" class="pagination-nav" :disabled="page === 1" @click="changePage(page - 1)">
-                « Previous
+                {{ $t('resources.previous') }}
               </v-btn>
 
               <v-btn v-for="n in meta.totalPages" :key="n" :variant="page === n ? 'flat' : 'outlined'"
@@ -100,12 +91,12 @@
               </v-btn>
 
               <v-btn variant="text" class="pagination-nav" :disabled="page === totalPages" @click="changePage(page + 1)">
-                Next »
+                {{ $t('resources.next') }}
               </v-btn>
             </v-col>
           </v-row>
           <v-alert v-if="!loading && !items.length" type="info" variant="tonal">
-            No resources found.
+            {{ $t('resources.noResourcesFound') }}
           </v-alert>
         </template>
       </v-col>
