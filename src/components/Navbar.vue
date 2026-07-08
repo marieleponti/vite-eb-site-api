@@ -10,12 +10,12 @@
 
       <div class="header-col header-col--nav">
         <nav class="navigation">
-          <router-link class="nav-link" to="/">HOME</router-link>
+          <router-link class="nav-link" to="/">{{ $t('nav.home') }}</router-link>
 
           <v-menu open-on-hover transition="slide-y-transition" offset="20">
             <template #activator="{ props }">
               <span class="nav-link d-inline-flex align-center repo-trigger" v-bind="props">
-                REPOSITORY
+                {{ $t('nav.repository') }}
                 <v-icon size="small" class="chevron-icon">mdi-chevron-down</v-icon>
               </span>
             </template>
@@ -23,29 +23,30 @@
             <v-list class="clean-dropdown pa-0">
 
               <v-list-item to="/resources" link>
-                <v-list-item-title>Library</v-list-item-title>
+                <v-list-item-title>{{ $t('nav.library') }}</v-list-item-title>
               </v-list-item>
 
               <v-list-item to="/featured-research" link>
-                <v-list-item-title>Featured Research</v-list-item-title>
+                <v-list-item-title>{{ $t('nav.featuredResearch') }}</v-list-item-title>
               </v-list-item>
 
               <v-list-item to="/public-records-requests" link>
-                <v-list-item-title>Public Records Requests</v-list-item-title>
+                <v-list-item-title>{{ $t('nav.publicRecordsRequests') }}</v-list-item-title>
               </v-list-item>
 
             </v-list>
           </v-menu>
 
-          <router-link class="nav-link" to="/blog">BLOG</router-link>
-          <router-link class="nav-link" to="/about">ABOUT</router-link>
+          <router-link class="nav-link" to="/blog">{{ $t('nav.blog') }}</router-link>
+          <router-link class="nav-link" to="/about">{{ $t('nav.about') }}</router-link>
 
-          <router-link v-if="!isLoggedIn" class="nav-link" to="/ebcommunity">
-            LOGIN
-          </router-link>
+          <!-- Selector de idioma: muestra el idioma AL QUE se puede cambiar -->
+          <a class="nav-link nav-link--lang" href="#" @click.prevent="toggleLocale">
+            {{ $t('nav.languageSwitch') }}
+          </a>
 
-          <a v-else class="nav-link" href="#" @click.prevent="handleLogout">
-            LOGOUT
+          <a v-if="isLoggedIn" class="nav-link" href="#" @click.prevent="handleLogout">
+            {{ $t('nav.logout') }}
           </a>
         </nav>
       </div>
@@ -63,18 +64,24 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
 const { token, logout } = useAuth()
+const { locale } = useI18n()
 
 const isLoggedIn = computed(() => !!token.value)
+
+function toggleLocale() {
+  locale.value = locale.value === 'en' ? 'es' : 'en'
+  localStorage.setItem('locale', locale.value)
+}
 
 function handleLogout() {
   logout()
   router.push('/')
 }
-
 </script>
 
 <style scoped>
@@ -175,6 +182,11 @@ function handleLogout() {
 
 .chevron-icon {
   color: #f5c670 !important;
+}
+
+.nav-link--lang {
+  font-size: 15px;
+  opacity: 0.9;
 }
 
 .clean-dropdown {

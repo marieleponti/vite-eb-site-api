@@ -4,14 +4,10 @@
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-content">
-        <p class="hero-text">
-          Welcome to the Everywhere Border info repository. This is a living resource that makes visible the harms of US-driven border externalization, and how tech infrastructures are implemented and used in migration control systems, militarization, and policing in the Americas. Our goal is to support and strengthen transnational collaboration and advocacy to combat the role of technology in migration deterrence as a method of control, consolidation of power, structural violence, and impunity.
-        </p>
-        <p class="hero-text">
-          This info repository supports and reflects collaboration across borders. It contains original research, documentation, and analysis on border externalization policies and practices of multiple countries in the region, and the ever-growing tech and data infrastructure that support them, often made of opaque and inaccessible systems. Resources draw from the work of civil society organizations, academic research, financial investigation, and public records requests. The info repository is a collective work in progress—we welcome contributions from activists, researchers, and civil society organizations.
-        </p>
+        <p class="hero-text">{{ $t('home.heroText1') }}</p>
+        <p class="hero-text">{{ $t('home.heroText2') }}</p>
         <div class="hero-btn-wrap">
-          <router-link to="/resources" class="hero-btn">EXPLORE THE LIBRARY</router-link>
+          <router-link to="/resources" class="hero-btn">{{ $t('home.exploreLibrary') }}</router-link>
         </div>
       </div>
       <img src="/wire.png" alt="" class="fence-decoration" aria-hidden="true" />
@@ -19,10 +15,8 @@
 
     <!-- "Why" Section -->
     <section class="content-section">
-      <h2 class="section-title">Why the Everywhere Border?</h2>
-      <p class="section-text">
-        The border is not a fixed territorial boundary. It is an all-encompassing system of ideas, policies, practices, and infrastructures that reach deep into the interior of origin and transit countries through externalization processes, with the goal of controlling the movement of the majority of humans, reserving free movement to reach territorial frontiers and cross political boundaries for a select few. The US has been a key actor in advancing this vision and practice, which has a tremendous impact on targeted countries, facilitating and increasing militarization, state violence, and corporate power.
-      </p>
+      <h2 class="section-title">{{ $t('home.whyTitle') }}</h2>
+      <p class="section-text">{{ $t('home.whyText') }}</p>
     </section>
 
     <!-- Dashed wave decoration mid-page -->
@@ -32,9 +26,7 @@
     <div class="wall-section">
       <img src="/border_wall.png" alt="" class="wall-section-img" aria-hidden="true" />
       <div class="wall-section-content">
-        <p class="section-text wall-section-text">
-          The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
-        </p>
+        <p class="section-text wall-section-text">{{ $t('home.wallSectionText') }}</p>
         <div class="icon-row">
           <img src="/border_icons.png" alt="" class="icon-row-image" />
         </div>
@@ -43,28 +35,26 @@
 
     <!-- Bullet Section — full width, gold background, before train image -->
     <div class="bullet-full">
-      <p class="bullet-title">This is &ldquo;The Everywhere Border&rdquo;:</p>
+      <p class="bullet-title">{{ $t('home.bulletTitle') }}</p>
       <ul class="bullet-list-gold">
-        <li>It enables the policing of people wherever they are, based on race, nationality, ethnicity, class, gender, and other social markers.</li>
-        <li>It relies on public narratives, laws, and politics to reinforce hierarchies of belonging, thereby allowing governments to more easily limit people&rsquo;s freedom of movement, ability to stay, and to live freely.</li>
-        <li>It plays a fundamental role in disrupting the social fabric of origin, transit, and destination countries, making communities surveilled, policed and unsafe.</li>
+        <li>{{ $t('home.bullet1') }}</li>
+        <li>{{ $t('home.bullet2') }}</li>
+        <li>{{ $t('home.bullet3') }}</li>
       </ul>
-      <p class="bullet-invite">
-        We invite you to explore the resources available here, leverage them in your work, and share information with others.
-      </p>
+      <p class="bullet-invite">{{ $t('home.bulletInvite') }}</p>
       <div class="center-btn-wrap">
-        <router-link to="/resources" class="bullet-btn">EXPLORE THE DATABASE</router-link>
+        <router-link to="/resources" class="bullet-btn">{{ $t('home.exploreDatabase') }}</router-link>
       </div>
     </div>
 
     <!-- Full Width Image — gold background continues -->
     <div class="full-image gold-bg">
-      <img src="/traincart.png" alt="People riding a freight train" />
+      <img src="/traincart.png" :alt="$t('home.trainImageAlt')" />
     </div>
 
     <!-- Featured Content -->
     <section class="content-section">
-      <h2 class="section-title section-title--light">Featured Content</h2>
+      <h2 class="section-title section-title--light">{{ $t('home.featuredTitle') }}</h2>
 
       <div v-if="loadingFeatured" class="featured-card">
         <div class="featured-skeleton-img"></div>
@@ -89,29 +79,29 @@
               <h3>{{ item.title }}</h3>
               <p>{{ trimExcerpt(item.excerpt, 20) }}</p>
               <a :href="item.permalink" target="_blank" rel="noopener noreferrer" class="featured-link">
-                Read More
+                {{ $t('home.readMore') }}
               </a>
             </div>
           </div>
         </div>
 
         <template v-if="featuredContent.length > 1">
-          <button class="slider-arrow slider-arrow-prev" @click="prevSlide" aria-label="Previous featured item">&#8249;</button>
-          <button class="slider-arrow slider-arrow-next" @click="nextSlide" aria-label="Next featured item">&#8250;</button>
+          <button class="slider-arrow slider-arrow-prev" @click="prevSlide" :aria-label="$t('home.prevSlideAria')">&#8249;</button>
+          <button class="slider-arrow slider-arrow-next" @click="nextSlide" :aria-label="$t('home.nextSlideAria')">&#8250;</button>
           <div class="slider-dots">
             <button
               v-for="(item, i) in featuredContent"
               :key="`dot-${i}`"
               class="slider-dot"
               :class="{ active: i === currentSlide }"
-              :aria-label="`Go to slide ${i + 1}`"
+              :aria-label="$t('home.goToSlideAria', { n: i + 1 })"
               @click="goToSlide(i)"
             ></button>
           </div>
         </template>
       </div>
 
-      <p v-else class="section-text">No featured content available right now.</p>
+      <p v-else class="section-text">{{ $t('home.noFeaturedContent') }}</p>
     </section>
 
   </div>

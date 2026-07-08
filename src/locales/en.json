@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "home": "Home",
+    "repository": "Repository",
+    "library": "Library",
+    "featuredResearch": "Featured Research",
+    "publicRecordsRequests": "Public Records Requests",
+    "blog": "Blog",
+    "about": "About",
+    "login": "Login",
+    "logout": "Logout",
+    "languageSwitch": "Español"
+  },
+  "home": {
+    "heroText1": "Welcome to the Everywhere Border info repository. This is a living resource that makes visible the harms of US-driven border externalization, and how tech infrastructures are implemented and used in migration control systems, militarization, and policing in the Americas. Our goal is to support and strengthen transnational collaboration and advocacy to combat the role of technology in migration deterrence as a method of control, consolidation of power, structural violence, and impunity.",
+    "heroText2": "This info repository supports and reflects collaboration across borders. It contains original research, documentation, and analysis on border externalization policies and practices of multiple countries in the region, and the ever-growing tech and data infrastructure that support them, often made of opaque and inaccessible systems. Resources draw from the work of civil society organizations, academic research, financial investigation, and public records requests. The info repository is a collective work in progress—we welcome contributions from activists, researchers, and civil society organizations.",
+    "exploreLibrary": "Explore the library",
+    "whyTitle": "Why the Everywhere Border?",
+    "whyText": "The border is not a fixed territorial boundary. It is an all-encompassing system of ideas, policies, practices, and infrastructures that reach deep into the interior of origin and transit countries through externalization processes, with the goal of controlling the movement of the majority of humans, reserving free movement to reach territorial frontiers and cross political boundaries for a select few. The US has been a key actor in advancing this vision and practice, which has a tremendous impact on targeted countries, facilitating and increasing militarization, state violence, and corporate power.",
+    "wallSectionText": "The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.",
+    "bulletTitle": "This is \u201cThe Everywhere Border\u201d:",
+    "bullet1": "It enables the policing of people wherever they are, based on race, nationality, ethnicity, class, gender, and other social markers.",
+    "bullet2": "It relies on public narratives, laws, and politics to reinforce hierarchies of belonging, thereby allowing governments to more easily limit people\u2019s freedom of movement, ability to stay, and to live freely.",
+    "bullet3": "It plays a fundamental role in disrupting the social fabric of origin, transit, and destination countries, making communities surveilled, policed and unsafe.",
+    "bulletInvite": "We invite you to explore the resources available here, leverage them in your work, and share information with others.",
+    "exploreDatabase": "Explore the database",
+    "trainImageAlt": "People riding a freight train",
+    "featuredTitle": "Featured Content",
+    "readMore": "Read more",
+    "noFeaturedContent": "No featured content available right now.",
+    "prevSlideAria": "Previous featured item",
+    "nextSlideAria": "Next featured item",
+    "goToSlideAria": "Go to slide {n}"
+  }
+}

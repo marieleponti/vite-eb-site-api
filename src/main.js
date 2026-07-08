@@ -6,8 +6,11 @@ import '@/assets/styles/main.css'
 import vuetify from './plugins/vuetify'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
+import i18n from './i18n'
+
 
 createApp(App)
   .use(router)
   .use(vuetify)
+  .use(i18n)
   .mount('#app')
