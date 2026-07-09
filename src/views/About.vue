@@ -2,32 +2,27 @@
   <div class="about-page">
 
     <div class="page-wrapper">
-
       <h1 class="h1">{{ $t('about.pageTitle') }}</h1>
-
       <h2 class="h2">{{ $t('about.projectHeading') }}</h2>
 
       <div class="content">
         <p v-html="$t('about.projectIntroHtml')"></p>
-
         <p>{{ $t('about.projectPara2') }}</p>
-
         <p>{{ $t('about.projectPara3') }}</p>
-
         <p>{{ $t('about.projectPara4') }}</p>
-
         <p>{{ $t('about.projectPara5') }}</p>
-
         <p>{{ $t('about.projectPara6') }}</p>
-
         <p>{{ $t('about.projectPara7') }}</p>
       </div>
+    </div>
 
+    <div class="divider" aria-hidden="true"></div>
+
+    <div class="page-wrapper">
       <h2 class="h2">{{ $t('about.approachHeading') }}</h2>
 
       <div class="content">
         <p>{{ $t('about.approachPara1') }}</p>
-
         <p>{{ $t('about.approachPara2') }}</p>
 
         <ul>
@@ -40,31 +35,31 @@
 
         <p>{{ $t('about.approachPara3') }}</p>
       </div>
+    </div>
 
+    <div class="divider" aria-hidden="true"></div>
+
+    <div class="page-wrapper">
       <h2 class="h2">{{ $t('about.networkHeading') }}</h2>
 
       <div class="content">
         <p>{{ $t('about.networkPara1') }}</p>
-
         <p>{{ $t('about.networkPara2') }}</p>
 
         <form class="form" @submit.prevent="submit">
           <input v-model="form.name" type="text" :placeholder="$t('about.formNamePlaceholder')" />
           <input v-model="form.email" type="email" :placeholder="$t('about.formEmailPlaceholder')" />
           <textarea v-model="form.message" :placeholder="$t('about.formMessagePlaceholder')"></textarea>
-
           <button type="submit">{{ $t('about.formSubmit') }}</button>
         </form>
-
       </div>
-
     </div>
+
   </div>
 </template>
 
 <script setup>
 import { reactive } from 'vue'
-import Navbar from '@/components/Navbar.vue'
 
 const form = reactive({
   name: '',
@@ -79,68 +74,121 @@ const submit = () => {
 
 <style scoped>
 .about-page {
-  background: #F0EFF3; /* lavanda claro, no navy */
-  color: #3A4650;
+  background: #f3f3f7;
+  color: #000000;
 }
 
 .page-wrapper {
-  max-width: 1400px; /* mucho más ancho que 820px */
+  width: 80%;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 80px 40px;
+  padding: 40px 20px;
+}
+
+.divider {
+  width: 100%;
+  height: 40px; /* ajusta al alto real de tu PNG */
+  background-image: url('/terrain_yellow.png');
+  background-repeat: repeat-x;
+  background-position: left center;
+  background-size: auto 100%;
 }
 
 .h1 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 48px;
-  font-weight: 600;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-size: 60px;
+  font-weight: 700;
   margin-bottom: 30px;
-  color: #2E3A46; /* NO naranja, es oscuro */
+  color: #2b3f47;
+  text-align: left;
 }
 
 .h2 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 32px;
-  font-weight: 600;
-  margin: 50px 0 20px;
-  color: #E0824B; /* naranja solo aquí */
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-size: 50px;
+  font-weight: 700;
+  margin: 40px 0 20px;
+  color: #f38a4e;
+  text-align: left;
 }
 
 .content p {
-  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.8;
-  margin-bottom: 20px;
-  color: #3A4650;
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.7em;
+  margin-bottom: 18px;
+  color: #000000;
+  text-align: left;
 }
 
 a {
-  color: #3B6FA0;
+  color: #0c71c3;
   text-decoration: underline;
 }
 
-/* separador tipo "montaña" punteado */
-.divider {
-  width: 100%;
-  height: 60px;
-  margin: 40px 0;
-  background-image: url("data:image/svg+xml,%3Csvg ...%3E"); /* ver abajo */
+ul {
+  margin: 20px 0 20px 20px;
+  padding-bottom: 1em;
+}
+
+li {
+  margin-bottom: 0.5em;
+  line-height: 1.7em;
+  font-family: 'Work Sans', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}
+
+.form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 input, textarea {
-  background: #EAEAEA;
-  color: #333;
-  border: none;
-  padding: 14px;
+  -webkit-appearance: none;
+  background-color: #eee;
+  border-width: 0;
+  border-radius: 0;
+  color: #999;
+  font-size: 14px;
+  padding: 16px;
+  font-family: 'Work Sans', Helvetica, Arial, sans-serif;
 }
 
-input::placeholder, textarea::placeholder {
-  color: #999;
+textarea {
+  min-height: 150px;
 }
 
 button {
-  background: #F0B23C;
-  color: #1a1a1a;
-  font-weight: bold;
+  color: #2b3f47;
+  background: transparent;
+  border: 2px solid #2b3f47;
+  padding: 0.3em 1em;
+  font-family: 'Work Sans', Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  width: fit-content;
+  transition: all 0.2s;
 }
 
+button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.content :deep(a) {
+  color: #0c71c3;
+  text-decoration: underline;
+}
+
+.content :deep(a:visited) {
+  color: #0c71c3;
+}
+
+.content :deep(a:hover) {
+  opacity: 0.8;
+}
 </style>
