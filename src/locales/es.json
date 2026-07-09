@@ -115,6 +115,10 @@
   },
     "research": {
     "backToFeatured": "Volver a investigaciones destacadas"
-  }
+  },
+  "search": {
+  "placeholder": "Buscar recursos y blog...",
+  "button": "BUSCAR"
+}
 }
   

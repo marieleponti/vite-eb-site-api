@@ -58,7 +58,8 @@ const routes = [
     name: 'PublicRecordsRequestSingle',
     component: () => import('../views/PublicRecordsRequestSingle.vue'),
     props: true
-  }
+  },
+  { path: '/search', component: () => import('@/views/SearchPage.vue') }
   
 ]
 

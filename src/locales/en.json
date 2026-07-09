@@ -115,5 +115,9 @@
   }, 
     "research": {
     "backToFeatured": "Back to Featured Research"
-  }
+  },
+  "search": {
+  "placeholder": "Search resources and blog...",
+  "button": "SEARCH"
+}
 }
