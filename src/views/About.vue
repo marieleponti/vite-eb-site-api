@@ -78,90 +78,69 @@ const submit = () => {
 </script>
 
 <style scoped>
-
 .about-page {
-  background: #2B3B47;
-  color: #F5F5F5;
+  background: #F0EFF3; /* lavanda claro, no navy */
+  color: #3A4650;
 }
 
-/* clave: ancho tipo artículo (como Divi real) */
 .page-wrapper {
-  max-width: 820px;
+  max-width: 1400px; /* mucho más ancho que 820px */
   margin: 0 auto;
-  padding: 80px 20px;
+  padding: 80px 40px;
 }
 
-/* títulos muy simples (como original) */
 .h1 {
-  font-size: 42px;
-  font-weight: 500;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 48px;
+  font-weight: 600;
   margin-bottom: 30px;
-  color: #F4D06F;
+  color: #2E3A46; /* NO naranja, es oscuro */
 }
 
 .h2 {
-  font-size: 26px;
-  font-weight: 500;
-  margin: 40px 0 20px;
-  color: #F4D06F;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 32px;
+  font-weight: 600;
+  margin: 50px 0 20px;
+  color: #E0824B; /* naranja solo aquí */
 }
 
-/* texto alineado a la izquierda (CLAVE del original) */
 .content p {
-  font-size: 14px;
-  line-height: 1.9;
-  margin-bottom: 18px;
-  text-align: left;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  color: #3A4650;
 }
 
-/* links simples */
 a {
-  color: #F4D06F;
+  color: #3B6FA0;
   text-decoration: underline;
 }
 
-/* lista simple tipo editorial */
-ul {
-  margin: 20px 0 20px 20px;
-}
-
-li {
-  margin-bottom: 10px;
-  line-height: 1.7;
-}
-
-/* FORM estilo mínimo */
-.form {
-  margin-top: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* separador tipo "montaña" punteado */
+.divider {
+  width: 100%;
+  height: 60px;
+  margin: 40px 0;
+  background-image: url("data:image/svg+xml,%3Csvg ...%3E"); /* ver abajo */
 }
 
 input, textarea {
-  padding: 10px;
+  background: #EAEAEA;
+  color: #333;
   border: none;
-  background: #1f2a33;
-  color: white;
-  font-size: 14px;
+  padding: 14px;
 }
 
-textarea {
-  min-height: 120px;
+input::placeholder, textarea::placeholder {
+  color: #999;
 }
 
 button {
-  background: #F4D06F;
-  color: #2B3B47;
-  padding: 10px 18px;
-  border: none;
+  background: #F0B23C;
+  color: #1a1a1a;
   font-weight: bold;
-  cursor: pointer;
-  width: fit-content;
-}
-
-button:hover {
-  background: #F79456;
 }
 
 </style>
