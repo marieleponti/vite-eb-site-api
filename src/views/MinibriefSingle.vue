@@ -30,6 +30,15 @@
       />
 
       <v-container class="py-8" style="max-width: 1200px;">
+        <v-btn
+          variant="text"
+          color="#002d62"
+          class="mb-4 px-0"
+          to="/featured-research"
+        >
+          « {{ $t('research.backToFeatured') }}
+        </v-btn>
+
         <v-breadcrumbs
           :items="[
             { title: 'Research', to: '/featured-research' },
@@ -68,6 +77,16 @@
           :heading-overrides="tocOverrides"
           :toc-structure="tocStructure"
         />
+
+        <v-divider class="my-8" />
+        <v-btn
+          variant="text"
+          color="#002d62"
+          class="px-0"
+          to="/featured-research"
+        >
+          « {{ $t('research.backToFeatured') }}
+        </v-btn>
 
       </v-container>
     </template>

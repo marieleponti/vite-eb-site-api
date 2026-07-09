@@ -86,8 +86,9 @@
     "pageTitle": "Blog",
     "introText": "Explorar articulos, actualizaciones, y comentarios del proyecto de la Frontera Omnipresente y sus contribuidores.",
     "postsFound": "{count} resultados",
-    "readMore": "",
-    "noPostsFound": ""
+    "readMore": "leer",
+    "noPostsFound": "No se encuentran posts.",
+    "backToBlog": "Volver al blog"
   },
   "featuredResearch": {
     "pageTitle": "Investigación Autoral — Frontera Omnipresente",
@@ -111,6 +112,9 @@
     "introText": "Most of the policies, practices, and players associated with US border externalization are intentionally obscured and those proliferating harmful impacts can act with impunity. There have been numerous efforts by advocates to learn more about US border policing and externalization processes. Below is a collection of public records requests on these issues. ",
     "docketTitle": "Nuestros casos",
     "noDocketItems": "No hay casos disponibles"
+  },
+    "research": {
+    "backToFeatured": "Volver a investigaciones destacadas"
   }
 }
   

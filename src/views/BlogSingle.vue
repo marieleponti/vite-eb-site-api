@@ -3,7 +3,7 @@
 
         <!-- Back button -->
         <v-btn variant="text" color="#2f4356" class="mb-6" to="/blog">
-            « Back to Blog
+            « {{ $t('blog.backToBlog') }}
         </v-btn>
 
         <!-- Loading -->
@@ -28,14 +28,14 @@
                     {{ formatDate(post.date) }}
                 </div>
 
-                <!--
-                  CAMBIO: antes este <div> no tenía la clase "blog-content",
-                  así que las reglas :deep(p), :deep(img), etc. de abajo
-                  nunca matcheaban nada. Junto con el fix en postMapper.js
-                  (content ya no pierde sus tags HTML), esto es lo que
-                  reconstruye el formato real del post.
-                -->
                 <div class="blog-content" v-html="processedContent"></div>
+
+                <!-- Back button (al final del artículo) -->
+                <v-divider class="my-8" />
+                <v-divider class="my-8" />
+                <v-btn variant="text" color="#2f4356" to="/blog">
+                    « {{ $t('blog.backToBlog') }}
+                </v-btn>
 
             </v-col>
         </v-row>

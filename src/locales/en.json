@@ -87,7 +87,8 @@
     "introText": "Explore articles, analysis, updates, and commentary from the Everywhere Border project and our contributors.",
     "postsFound": "{count} posts found",
     "readMore": "read more",
-    "noPostsFound": "No posts found."
+    "noPostsFound": "No posts found.",
+    "backToBlog": "Back to blog"
   },
    "featuredResearch": {
     "pageTitle": "The Everywhere Border Featured Research",
@@ -111,5 +112,8 @@
     "introText": "Most of the policies, practices, and players associated with US border externalization are intentionally obscured and those proliferating harmful impacts can act with impunity. There have been numerous efforts by advocates to learn more about US border policing and externalization processes. Below is a collection of public records requests on these issues.",
     "docketTitle": "Our Docket",
     "noDocketItems": "No docket items available at the moment."
+  }, 
+    "research": {
+    "backToFeatured": "Back to Featured Research"
   }
 }
