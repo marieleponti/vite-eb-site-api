@@ -50,6 +50,10 @@
           <input v-model="form.name" type="text" :placeholder="$t('about.formNamePlaceholder')" />
           <input v-model="form.email" type="email" :placeholder="$t('about.formEmailPlaceholder')" />
           <textarea v-model="form.message" :placeholder="$t('about.formMessagePlaceholder')"></textarea>
+
+          <!-- honeypot: invisible para humanos, visible para bots -->
+          <input v-model="form.website" type="text" name="website" autocomplete="off" tabindex="-1" class="honeypot" />
+
           <button type="submit">{{ $t('about.formSubmit') }}</button>
         </form>
       </div>
@@ -61,14 +65,20 @@
 <script setup>
 import { reactive } from 'vue'
 
+
 const form = reactive({
   name: '',
   email: '',
-  message: ''
+  message: '',
+  website: '' // honeypot, debe quedar vacío
 })
 
 const submit = () => {
-  console.log(form)
+  if (form.website) {
+    // un bot llenó el campo oculto, ignora silenciosamente
+    return
+  }
+  // enviar form al endpoint...
 }
 </script>
 
@@ -87,7 +97,8 @@ const submit = () => {
 
 .divider {
   width: 100%;
-  height: 40px; /* ajusta al alto real de tu PNG */
+  height: 40px;
+  /* ajusta al alto real de tu PNG */
   background-image: url('/terrain_yellow.png');
   background-repeat: repeat-x;
   background-position: left center;
@@ -146,7 +157,8 @@ li {
   gap: 12px;
 }
 
-input, textarea {
+input,
+textarea {
   -webkit-appearance: none;
   background-color: #eee;
   border-width: 0;
@@ -190,5 +202,14 @@ button:hover {
 
 .content :deep(a:hover) {
   opacity: 0.8;
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  pointer-events: none;
 }
 </style>
