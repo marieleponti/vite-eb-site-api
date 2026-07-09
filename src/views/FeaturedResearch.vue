@@ -3,7 +3,7 @@
 
     <!-- HEADER PRINCIPAL -->
     <h1 class="secondfont mb-3 font-weight-bold text-dark px-4 pt-4">
-      The Everywhere Border Featured Research
+      {{ $t('featuredResearch.pageTitle') }}
     </h1>
 
     <!-- JUMBOTRON INFORMATIVO -->
@@ -11,15 +11,7 @@
       <v-row no-gutters align="center">
         <v-col cols="12" md="6" class="pa-6">
           <p class="jumbotron-text mb-0">
-            The United States is building a digital border infrastructure in neighbouring countries that expands and
-            deepens surveillance,
-            while obscuring state violence. The implications of these infrastructures are long-lasting and need to be
-            integrated into strategies
-            of resistance of migrant justice movements worldwide. Since 2023, The Everywhere Border project has been
-            engaged in research to surface
-            information on the infrastructures put in place throughout Latin America in the service of deterrence and
-            its human impacts on people on
-            the move and civil society at large. Our original research outputs available below.
+            {{ $t('featuredResearch.introText') }}
           </p>
         </v-col>
         <v-col cols="12" md="6" class="d-none d-md-block position-relative line-illustration">
@@ -27,7 +19,7 @@
             <v-img src="src/assets/images/border-tech.jpg" alt="Border Infrastructure Illustration" height="100%" cover />
             <figcaption class="caption-text">
               <a href="https://www.instagram.com/chewsomebubblegum/" target="_blank" rel="noopener noreferrer">
-                Illustration by Zoran Svilar
+                {{ $t('featuredResearch.illustrationCaption') }}
               </a>
             </figcaption>
           </figure>
@@ -37,7 +29,7 @@
 
     <!-- SECCIÓN DE INVESTIGACIONES (Fijas + Query de WordPress) -->
     <v-container fluid class="px-4 pb-8">
-      <h2 class="secondfont mb-6">Featured Research</h2>
+      <h2 class="secondfont mb-6">{{ $t('featuredResearch.sectionTitle') }}</h2>
 
       <!-- Skeletons de carga mientras useContent hace la petición a Netlify / Pantheon -->
       <v-row v-if="loading">
@@ -82,7 +74,7 @@
             <v-card-actions class="pa-4 pt-0">
               <v-btn color="#002d62" variant="text" :href="item.permalink" target="_blank"
                 class="font-weight-bold px-0 text-none">
-                View Research →
+                {{ $t('featuredResearch.viewResearch') }}
               </v-btn>
             </v-card-actions>
 
@@ -92,7 +84,7 @@
 
       <!-- Estado Vacío -->
       <v-alert v-else type="info" variant="tonal" class="text-grey-darken-3">
-        No featured research found. <a href="/research" class="text-success font-weight-bold">Browse all research</a>.
+        {{ $t('featuredResearch.noResultsFound') }} <a href="/research" class="text-success font-weight-bold">{{ $t('featuredResearch.browseAll') }}</a>.
       </v-alert>
     </v-container>
 
@@ -101,10 +93,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useContent } from '@/composables/useContent'
-import { useAuth } from '@/composables/useAuth' 
+import { useAuth } from '@/composables/useAuth'
+
+const { t } = useI18n()
 const { items: dynamicItems, fetch: cargarContenido, loading } = useContent()
-const { roles: userRoles, checkCurrentUser } = useAuth() 
+const { roles: userRoles, checkCurrentUser } = useAuth()
 
 const allowedRoles = ['ebteam', 'administrator', 'ebcommunity']
 
@@ -113,37 +108,39 @@ const hasAccess = computed(() => {
   return userRoles.value.some(role => allowedRoles.includes(role))
 })
 
-// 4 artículos estáticos iniciales fijos
-const staticResearch = ref([
+// 4 artículos estáticos iniciales fijos.
+// Título y extracto vienen de $t() para que cambien con el idioma;
+// permalink, imagen y autor se mantienen fijos (no se traducen).
+const staticResearch = computed(() => [
   {
-    title: 'Border Externalization in the Americas',
+    title: t('featuredResearch.static1Title'),
     permalink: '/featured-research/border-externalization-in-americas',
     featuredImage: 'src/assets/images/minibrief_border-ext.jpg',
-    excerpt: 'Analysis of digital border infrastructure expansion.',
+    excerpt: t('featuredResearch.static1Excerpt'),
     author: 'Mizue Aizeki & S. Narváez',
     restricted: false
   },
   {
-    title: 'Biometrics-Based Migration Management Infrastructures',
+    title: t('featuredResearch.static2Title'),
     permalink: '/featured-research/biometrics-based-migration-management',
     featuredImage: 'src/assets/images/minibrief_biometrics-migr-mgmt.jpg',
-    excerpt: 'Surveillance and digital control tracking throughout Latin America.',
+    excerpt: t('featuredResearch.static2Excerpt'),
     author: 'Santiago Narváez',
     restricted: true
   },
   {
-    title: 'Human Impacts',
+    title: t('featuredResearch.static3Title'),
     permalink: '/featured-research/human-impacts-brief',
     featuredImage: 'src/assets/images/minibrief_human-impacts.png',
-    excerpt: 'The cost of state deterrence policies on migrant populations.',
+    excerpt: t('featuredResearch.static3Excerpt'),
     author: 'Laura Bingham',
     restricted: false
   },
   {
-    title: 'Biometrics & Borders',
+    title: t('featuredResearch.static4Title'),
     permalink: '/featured-research/biometrics-mx-ca',
     featuredImage: 'src/assets/images/minibrief_biometrics-borders.jpg',
-    excerpt: 'Examining biometric data extraction technologies.',
+    excerpt: t('featuredResearch.static4Excerpt'),
     author: 'Everywhere Border Project',
     restricted: false
   }

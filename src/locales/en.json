@@ -88,5 +88,28 @@
     "postsFound": "{count} posts found",
     "readMore": "read more",
     "noPostsFound": "No posts found."
+  },
+   "featuredResearch": {
+    "pageTitle": "The Everywhere Border Featured Research",
+    "introText": "The United States is building a digital border infrastructure in neighbouring countries that expands and deepens surveillance, while obscuring state violence. The implications of these infrastructures are long-lasting and need to be integrated into strategies of resistance of migrant justice movements worldwide. Since 2023, The Everywhere Border project has been engaged in research to surface information on the infrastructures put in place throughout Latin America in the service of deterrence and its human impacts on people on the move and civil society at large. Our original research outputs available below.",
+    "illustrationCaption": "Illustration by Zoran Svilar",
+    "sectionTitle": "Featured Research",
+    "viewResearch": "View Research →",
+    "noResultsFound": "No featured research found.",
+    "browseAll": "Browse all research",
+    "static1Title": "Border Externalization in the Americas",
+    "static1Excerpt": "Analysis of digital border infrastructure expansion.",
+    "static2Title": "Biometrics-Based Migration Management Infrastructures",
+    "static2Excerpt": "Surveillance and digital control tracking throughout Latin America.",
+    "static3Title": "Human Impacts",
+    "static3Excerpt": "The cost of state deterrence policies on migrant populations.",
+    "static4Title": "Biometrics & Borders",
+    "static4Excerpt": "Examining biometric data extraction technologies."
+  },
+  "publicRecordsRequests": {
+    "pageTitle": "Public Records Requests",
+    "introText": "Most of the policies, practices, and players associated with US border externalization are intentionally obscured and those proliferating harmful impacts can act with impunity. There have been numerous efforts by advocates to learn more about US border policing and externalization processes. Below is a collection of public records requests on these issues.",
+    "docketTitle": "Our Docket",
+    "noDocketItems": "No docket items available at the moment."
   }
 }

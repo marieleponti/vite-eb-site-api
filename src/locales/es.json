@@ -65,7 +65,7 @@
   "resources": {
     "pageTitle": "Biblioteca",
     "introText": "Bienvenido a la biblioteca de recursos de La Frontera Omnipresente. Aquí usted encontrará una recopilación completa y en constante expansión de diversas produciones de investigación, como informes, white papers, artículos académicos, análisis y otros recursos, así como documentación original relacionada con el manejo de las fronteras y la externalización, las tecnologías fronterizas, la securitización, la militarización, los actores corporativos, las fuentes de financiación, los impactos humanos y mucho más, con un foco especial en a las Américas. Se trata de una biblioteca curada, lo que significa que los recursos aquí reunidos han sido elegidos por su relevancia e importancia para los temas en cuestión. Si usted desea enviar un recurso para nuestra consideración, rellene este formulario.",
-    "viewResource": "ver",
+    "viewResource": "leer",
     "previous": "anterior",
     "next": "próxima",
     "noResourcesFound": "no se encuentra"
@@ -88,5 +88,29 @@
     "postsFound": "{count} resultados",
     "readMore": "",
     "noPostsFound": ""
+  },
+  "featuredResearch": {
+    "pageTitle": "Investigación Autoral — Frontera Omnipresente",
+    "introText": "Los Estados Unidos están construyendo una infraestructura fronteriza digital en los países vecinos que amplía y profundiza la vigilancia, al mismo tiempo que oculta la violencia estatal. Las implicaciones de estas infraestructuras son duraderas y deben integrarse en las estrategias de resistencia de los movimientos por la justicia migratoria en todo el mundo. Desde 2023, el proyecto Frontera Omnipresente se ha dedicado a investigar para sacar a la luz información sobre las infraestructuras implantadas en toda América Latina con fines securitizantes y su impacto humano en las personas que se desplazan y en la sociedad civil en general. Los resultados de nuestra investigación autoral están disponibles a continuación. ",
+    "illustrationCaption": "Ilustración por Zoran Svilar",
+    "sectionTitle": " Investigaciones destacadas",
+    "viewResearch": "leer",
+    "noResultsFound": "Sin resultados",
+    "browseAll": "Revisar todas las investigaciones",
+    "static1Title": "Exteriorización de la frontera en América",
+    "static1Excerpt": "Análisis de la expansión del andamiaje de la frontera digital",
+    "static2Title": "Andamiajes de administración de migración basados en los biométricos",
+    "static2Excerpt": "Vigilancia y rastreo y control digital en América Latina",
+    "static3Title": "Impacto humano",
+    "static3Excerpt": "El costo que llevan poblaciones migrantes de las politicas de disuación estatales",
+    "static4Title": "Biométicos y fronteras",
+    "static4Excerpt": "Examinar tecnologías de extracción de datos biométricos"
+  },
+  "publicRecordsRequests": {
+    "pageTitle": "Peticiones de informaciones públicas",
+    "introText": "Most of the policies, practices, and players associated with US border externalization are intentionally obscured and those proliferating harmful impacts can act with impunity. There have been numerous efforts by advocates to learn more about US border policing and externalization processes. Below is a collection of public records requests on these issues. ",
+    "docketTitle": "Nuestros casos",
+    "noDocketItems": "No hay casos disponibles"
   }
 }
+  
