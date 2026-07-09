@@ -35,7 +35,7 @@
                   (content ya no pierde sus tags HTML), esto es lo que
                   reconstruye el formato real del post.
                 -->
-                <div class="blog-content" v-html="post.content"></div>
+                <div class="blog-content" v-html="processedContent"></div>
 
             </v-col>
         </v-row>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchPostBySlug } from '@/api/services/wp.service'
 
@@ -68,7 +68,6 @@ onMounted(() => {
 
 async function loadPost() {
     loading.value = true
-
     try {
         const slug = route.params.slug
         const res = await fetchPostBySlug(slug)
@@ -80,6 +79,26 @@ async function loadPost() {
         loading.value = false
     }
 }
+
+const processedContent = computed(() => {
+    if (!post.value?.content) return ''
+
+    const SUBTITLE_MAX_LENGTH = 80 // ajusta según tus posts reales
+
+    const doc = new DOMParser().parseFromString(post.value.content, 'text/html')
+
+    doc.querySelectorAll('p').forEach((p) => {
+        const onlyChild = p.children.length === 1 && p.children[0].tagName === 'STRONG'
+        if (onlyChild) {
+            const text = p.textContent.trim()
+            if (text.length > 0 && text.length <= SUBTITLE_MAX_LENGTH) {
+                p.classList.add('is-subtitle')
+            }
+        }
+    })
+
+    return doc.body.innerHTML
+})
 
 function formatDate(date) {
     if (!date) return ''
@@ -143,12 +162,7 @@ function formatDate(date) {
     color: #1f2d36;
 }
 
-/* Párrafo que es SOLO un <strong> -> funciona como subtítulo de sección.
-   :has() tiene buen soporte en navegadores actuales (Chrome/Edge/Safari/
-   Firefox 2023+); si necesitas soportar navegadores más viejos, esto se
-   degrada con gracia: el texto sigue en negrita, solo sin el espaciado
-   extra de "subtítulo". */
-.blog-content :deep(p:has(> strong:only-child)) {
+.blog-content :deep(p.is-subtitle) {
     margin-top: 2.5rem;
     margin-bottom: 1rem;
     font-size: 1.05em;
