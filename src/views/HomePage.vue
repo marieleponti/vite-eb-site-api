@@ -406,7 +406,7 @@ onMounted(() => {
 .bullet-full {
   background-color: var(--color-gold);
   width: 100%;
-  padding: 500px 220px 60px 220px;
+  padding: 200px 220px 60px 220px;
   font-family: var(--font-sans);
 }
 

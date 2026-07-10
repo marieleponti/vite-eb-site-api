@@ -206,21 +206,25 @@ function formatDate(date) {
   padding-right: 0px;
 }
 
+/* Título principal — Cormorant bold, coincide con la regla global h1 */
 .resource-title-single {
   font-size: 2.5rem;
   color: #29465b;
-  font-weight: 300;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
   line-height: 1.2;
 }
 
 .resource-meta-single {
   font-size: 1rem;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .resource-content-single {
   font-size: 1.15rem;
   line-height: 1.9;
   color: #333333;
+  font-family: 'Work Sans', sans-serif;
 }
 
 .bg-details-box {
@@ -234,6 +238,7 @@ function formatDate(date) {
   color: #55595c;
   margin-bottom: 4px;
   letter-spacing: 0.02em;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
 /* Manejo de contenedores de vídeo (iFrames responsivos) */

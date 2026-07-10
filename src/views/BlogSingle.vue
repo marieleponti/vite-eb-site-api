@@ -112,22 +112,26 @@ function formatDate(date) {
 
 <style scoped>
 .blog-single-page {
-    background: #fff;
-    min-height: 100vh;
+  background: #fff;
+  min-height: 100vh;
 }
 
+/* Título — Cormorant bold, coincide con regla global h1 */
 .blog-title {
-    font-size: 2.5rem;
-    font-weight: 300;
-    color: #29465b;
-    line-height: 1.2;
-    margin-top: 1.5rem;
+  font-size: 2.5rem;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  color: #29465b;
+  line-height: 1.2;
+  margin-top: 1.5rem;
 }
 
+/* Sin override en el original -> hereda Open Sans (body) */
 .blog-meta {
-    color: #7a8a96;
-    font-size: 0.95rem;
-    margin-bottom: 2rem;
+  color: #7a8a96;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
 /* =========================================
@@ -139,91 +143,93 @@ function formatDate(date) {
    subtítulos reales y no como una palabra en negrita en medio del texto.
 ========================================= */
 .blog-content {
-    font-size: 1.15rem;
-    line-height: 1.9;
-    color: #333;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #333;
+  font-family: 'Work Sans', sans-serif;
 }
 
 .blog-content :deep(p) {
-    margin: 0 0 1.5rem;
+  margin: 0 0 1.5rem;
 }
 
 .blog-content :deep(a) {
-    color: #2f4356;
-    text-decoration: underline;
+  color: #2f4356;
+  text-decoration: underline;
 }
 
 .blog-content :deep(a:hover) {
-    color: #29465b;
+  color: #29465b;
 }
 
 .blog-content :deep(strong) {
-    font-weight: 700;
-    color: #1f2d36;
+  font-weight: 700;
+  color: #1f2d36;
 }
 
 .blog-content :deep(p.is-subtitle) {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    font-size: 1.05em;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: #29465b;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.05em;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #29465b;
 }
 
 .blog-content :deep(em) {
-    font-style: italic;
-    color: #555;
+  font-style: italic;
+  color: #555;
 }
 
-/* El primer párrafo suele ser la bajada/resumen en cursiva (<em>) */
 .blog-content :deep(> p:first-child em) {
-    font-size: 1.1em;
+  font-size: 1.1em;
 }
 
+/* h2/h3 dentro del contenido — Cormorant, coincide con regla global */
 .blog-content :deep(h2),
 .blog-content :deep(h3) {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    color: #29465b;
-    font-weight: 600;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #29465b;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
 }
 
 .blog-content :deep(blockquote) {
-    margin: 1.5rem 0;
-    padding-left: 1.25rem;
-    border-left: 4px solid #c7cdd4;
-    color: #555;
-    font-style: italic;
+  margin: 1.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 4px solid #c7cdd4;
+  color: #555;
+  font-style: italic;
 }
 
 .blog-content :deep(ul),
 .blog-content :deep(ol) {
-    margin-bottom: 1.5rem;
-    padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
 }
 
 .blog-content :deep(li) {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Imágenes embebidas en el cuerpo (bloques wp-block-image de WP) */
 .blog-content :deep(img) {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    display: block;
-    margin: 0.5rem auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin: 0.5rem auto;
 }
 
 .blog-content :deep(figure) {
-    margin: 2rem 0;
-    text-align: center;
+  margin: 2rem 0;
+  text-align: center;
 }
 
 .blog-content :deep(figcaption) {
-    font-size: 0.85rem;
-    color: #6b7280;
-    margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+  font-family: 'Work Sans', sans-serif;
 }
 </style>

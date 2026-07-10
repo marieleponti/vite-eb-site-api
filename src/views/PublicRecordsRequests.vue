@@ -134,14 +134,17 @@ onMounted(() => {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
+  padding-top: 40px;
   box-sizing: border-box;
 }
 
-/* Tipografía Cormorant para headings, como en el original (no Staatliches) */
+/* Tipografía Cormorant para headings, consistente con el resto del sitio.
+   (El WP original tenía un override raro a Work Sans/Raleway solo en esta
+   página — decisión de diseño: unificar en vez de replicar esa excepción) */
 .eb-default-font {
   font-family: 'Cormorant', serif;
+  font-weight: 700;
 }
-
 .section-title {
   color: #2b3f47 !important;
   margin: 0;

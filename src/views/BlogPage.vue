@@ -156,6 +156,7 @@ function formatDate(date) {
 .results-summary {
   background: #f3f3f3;
   border: 1px solid #e0e0e0;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .resources-intro {
@@ -165,19 +166,23 @@ function formatDate(date) {
   border: 1px solid #e0e0e0;
 }
 
+/* Título principal — Cormorant bold, coincide con regla global h1 */
 .resources-intro__title {
   font-size: 3rem;
   line-height: 1.1;
-  font-weight: 300;
-  text-transform: uppercase;
+  font-weight: 700;
+  /* text-transform: uppercase; */
   color: #29465b;
   margin-bottom: 1.5rem;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
 }
 
+/* Texto de intro — Work Sans, como en .resources-intro__text del resto del sitio */
 .resources-intro__text {
   font-size: 1.1rem;
   line-height: 1.9;
   color: #4b5563;
+  font-family: 'Work Sans', sans-serif;
 }
 
 .resource-card {
@@ -188,25 +193,32 @@ function formatDate(date) {
   transform: translateY(-2px);
 }
 
+/* Título de card — Work Sans/Raleway, coincide con var(--main-font) en h5 */
 .resource-title {
   font-size: 1.1rem;
   line-height: 1.4;
   color: #29465b;
+  font-family: 'Work Sans', 'Raleway', sans-serif;
 }
 
+/* Meta (fecha) — sin override en el original, hereda Open Sans (body) */
 .resource-meta {
   color: #7a8a96;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
+/* Excerpt — Work Sans, coincide con .eb-mn-tarjeta-post-descripcion */
 .resource-excerpt {
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-family: 'Work Sans', sans-serif;
 }
 
 /* Fiel a .eb-mn-tarjeta-post-boton-leer del sitio viejo:
-   link bold, sin underline, sin radius, color #2B3F47, sin fondo/borde. */
+   link bold, sin underline, sin radius, color #2B3F47, sin fondo/borde.
+   Sin font-family propio en el original -> hereda Open Sans (body) */
 .read-more-btn {
   color: #2B3F47 !important;
   font-weight: bold !important;
@@ -217,6 +229,7 @@ function formatDate(date) {
   border-radius: 0 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .read-more-btn:hover {

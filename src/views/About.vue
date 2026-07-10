@@ -125,7 +125,7 @@ const submit = () => {
 
 .content p {
   font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 300;
   line-height: 1.7em;
   margin-bottom: 18px;
