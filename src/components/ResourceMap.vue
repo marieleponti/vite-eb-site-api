@@ -1,13 +1,13 @@
 <template>
   <v-card flat class="resource-map-card">
-    <v-alert
+    <!-- <v-alert
       v-if="!loading && resourcesWithCoords.length === 0"
       type="info"
       variant="tonal"
       class="mb-4"
     >
       No hay recursos con ubicación cargada todavía.
-    </v-alert>
+    </v-alert> -->
 
     <div ref="mapEl" class="resource-map-card__canvas" aria-label="Mapa de recursos"></div>
   </v-card>
