@@ -20,15 +20,6 @@
 
     <template v-else>
 
-      <div v-if="item.heroEmbed" class="hero-embed" v-html="item.heroEmbed"></div>
-      <v-img
-        v-else-if="item.featuredImage"
-        :src="item.featuredImage"
-        height="420"
-        cover
-        class="hero-img"
-      />
-
       <v-container class="py-8" style="max-width: 1200px;">
         <v-btn
           variant="text"
@@ -55,6 +46,16 @@
           </span>
           <span v-if="item.date">{{ formattedDate }}</span>
         </div>
+
+        <!-- Hero (imagen/timeline) ahora va debajo del título -->
+        <div v-if="item.heroEmbed" class="hero-embed mb-8" v-html="item.heroEmbed"></div>
+        <v-img
+          v-else-if="item.featuredImage"
+          :src="item.featuredImage"
+          height="420"
+          cover
+          class="hero-img mb-8"
+        />
 
         <v-alert
           v-if="item.restricted && !hasAccess"
