@@ -46,8 +46,8 @@
         <p>{{ $t('about.networkPara1') }}</p>
         <p>{{ $t('about.networkPara2') }}</p>
 
-        <form class="form" name="contacto" @submit.prevent="submit">
-          <input type="hidden" name="form-name" value="contacto" />
+        <form class="form" name="contact" @submit.prevent="submit">
+          <input type="hidden" name="form-name" value="contact" />
 
           <input v-model="form.name" type="text" :placeholder="$t('about.formNamePlaceholder')" />
           <input v-model="form.email" type="email" :placeholder="$t('about.formEmailPlaceholder')" />
@@ -90,7 +90,7 @@ const submit = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: encode({
-        'form-name': 'contacto',
+        'form-name': 'contact',
         name: form.name,
         email: form.email,
         message: form.message,
