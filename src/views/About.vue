@@ -46,12 +46,13 @@
         <p>{{ $t('about.networkPara1') }}</p>
         <p>{{ $t('about.networkPara2') }}</p>
 
-        <form class="form" @submit.prevent="submit">
+        <form class="form" name="contacto" @submit.prevent="submit">
+          <input type="hidden" name="form-name" value="contacto" />
+
           <input v-model="form.name" type="text" :placeholder="$t('about.formNamePlaceholder')" />
           <input v-model="form.email" type="email" :placeholder="$t('about.formEmailPlaceholder')" />
           <textarea v-model="form.message" :placeholder="$t('about.formMessagePlaceholder')"></textarea>
 
-          <!-- honeypot: invisible para humanos, visible para bots -->
           <input v-model="form.website" type="text" name="website" autocomplete="off" tabindex="-1" class="honeypot" />
 
           <button type="submit">{{ $t('about.formSubmit') }}</button>
@@ -73,13 +74,37 @@ const form = reactive({
   website: '' // honeypot, debe quedar vacío
 })
 
-const submit = () => {
+const submit = async () => {
   if (form.website) {
     // un bot llenó el campo oculto, ignora silenciosamente
     return
   }
-  // enviar form al endpoint...
-}
+
+  const encode = (data) =>
+    Object.keys(data)
+      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+      .join('&')
+
+  try {
+    await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode({
+        'form-name': 'contacto',
+        name: form.name,
+        email: form.email,
+        message: form.message,
+        website: form.website
+      })
+    })
+    // éxito: limpia el form y muestra mensaje
+    form.name = ''
+    form.email = ''
+    form.message = ''
+  } catch (e) {
+    console.error('Error enviando formulario', e)
+  }
+} 
 </script>
 
 <style scoped>
