@@ -57,7 +57,10 @@
     "formNamePlaceholder": "Nombre y apellido",
     "formEmailPlaceholder": "Correo electronico",
     "formMessagePlaceholder": "Mensaje",
-    "formSubmit": "Enviar"
+    "formSubmit": "Enviar",
+    "formSending": "En trámite...",
+    "formSuccess": "Se ha enviado su mensaje. Estamos en contacto",
+    "formError": "Hubo un error. Por favor vuelva a intentar."
   },
   "footer": {
     "copyright": ""

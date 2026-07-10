@@ -57,7 +57,11 @@
     "formNamePlaceholder": "Name",
     "formEmailPlaceholder": "Email Address",
     "formMessagePlaceholder": "Message",
-    "formSubmit": "Submit"
+    "formSubmit": "Submit",
+    "formSending": "Sending...",
+    "formSuccess": "Message sent. We'll get back to you soon.",
+    "formError": "Something went wrong. Please try again."
+
   },
   "footer": {
     "copyright": "© {year} Everywhere Border. All rights reserved."

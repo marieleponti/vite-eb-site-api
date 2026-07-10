@@ -53,9 +53,19 @@
           <input v-model="form.email" type="email" :placeholder="$t('about.formEmailPlaceholder')" />
           <textarea v-model="form.message" :placeholder="$t('about.formMessagePlaceholder')"></textarea>
 
+          <!-- honeypot: invisible to humans, visible to bots -->
           <input v-model="form.website" type="text" name="website" autocomplete="off" tabindex="-1" class="honeypot" />
 
-          <button type="submit">{{ $t('about.formSubmit') }}</button>
+          <button type="submit" :disabled="status === 'sending'">
+            {{ status === 'sending' ? $t('about.formSending') : $t('about.formSubmit') }}
+          </button>
+
+          <p v-if="status === 'success'" class="form-alert form-alert--success">
+            {{ $t('about.formSuccess') }}
+          </p>
+          <p v-if="status === 'error'" class="form-alert form-alert--error">
+            {{ $t('about.formError') }}
+          </p>
         </form>
       </div>
     </div>
@@ -64,26 +74,29 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-
+import { reactive, ref } from 'vue'
 
 const form = reactive({
   name: '',
   email: '',
   message: '',
-  website: '' // honeypot, debe quedar vacío
+  website: '' // honeypot, must stay empty
 })
+
+const status = ref(null) // null | 'sending' | 'success' | 'error'
+
+const encode = (data) =>
+  Object.keys(data)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+    .join('&')
 
 const submit = async () => {
   if (form.website) {
-    // un bot llenó el campo oculto, ignora silenciosamente
+    // a bot filled the hidden field, silently ignore
     return
   }
 
-  const encode = (data) =>
-    Object.keys(data)
-      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
-      .join('&')
+  status.value = 'sending'
 
   try {
     await fetch('/', {
@@ -97,14 +110,15 @@ const submit = async () => {
         website: form.website
       })
     })
-    // éxito: limpia el form y muestra mensaje
+    status.value = 'success'
     form.name = ''
     form.email = ''
     form.message = ''
   } catch (e) {
-    console.error('Error enviando formulario', e)
+    console.error('Error submitting form', e)
+    status.value = 'error'
   }
-} 
+}
 </script>
 
 <style scoped>
@@ -236,5 +250,23 @@ button:hover {
   height: 0;
   width: 0;
   pointer-events: none;
+}
+
+.form-alert {
+  font-family: 'Work Sans', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 3px;
+  margin-top: 8px;
+}
+
+.form-alert--success {
+  background-color: #e6f4ea;
+  color: #1e7e34;
+}
+
+.form-alert--error {
+  background-color: #fdecea;
+  color: #c0392b;
 }
 </style>
