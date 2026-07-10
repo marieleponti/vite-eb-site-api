@@ -421,11 +421,10 @@ onBeforeUnmount(() => {
 }
 
 .rc-toc-title {
-  font-family: "Staatliches", sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
   margin-bottom: 0.75rem;
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 
 .rc-toc-list,
@@ -574,19 +573,18 @@ onBeforeUnmount(() => {
 .rc-content :deep(h2),
 .rc-content :deep(h3),
 .rc-content :deep(h4) {
-  font-family: "Staatliches", sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #002d62;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  color: #333333;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
   scroll-margin-top: 100px;
+  line-height: 1.2;
 }
 
-.rc-content :deep(h2) { font-size: 1.6rem; }
-.rc-content :deep(h3) { font-size: 1.3rem; }
-.rc-content :deep(h4) { font-size: 1.1rem; }
-
+.rc-content :deep(h2) { font-size: 3rem; }
+.rc-content :deep(h3) { font-size: 2.25rem; }
+.rc-content :deep(h4) { font-size: 1.5rem; }
 .rc-content :deep(p) {
   line-height: 1.8;
   color: #2b2b2b;

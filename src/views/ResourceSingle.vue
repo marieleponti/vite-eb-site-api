@@ -78,6 +78,13 @@
   >
     Download/Open PDF
   </v-btn>
+
+   <!-- Back button (al final del artículo) -->
+                <v-divider class="my-8" />
+                <v-divider class="my-8" />
+                <v-btn variant="text" color="#2f4356" to="/resources">
+                    « {{ $t('resources.backToResources') }}
+                </v-btn>
 </div>
         </article>
       </v-col>
@@ -247,25 +254,35 @@ function formatDate(date) {
   min-height: 100vh;
 }
 
+/* Título principal — intención original: Cormorant bold (regla global h1) */
 .resource-title-single {
   font-size: 2.5rem;
   color: #29465b;
-  font-weight: 300;
+  font-weight: 700;
   line-height: 1.2;
+  font-family: var(--eb-default, 'Cormorant', serif);
 }
 
 .resource-meta-single {
   font-size: 1rem;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
+/* Cuerpo del contenido — coincide con .single-post-description-display */
 .resource-content-single {
   font-size: 1.15rem;
   line-height: 1.9;
   color: #333333;
+  font-family: 'Work Sans', sans-serif;
 }
 
 .bg-details-box {
   background-color: #fafdff;
+}
+
+/* "Resource Specifications" heading — regla global h3: Cormorant bold */
+.resource-specs-title {
+  font-family: var(--eb-default, 'Cormorant', serif);
 }
 
 .tax-label {
@@ -275,13 +292,13 @@ function formatDate(date) {
   color: #55595c;
   margin-bottom: 4px;
   letter-spacing: 0.02em;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
 /* Manejo de contenedores de vídeo (iFrames responsivos) */
 .video-container {
   position: relative;
   padding-bottom: 56.25%;
-  /* Relación de aspecto 16:9 */
   height: 0;
   overflow: hidden;
   background: #000;
@@ -301,7 +318,7 @@ function formatDate(date) {
 :deep(.resource-content-single iframe) {
   max-width: 100%;
   width: 100%;
-  aspect-ratio: 4 / 3; /* o 16/9 según el embed predominante */
+  aspect-ratio: 4 / 3;
   border: 0;
 }
 </style>

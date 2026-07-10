@@ -68,7 +68,8 @@
     "viewResource": "view resource",
     "previous": "\u00ab Previous",
     "next": "Next \u00bb",
-    "noResourcesFound": "No resources found."
+    "noResourcesFound": "No resources found.",
+    "backToResources": "Back to library"
   },
    "resourceFilters": {
     "searchLabel": "Key Terms",

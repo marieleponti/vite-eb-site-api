@@ -206,9 +206,50 @@ function formatDate(date) {
 .resources-page {
   background: #f9f9f9;
   min-height: 100vh;
+  padding-inline: clamp(1.25rem, 6vw, 8rem);
 }
 
-.pagination-nav {
+/* ===== Intro / Título principal — intención original: Cormorant ===== */
+.resources-intro__title {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 700; /* el original usa bold en h3, no 300 */
+  letter-spacing: 0.02em;
+  /* text-transform: uppercase; */
+  color: #29465b;
+  margin-bottom: 1.5rem;
+  font-family: var(--eb-default, 'Cormorant', serif);
+}
+
+.resources-intro__text {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #4b5563;
+  font-weight: 400;
+  font-family: var(--main-font, 'Work Sans', 'Raleway', sans-serif);
+}
+
+/* ===== Card title — original usa var(--main-font) en el <h5> ===== */
+.resource-title {
+  font-family: var(--main-font, 'Work Sans', 'Raleway', sans-serif);
+}
+
+/* ===== Descripción/excerpt de card — Work Sans directo en el original ===== */
+.resource-excerpt {
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* resource-meta (fecha) y read-more-btn no tenían font-family propio
+   en el original -> heredan Open Sans (fuente body de Divi) */
+.resource-meta,
+.read-more-btn {
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+/* ===== Paginación — sin override en el original, hereda Open Sans ===== */
+.pagination-nav,
+.pagination-number {
+  font-family: 'Open Sans', Arial, sans-serif;
   color: #2f4356 !important;
   text-transform: none !important;
   font-size: 1.15rem;
@@ -247,25 +288,6 @@ function formatDate(date) {
 
 .resources-intro__inner {
   width: 100%;
-  /* max-width: 1400px; */
-}
-
-.resources-intro__title {
-  font-size: 3rem;
-  line-height: 1.1;
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #29465b;
-  margin-bottom: 1.5rem;
-}
-
-.resources-intro__text {
-  font-size: 1.1rem;
-  line-height: 1.9;
-  color: #4b5563;
-  font-weight: 400;
-  /* max-width: 780px; */
 }
 
 /* Mobile */

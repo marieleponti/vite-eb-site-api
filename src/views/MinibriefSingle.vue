@@ -216,9 +216,16 @@ watch(() => route.params.slug, (newSlug) => {
 
 <style scoped>
 .secondfont {
-  font-family: "Staatliches", sans-serif;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-size: 4.8rem;
+  line-height: 1.1;
+}
+
+@media (max-width: 960px) {
+  .secondfont {
+    font-size: 2.8rem;
+  }
 }
 
 .hero-img {
@@ -228,11 +235,15 @@ watch(() => route.params.slug, (newSlug) => {
 .hero-embed {
   width: 100%;
   border-bottom: 4px solid #002d62;
-  line-height: 0; /* evita espacio extra debajo del iframe */
+  line-height: 0;
 }
 
 .hero-embed :deep(iframe) {
   width: 100%;
   display: block;
+}
+
+.d-flex.align-center.mb-8 {
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
 }
 </style>

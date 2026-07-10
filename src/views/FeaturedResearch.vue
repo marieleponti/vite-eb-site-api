@@ -208,15 +208,33 @@ const allResearch = computed(() => {
 </script>
 
 <style scoped>
-/* (Los estilos visuales se mantienen idénticos) */
+
 .secondfont {
-  font-family: "Staatliches", sans-serif;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-size: 4.8rem;
+  line-height: 1.1;
+  color: #2b3f47
+}
+
+/* El h2 "Featured Research" también hereda .secondfont pero debe verse
+   más chico que el h1 principal -> igual que la regla global h3: 3.6rem */
+h2.secondfont {
+  font-size: 3rem;
+}
+
+@media (max-width: 960px) {
+  .secondfont {
+    font-size: 2.8rem;
+  }
+
+  h2.secondfont {
+    font-size: 2rem;
+  }
 }
 
 .bg-lightblue {
-  background-color: #F5F5F5 !important;
+  background-color: #eaeaef !important;
 }
 
 .resource-card {
@@ -228,6 +246,7 @@ const allResearch = computed(() => {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
 }
 
+/* Coincide con h3.research-title del original -> Cormorant bold */
 .resource-title a {
   color: #212529;
   text-decoration: none;
@@ -235,26 +254,31 @@ const allResearch = computed(() => {
   font-weight: 700;
   line-height: 1.3;
   transition: color 0.2s;
+  font-family: 'Cormorant', Georgia, 'Times New Roman', serif;
 }
 
 .resource-card:hover .resource-title a {
   color: #002d62;
 }
 
+/* .research-author / fecha -> Work Sans (body default de esta página) */
 .author-text {
   font-size: 0.85rem;
   color: #4b5563;
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
 }
 
 .jumbotron-custom {
-  background: #e8f3ec;
+  background: #eaeaef;
   border: 1px solid #d1e7dd;
 }
 
+/* Coincide con <p class="mb-3"> del original -> Work Sans */
 .jumbotron-text {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   line-height: 1.8;
   color: #333333;
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
 }
 
 .caption-text {
@@ -271,6 +295,12 @@ const allResearch = computed(() => {
   color: #ffffff !important;
   font-size: 0.75rem;
   text-decoration: none;
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
+}
+
+/* Excerpt de card -> Work Sans */
+.resource-excerpt {
+  font-family: 'Work Sans', Helvetica, Arial, Lucida, sans-serif;
 }
 
 .line-illustration {

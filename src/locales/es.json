@@ -68,7 +68,8 @@
     "viewResource": "leer",
     "previous": "anterior",
     "next": "próxima",
-    "noResourcesFound": "no se encuentra"
+    "noResourcesFound": "no se encuentra",
+    "backToResources": "Volver a la biblioteca"
   },
    "resourceFilters": {
     "searchLabel": "Palabras claves",
