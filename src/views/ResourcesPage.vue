@@ -207,7 +207,6 @@ function formatDate(date) {
   background: #f9f9f9;
   min-height: 100vh;
   padding-inline: clamp(1.25rem, 6vw, 8rem);
-  background: #ddd;
 }
 
 /* ===== Intro / Título principal — intención original: Cormorant ===== */
@@ -281,7 +280,7 @@ function formatDate(date) {
 }
 
 .resources-intro {
-  background: #ddd;
+  background: #f3f3f3;
   border-radius: 0;
   padding: 3rem 2rem;
   border: 1px solid #e0e0e0;

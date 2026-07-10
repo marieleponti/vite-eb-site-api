@@ -1,10 +1,12 @@
 <template>
   <v-container class="resource-single-page py-10">
     <!-- Botón para regresar al catálogo -->
-    <v-btn variant="text" color="#2f4356" class="mb-6" to="/resources">
-      « Back to Resources
+    <!-- Back button (al final del artículo) -->
+    <v-divider class="my-8" />
+    <v-divider class="my-8" />
+    <v-btn variant="text" color="#2f4356" to="/resources">
+      « {{ $t('resources.backToResources') }}
     </v-btn>
-
     <!-- Estado de Carga (Skeleton Loader) -->
     <v-row v-if="loading">
       <v-col cols="12" md="8" class="mx-auto">
@@ -33,7 +35,8 @@
           <!-- Descripción del recurso (ACF description) -->
           <div class="resource-content-single mb-8" v-html="sanitizeContent(resource.acf?.description) || ''"></div>
           <!-- Contenido nativo de WP (post_content) — embeds legado, iframes, etc. -->
-          <div v-if="resource.content" class="resource-content-single mb-8" v-html="sanitizeContent(resource.content)"></div>
+          <div v-if="resource.content" class="resource-content-single mb-8" v-html="sanitizeContent(resource.content)">
+          </div>
 
           <!-- Video Embebido Adaptativo (ACF embed_video) -->
           <div v-if="resource.acf?.video_embed" class="video-container mb-8 rounded-lg overflow-hidden">
@@ -41,51 +44,32 @@
           </div>
 
           <!-- PDFs: selector + viewer -->
-<div v-if="resource?.acf?.upload_files?.length" class="mb-8">
-  <v-select
-    v-model="selectedPdfUrl"
-    :items="resource.acf.upload_files.map(x => ({ title: x.file.title, value: x.file.url }))"
-    item-title="title"
-    item-value="value"
-    label="Select a PDF"
-    variant="outlined"
-    density="comfortable"
-  />
+          <div v-if="resource?.acf?.upload_files?.length" class="mb-8">
+            <v-select v-model="selectedPdfUrl"
+              :items="resource.acf.upload_files.map(x => ({ title: x.file.title, value: x.file.url }))"
+              item-title="title" item-value="value" label="Select a PDF" variant="outlined" density="comfortable" />
 
-  <div class="d-flex align-center ga-3 mt-3" v-if="selectedPdfUrl">
-    <v-icon color="#2f4356">mdi-file-pdf-box</v-icon>
-    <span>{{ resource.acf.upload_files.find(x => x.file.url === selectedPdfUrl)?.file.title }}</span>
-  </div>
+            <div class="d-flex align-center ga-3 mt-3" v-if="selectedPdfUrl">
+              <v-icon color="#2f4356">mdi-file-pdf-box</v-icon>
+              <span>{{resource.acf.upload_files.find(x => x.file.url === selectedPdfUrl)?.file.title}}</span>
+            </div>
 
-  <div class="rounded-lg overflow-hidden mt-4" v-if="selectedPdfUrl">
-    <iframe
-      :src="selectedPdfUrl"
-      width="100%"
-      height="750"
-      style="border:0;"
-      type="application/pdf"
-    />
-  </div>
+            <div class="rounded-lg overflow-hidden mt-4" v-if="selectedPdfUrl">
+              <iframe :src="selectedPdfUrl" width="100%" height="750" style="border:0;" type="application/pdf" />
+            </div>
 
-  <v-btn
-    class="mt-4"
-    v-if="selectedPdfUrl"
-    color="#2f4356"
-    size="large"
-    :href="selectedPdfUrl"
-    target="_blank"
-    prepend-icon="mdi-open-in-new"
-  >
-    Download/Open PDF
-  </v-btn>
+            <v-btn class="mt-4" v-if="selectedPdfUrl" color="#2f4356" size="large" :href="selectedPdfUrl"
+              target="_blank" prepend-icon="mdi-open-in-new">
+              Download/Open PDF
+            </v-btn>
 
-   <!-- Back button (al final del artículo) -->
-                <v-divider class="my-8" />
-                <v-divider class="my-8" />
-                <v-btn variant="text" color="#2f4356" to="/resources">
-                    « {{ $t('resources.backToResources') }}
-                </v-btn>
-</div>
+            <!-- Back button (al final del artículo) -->
+            <v-divider class="my-8" />
+            <v-divider class="my-8" />
+            <v-btn variant="text" color="#2f4356" to="/resources">
+              « {{ $t('resources.backToResources') }}
+            </v-btn>
+          </div>
         </article>
       </v-col>
 
