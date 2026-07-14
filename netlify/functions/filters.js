@@ -3,8 +3,6 @@ const WP = process.env.WP_API
 exports.handler = async () => {
   try {
 
-    console.log('WP:', WP)
-
     const res = await fetch(
       `${WP}/wp-json/ebinforepo/v1/filters`
     )

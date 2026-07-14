@@ -21,7 +21,6 @@ export function useContent(defaultParams = {}) {
 
     try {
       const merged = { ...defaultParams, ...params }
-      console.log('PAGE:', merged.page)
 
       let res = null
 
@@ -53,7 +52,6 @@ export function useContent(defaultParams = {}) {
           res :
           []
 
-        console.log('FIRST ITEM RAW:', res?.items?.[0])
         items.value = raw.map(mapPost)
 
         meta.value.total = raw.length
@@ -91,11 +89,7 @@ export function useContent(defaultParams = {}) {
 
         const queryString = query.toString()
 
-        console.log('Vue envia:', queryString)
-
         res = await fetchResources(queryString)
-
-        console.log('RAW RESPONSE:', res)
 
         // ======================
         // NORMALIZACIÓN SEGURA
@@ -107,7 +101,6 @@ export function useContent(defaultParams = {}) {
           Array.isArray(res?.items) ?
           res.items :
           []
-        console.log('FIRST ITEM NORMALIZED:', rawItems?.[0])
 
         items.value = rawItems.map(normalizeResource)
 
