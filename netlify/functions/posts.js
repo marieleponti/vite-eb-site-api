@@ -9,28 +9,21 @@ exports.handler = async (event) => {
 
   try {
     if (event.httpMethod === 'GET') {
-      // CAPTURA CLAVE: Leemos tanto 'search' como 's' para que no haya pérdidas
       const query = event.queryStringParameters?.search || event.queryStringParameters?.s || ''
       const categories = event.queryStringParameters?.categories || ''
       const tags = event.queryStringParameters?.tags || ''
       const slug = event.queryStringParameters?.slug || ''
 
-      // 1. Construimos la URL base para WordPress
       let url = `${WP}/wp-json/wp/v2/posts?_embed=true&per_page=100`
 
-      if (slug) {url += `&slug=${encodeURIComponent(slug)}`}
-
-      // 2. Si venían taxonomías de tus filtros funcionales, las conservamos
-      if (categories) url += `&categories=${categories}`
-      if (tags) url += `&tags=${tags}`
-      
-      // 3. Añadimos el parámetro de búsqueda nativo a WP
+      if (slug) url += `&slug=${encodeURIComponent(slug)}`
+      if (categories) url += `&categories=${encodeURIComponent(categories)}`
+      if (tags) url += `&tags=${encodeURIComponent(tags)}`
       if (query) url += `&search=${encodeURIComponent(query)}`
 
       const res = await fetch(url, { headers })
       let data = await res.json()
 
-      // 4. DOBLE ESCUDO: Si Pantheon ignora el parámetro '?search=', JS filtra el JSON aquí mismo
       if (query && Array.isArray(data)) {
         const palabra = query.toLowerCase()
         data = data.filter(post => {
@@ -42,7 +35,7 @@ exports.handler = async (event) => {
 
       return {
         statusCode: 200,
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
@@ -53,6 +46,13 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) }
 
   } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ error: error.message }) }
+    return {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({ error: 'Internal server error' }),
+    }
   }
 }
