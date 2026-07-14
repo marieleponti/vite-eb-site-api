@@ -28,9 +28,24 @@ export async function netlifyFetch(
 
   const text = await res.text()
 
+  let data
   try {
-    return JSON.parse(text)
+    data = text ? JSON.parse(text) : null
   } catch (e) {
-    throw e
+    if (import.meta.env.DEV) {
+      console.error('Invalid JSON response:', text)
+    }
+    const parseError = new Error('Invalid JSON response')
+    parseError.status = res.status
+    throw parseError
   }
+
+  if (!res.ok) {
+    const error = new Error(data?.error || `Request failed with status ${res.status}`)
+    error.status = res.status
+    error.data = data
+    throw error
+  }
+
+  return data
 }
