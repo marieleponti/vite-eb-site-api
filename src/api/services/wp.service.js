@@ -90,19 +90,3 @@ export async function fetchResourceById(id) {
 export async function fetchResourceFilters() {
   return await netlifyFetch('/filters')
 }
-
-// CREATE POST
-export async function createPost(payload) {
-  return await netlifyFetch('/posts', '', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  })
-}
-
-// UPDATE POST
-export async function updatePost(id, payload) {
-  return await netlifyFetch(`/posts/${id}`, '', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  })
-}
