@@ -19,9 +19,6 @@ exports.handler = async (event) => {
       }
     }
 
-    console.log('TOKEN:', token)
-    console.log('AUTH HEADER:', `Bearer ${token}`)
-
     const res = await fetch(
       `${WP}/wp-json/ebinforepo/v1/me`,
       {

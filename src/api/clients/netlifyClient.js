@@ -28,9 +28,6 @@ export async function netlifyFetch(
 
   const text = await res.text()
 
-  console.log('URL:', url)
-  console.log('RAW NETLIFY RESPONSE:', text)
-
   try {
     return JSON.parse(text)
   } catch (e) {
