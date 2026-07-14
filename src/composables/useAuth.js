@@ -52,31 +52,34 @@ export function useAuth() {
   // =======================
   async function checkCurrentUser() {
 
-    if (!token.value) return null
+  if (!token.value) return null
 
-    try {
-      // Antes esto le pegaba directo a '/wp-json/ebinforepo/v1/me',
-      // pero esa ruta no la intercepta ninguna Netlify Function — por
-      // eso siempre tiraba "Function not found". Ahora pasa por la
-      // función /me (netlify/functions/me.js), que reenvía el JWT a
-      // WordPress y devuelve la respuesta.
-      const data = await netlifyFetch('/me')
+  try {
+    const data = await netlifyFetch('/me')
 
-      // Si el backend responde correctamente, sincronizamos roles
-      if (data && Array.isArray(data.roles)) {
-        roles.value = data.roles
-        localStorage.setItem('user_roles', JSON.stringify(data.roles))
-      }
+    if (data && Array.isArray(data.roles)) {
+      roles.value = data.roles
+      localStorage.setItem('user_roles', JSON.stringify(data.roles))
+    }
 
-      return data
+    return data
 
-    } catch (error) {
-      // IMPORTANTE:
-      // No romper sesión por errores de red o backend temporal
-      console.warn('Auth check failed (network or server issue):', error)
+  } catch (error) {
+    // Si el token es inválido/expirado, cerramos sesión de verdad
+    if (error.status === 401 || error.status === 403) {
+      logout()
       return null
     }
+
+    // Error de red u otro problema temporal: no rompemos la sesión,
+    // pero tampoco logueamos detalles sensibles
+    if (import.meta.env.DEV) {
+      console.warn('Auth check failed (network or server issue):', error)
+    }
+
+    return null
   }
+}
 
   // =======================
   // LOGOUT

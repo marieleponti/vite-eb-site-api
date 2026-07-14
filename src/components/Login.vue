@@ -46,14 +46,11 @@ async function handleLogin() {
       password.value
     )
 
-    console.log('LOGIN DATA:', data)
-
     if (data?.token) {
       router.push('/resources')
     }
 
   } catch (err) {
-    console.error(err)
   }
 }
 </script>

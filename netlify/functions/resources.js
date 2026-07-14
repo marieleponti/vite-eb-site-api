@@ -147,7 +147,6 @@ exports.handler = async (event = {}) => {
     }
 
   } catch (error) {
-    console.error('RESOURCES ERROR:', error)
 
     return {
       statusCode: 500,

@@ -79,16 +79,10 @@ async function loadFilters() {
     })
 
   } catch (error) {
-    console.error('Error loading filters:', error)
   }
 }
 
 function emitFilters() {
-
-  console.log(
-    'FILTERS JSON:',
-    JSON.stringify(filters)
-  )
 
   emit('update', { ...filters })
 }

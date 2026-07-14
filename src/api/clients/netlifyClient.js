@@ -31,7 +31,6 @@ export async function netlifyFetch(
   try {
     return JSON.parse(text)
   } catch (e) {
-    console.error('Invalid JSON response:', text)
     throw e
   }
 }

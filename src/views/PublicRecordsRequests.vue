@@ -100,7 +100,7 @@ async function getDocketFeed() {
 
     docketFeed.value = response?.items || []
   } catch (err) {
-    console.error('Error en Docket Feed:', err)
+    console.error('Error in Docket Feed:', err)
   } finally {
     loadingDocket.value = false
   }
