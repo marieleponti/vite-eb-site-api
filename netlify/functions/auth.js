@@ -54,6 +54,8 @@ exports.handler = async (event) => {
 
   } catch (error) {
 
+    console.error('Auth function error:', error)
+
     return {
       statusCode: 500,
       body: JSON.stringify({

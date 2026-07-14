@@ -148,6 +148,8 @@ exports.handler = async (event = {}) => {
 
   } catch (error) {
 
+    console.error('Resources function error:', error)
+
     return {
       statusCode: 500,
       headers: {
@@ -155,7 +157,7 @@ exports.handler = async (event = {}) => {
         'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({
-        error: error.message,
+        error: 'Internal server error',
       }),
     }
   }
