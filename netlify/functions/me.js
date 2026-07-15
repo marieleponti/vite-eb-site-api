@@ -1,27 +1,28 @@
-// functions/me.js
-//
-// Cloudflare Pages Function — equivalent to the old Netlify function.
-// Cloudflare auto-routes this file to the path /me based on its filename.
+// netlify functions
 
-export async function onRequestGet(context) {
-  const { request, env } = context
+const WP = process.env.WP_API
+
+exports.handler = async (event) => {
 
   try {
-    const authHeader = request.headers.get('authorization') || ''
-    const token = authHeader.replace('Bearer ', '')
+
+    const token =
+      event.headers.authorization?.replace(
+        'Bearer ',
+        ''
+      )
 
     if (!token) {
-      return new Response(
-        JSON.stringify({ error: 'Missing token' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      )
+      return {
+        statusCode: 401,
+        body: JSON.stringify({
+          error: 'Missing token',
+        }),
+      }
     }
 
     const res = await fetch(
-      `${env.WP_API}/wp-json/ebinforepo/v1/me`,
+      `${WP}/wp-json/ebinforepo/v1/me`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -30,41 +31,34 @@ export async function onRequestGet(context) {
     )
 
     if (!res.ok) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid token' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      )
+      return {
+        statusCode: 401,
+        body: JSON.stringify({
+          error: 'Invalid token',
+        }),
+      }
     }
 
     const user = await res.json()
 
-    return new Response(
-      JSON.stringify({
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
         id: user.id,
         roles: user.roles,
         caps: user.capabilities,
       }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    )
+    }
 
   } catch (error) {
 
-    // Log the real error internally (visible only in Cloudflare's function logs)
     console.error('Me function error:', error)
 
-    // Return a generic message to the client — never expose internals
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    )
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: error.message,
+      }),
+    }
   }
 }
