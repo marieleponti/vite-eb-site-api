@@ -1,3 +1,5 @@
+// netlify functions
+
 const WP = process.env.WP_API
 
 async function getUser(token) {

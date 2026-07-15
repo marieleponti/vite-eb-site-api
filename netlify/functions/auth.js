@@ -1,3 +1,4 @@
+// netlify functions
 const WP = process.env.WP_API
 
 exports.handler = async (event) => {
