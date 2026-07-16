@@ -30,7 +30,7 @@
 
     <!-- Teal block: wall image on top, text and icons below -->
     <div class="wall-section">
-      <img src="/border_wall.png" alt="" class="wall-section-img" ref="wallImgRef" aria-hidden="true" @load="updateWallMargin" />
+      <img src="/border_wall.png" alt="" class="wall-section-img" ref="wallImgRef" aria-hidden="true" />
       <div class="wall-section-content" :style="{ marginTop: wallContentMargin }">
         <p class="section-text wall-section-text">
           The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
@@ -118,28 +118,33 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch, h } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch, h } from 'vue'
 import { useContent } from '@/composables/useContent'
 
 let whyCleanup = null
 /* -------------------------------------------------------------------- */
-/* Wall section: dynamic margin so teal box always shows ~120px of      */
-/* image above it, regardless of viewport/image render size             */
+/* Wall section: dynamic margin                                          */
 /* -------------------------------------------------------------------- */
 const wallImgRef = ref(null)
-const wallContentMargin = ref('-900px')
+const wallContentMargin = ref('-780px')
 
 function updateWallMargin() {
   const img = wallImgRef.value
   if (!img) return
   const imgHeight = img.offsetHeight
-  // Show ~120px of image above the teal box
-  const overlap = imgHeight - 120
-  wallContentMargin.value = `-${overlap}px`
+  if (imgHeight > 0) {
+    wallContentMargin.value = `-${imgHeight - 120}px`
+  }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await nextTick()
   updateWallMargin()
+  // Also handle case where image loads after mount
+  const img = wallImgRef.value
+  if (img && !img.complete) {
+    img.addEventListener('load', updateWallMargin, { once: true })
+  }
   window.addEventListener('resize', updateWallMargin, { passive: true })
 })
 
