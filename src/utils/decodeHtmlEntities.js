@@ -1,5 +1,5 @@
 /**
- * WP REST devuelve title.rendered con las entidades HTML ya codificadas
+ * WP REST returns title.rendered con las entidades HTML ya codificadas
  * (ej. "Foo &amp; Bar" en vez de "Foo & Bar"), porque está pensado para
  * insertarse como HTML. Vue con {{ title }} lo muestra como texto plano
  * sin decodificar, así que sin esto el "&amp;" (o "&quot;", "&#039;", etc.)
