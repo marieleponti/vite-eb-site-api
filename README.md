@@ -71,7 +71,7 @@ Two parallel implementations exist during the migration:
 | `netlify/functions/me.js` | `functions/api/me.js` | `/api/me` |
 | `netlify/functions/posts.js` | `functions/api/posts.js` | `/api/posts` |
 | `netlify/functions/resources.js` | `functions/api/resources.js` | `/api/resources` |
-| `netlify/functions/filters.js` | *(pending conversion)* | `/api/filters` |
+| `netlify/functions/filters.js` | `functions/api/filters.js` | `/api/filters` |
 
 **Important naming note:** Cloudflare Pages Functions are routed by file path. Early in the migration, functions lived directly under `functions/` (e.g. `functions/resources.js` → `/resources`), which **collided with the Vue Router page of the same name**. All functions were moved under `functions/api/` to avoid this. `VITE_API_BASE` is set to `/api` in the Cloudflare Pages project (and to `/.netlify/functions` in the Netlify project) to match.
 
@@ -81,7 +81,7 @@ Two parallel implementations exist during the migration:
 - **`me.js`** — accepts a Bearer token, forwards it to a custom WP endpoint (`ebinforepo/v1/me`), returns the current user's `id`, `roles`, `caps`.
 - **`posts.js`** — read-only (`GET`). Write functionality (create/update posts) was removed as unused; all content is managed via wp-admin by the internal team.
 - **`resources.js`** — read-only (`GET`). Determines whether to include `private` status resources based on the requesting user's role (validated server-side against WordPress via `me.js`'s underlying check).
-- **`filters.js`** — *(pending)* returns taxonomy filter options for the resource library UI.
+- **`filters.js`** — read-only (`GET`), no authentication required. Returns the hierarchical taxonomy tree (topics, sources, formats, countries, languages) used to populate the resource library filter UI.
 
 ---
 
@@ -185,15 +185,14 @@ All items below were identified and resolved during a manual security review of 
 ### Completed
 - [x] Cloudflare Pages project created and correctly configured as **Pages** (not Workers — an early misconfiguration caused build failures where `wrangler` attempted to parse `vite.config.js`).
 - [x] `NODE_VERSION` environment variable set to match the Netlify build environment.
-- [x] All four core functions (`auth`, `me`, `posts`, `resources`) converted from Netlify's `exports.handler` format to Cloudflare's `onRequestGet`/`onRequestPost` format using the standard Fetch API (`Request`/`Response`).
+- [x] All five functions (`auth`, `me`, `posts`, `resources`, `filters`) converted from Netlify's `exports.handler` format to Cloudflare's `onRequestGet`/`onRequestPost` format using the standard Fetch API (`Request`/`Response`).
 - [x] Environment variables (`WP_API`, `VITE_API_BASE`) configured for the Cloudflare Pages project.
 - [x] Route collision between Vue Router pages and API functions resolved by moving all functions under `functions/api/` and setting `VITE_API_BASE=/api`.
 - [x] CORS updated in WordPress to allow the `*.pages.dev` origin during testing.
-- [x] End-to-end verification: posts and resources load correctly in the UI when navigated via the app.
+- [x] Fixed `authService.js`, which had the Netlify function path (`/.netlify/functions/auth`) hardcoded instead of using `VITE_API_BASE` like the rest of the API layer — this caused login to fail silently on Cloudflare until corrected.
+- [x] End-to-end verification complete: posts, resources, filters, login, resource/post detail pages (by slug), and search all confirmed working in the UI on Cloudflare Pages.
 
 ### Remaining
-- [ ] Convert `filters.js` (in progress).
-- [ ] Verify remaining flows: resource/post detail pages by slug, login flow, search.
 - [ ] Point `admin.yourdomain.com` DNS (via Cloudflare, proxied) to the new Pantheon WP environment.
 - [ ] Point the root domain to Cloudflare Pages.
 - [ ] Update `WP_API` / `VITE_WP_API` to use `admin.yourdomain.com` instead of the raw Pantheon URL.
@@ -210,3 +209,4 @@ All items below were identified and resolved during a manual security review of 
 - **`VITE_*` environment variables are baked in at build time**, not read at runtime. Changing them in the Cloudflare Pages dashboard requires a fresh build (not just a redeploy of a previous build) to take effect.
 - **Cloudflare Pages vs. Cloudflare Workers are different products** in the dashboard despite sharing infrastructure — creating a project under the wrong one produces confusing build errors (e.g. `wrangler` trying to parse `vite.config.js` as a Worker entry point).
 - **A leading `/` in `VITE_API_BASE`** combined with an endpoint starting with `/` produces a protocol-relative URL (`//posts`), which browsers interpret as `https://posts/` — an easy mistake when trying to represent "no base path."
+- **Not every API call goes through the shared `netlifyFetch` wrapper.** `authService.js`'s `login()` function had the Netlify function path hardcoded (`/.netlify/functions/auth`) instead of using `VITE_API_BASE`, so it was missed during the initial `VITE_API_BASE` migration and kept failing (405, then a literal `${API}` in the URL from an unescaped template-literal typo) until caught by manual testing. When auditing for platform-specific paths, grep the whole `src/` tree for `/.netlify/` or similar literals, not just the central client file.
