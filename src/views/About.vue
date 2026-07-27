@@ -74,6 +74,7 @@
 </template>
 
 <script setup>
+// Cloudflare pages contact form for Resend integration
 const API = import.meta.env.VITE_API_BASE || ''
 
 const submit = async () => {
