@@ -74,42 +74,31 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-
-const form = reactive({
-  name: '',
-  email: '',
-  message: '',
-  website: '' // honeypot, must stay empty
-})
-
-const status = ref(null) // null | 'sending' | 'success' | 'error'
-
-const encode = (data) =>
-  Object.keys(data)
-    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
-    .join('&')
+const API = import.meta.env.VITE_API_BASE || ''
 
 const submit = async () => {
   if (form.website) {
-    // a bot filled the hidden field, silently ignore
     return
   }
 
   status.value = 'sending'
 
   try {
-    await fetch('/', {
+    const res = await fetch(`${API}/contact`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encode({
-        'form-name': 'contact',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         name: form.name,
         email: form.email,
         message: form.message,
         website: form.website
       })
     })
+
+    if (!res.ok) {
+      throw new Error('Failed to submit')
+    }
+
     status.value = 'success'
     form.name = ''
     form.email = ''
