@@ -78,7 +78,7 @@
         <v-card variant="outlined" class="pa-5 rounded-lg bg-details-box" style="border-color: #c7cdd4 !important;">
           <h3 class="text-subtitle-1 font-weight-bold mb-4"
             style="color: #29465b; text-transform: uppercase; letter-spacing: 0.05em;">
-            Resource Specifications
+            About the Resource
           </h3>
 
           <div class="d-flex flex-column ga-4">
