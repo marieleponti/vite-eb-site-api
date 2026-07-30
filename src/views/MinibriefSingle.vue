@@ -1,5 +1,5 @@
 <!-- src/views/MiniBriefSingle.vue
-  Página Single para /featured-research/:slug
+  Página Single for /featured-research/:slug
 -->
 <template>
   <v-container fluid class="single-research pa-0">
