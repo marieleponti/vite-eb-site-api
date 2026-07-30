@@ -74,13 +74,21 @@
 </template>
 
 <script setup>
-// Cloudflare pages contact form for Resend integration
+import { reactive, ref } from 'vue'
+
 const API = import.meta.env.VITE_API_BASE || ''
 
+const form = reactive({
+  name: '',
+  email: '',
+  message: '',
+  website: ''
+})
+
+const status = ref('')
+
 const submit = async () => {
-  if (form.website) {
-    return
-  }
+  if (form.website) return
 
   status.value = 'sending'
 
@@ -96,9 +104,7 @@ const submit = async () => {
       })
     })
 
-    if (!res.ok) {
-      throw new Error('Failed to submit')
-    }
+    if (!res.ok) throw new Error('Failed to submit')
 
     status.value = 'success'
     form.name = ''
