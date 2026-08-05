@@ -16,7 +16,7 @@
         </v-col>
         <v-col cols="12" md="6" class="d-none d-md-block position-relative line-illustration">
           <figure class="ma-0 position-relative fill-height">
-            <v-img src="src/assets/images/border-tech.jpg" alt="Border Infrastructure Illustration" height="100%" cover />
+            <v-img :src="borderTechImg" alt="Border Infrastructure Illustration" height="100%" cover />
             <figcaption class="caption-text">
               <a href="https://www.instagram.com/chewsomebubblegum/" target="_blank" rel="noopener noreferrer">
                 {{ $t('featuredResearch.illustrationCaption') }}
@@ -97,6 +97,18 @@ import { useI18n } from 'vue-i18n'
 import { useContent } from '@/composables/useContent'
 import { useAuth } from '@/composables/useAuth'
 
+// ── IMPORTS DE IMÁGENES ────────────────────────────────────────────────
+// Importante: deben importarse así (no como strings de ruta) para que
+// Vite las procese, les asigne hash y las incluya en el build de
+// producción (dist/). Un string literal como 'src/assets/images/x.jpg'
+// solo "funciona" en dev porque el servidor de Vite sirve el filesystem
+// completo; en Cloudflare Pages ese path no existe y da 404.
+import borderTechImg from '@/assets/images/border-tech.jpg'
+import minibriefBorderExt from '@/assets/images/minibrief_border-ext.jpg'
+import minibriefBiometricsMgmt from '@/assets/images/minibrief_biometrics-migr-mgmt.jpg'
+import minibriefHumanImpacts from '@/assets/images/minibrief_human-impacts.png'
+import minibriefBiometricsBorders from '@/assets/images/minibrief_biometrics-borders.jpg'
+
 const { t } = useI18n()
 const { items: dynamicItems, fetch: cargarContenido, loading } = useContent()
 const { roles: userRoles, checkCurrentUser } = useAuth()
@@ -115,7 +127,7 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static1Title'),
     permalink: '/featured-research/border-externalization-in-americas',
-    featuredImage: 'src/assets/images/minibrief_border-ext.jpg',
+    featuredImage: minibriefBorderExt,
     excerpt: t('featuredResearch.static1Excerpt'),
     author: 'Mizue Aizeki & S. Narváez',
     restricted: false
@@ -123,7 +135,7 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static2Title'),
     permalink: '/featured-research/biometrics-based-migration-management',
-    featuredImage: 'src/assets/images/minibrief_biometrics-migr-mgmt.jpg',
+    featuredImage: minibriefBiometricsMgmt,
     excerpt: t('featuredResearch.static2Excerpt'),
     author: 'Santiago Narváez',
     restricted: true
@@ -131,7 +143,7 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static3Title'),
     permalink: '/featured-research/human-impacts-brief',
-    featuredImage: 'src/assets/images/minibrief_human-impacts.png',
+    featuredImage: minibriefHumanImpacts,
     excerpt: t('featuredResearch.static3Excerpt'),
     author: 'Laura Bingham',
     restricted: false
@@ -139,17 +151,23 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static4Title'),
     permalink: '/featured-research/biometrics-mx-ca',
-    featuredImage: 'src/assets/images/minibrief_biometrics-borders.jpg',
+    featuredImage: minibriefBiometricsBorders,
     excerpt: t('featuredResearch.static4Excerpt'),
     author: 'Everywhere Border Project',
     restricted: false
   }
 ])
 
+// Limpia etiquetas HTML y recorta a `wordLimit` palabras.
+// Antes: cuando el texto tenía <= wordLimit palabras, se retornaba
+// `text` (el original, CON las etiquetas <p> sin limpiar), lo cual
+// se veía en pantalla como "<p>...</p>" literal porque se imprime
+// con interpolación de texto ({{ }}), no con v-html.
 function trimExcerpt(text, wordLimit) {
   if (!text) return ''
-  const words = text.replace(/<[^>]*>/g, '').split(/\s+/)
-  if (words.length <= wordLimit) return text
+  const plain = text.replace(/<[^>]*>/g, '').trim()
+  const words = plain.split(/\s+/)
+  if (words.length <= wordLimit) return plain
   return words.slice(0, wordLimit).join(' ') + '...'
 }
 
