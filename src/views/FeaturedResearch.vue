@@ -96,13 +96,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useContent } from '@/composables/useContent'
 import { useAuth } from '@/composables/useAuth'
-
-// ── IMPORTS DE IMÁGENES ────────────────────────────────────────────────
-// Importante: deben importarse así (no como strings de ruta) para que
-// Vite las procese, les asigne hash y las incluya en el build de
-// producción (dist/). Un string literal como 'src/assets/images/x.jpg'
-// solo "funciona" en dev porque el servidor de Vite sirve el filesystem
-// completo; en Cloudflare Pages ese path no existe y da 404.
 import borderTechImg from '@/assets/images/border-tech.jpg'
 import minibriefBorderExt from '@/assets/images/minibrief_border-ext.jpg'
 import minibriefBiometricsMgmt from '@/assets/images/minibrief_biometrics-migr-mgmt.jpg'
@@ -158,11 +151,6 @@ const staticResearch = computed(() => [
   }
 ])
 
-// Limpia etiquetas HTML y recorta a `wordLimit` palabras.
-// Antes: cuando el texto tenía <= wordLimit palabras, se retornaba
-// `text` (el original, CON las etiquetas <p> sin limpiar), lo cual
-// se veía en pantalla como "<p>...</p>" literal porque se imprime
-// con interpolación de texto ({{ }}), no con v-html.
 function trimExcerpt(text, wordLimit) {
   if (!text) return ''
   const plain = text.replace(/<[^>]*>/g, '').trim()
