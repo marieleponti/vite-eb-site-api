@@ -88,9 +88,10 @@
             <div>
               <h3>{{ item.title }}</h3>
               <p>{{ trimExcerpt(item.excerpt, 20) }}</p>
-              <a :href="item.permalink" target="_blank" rel="noopener noreferrer" class="featured-link">
+              <router-link :to="item.type === 'post' ? `/blog/${item.slug}` : `/resources/${item.slug}`"
+                class="featured-link">
                 Read More
-              </a>
+              </router-link>
             </div>
           </div>
         </div>
