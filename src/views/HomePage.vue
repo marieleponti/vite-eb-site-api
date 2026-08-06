@@ -360,7 +360,9 @@ onMounted(() => {
 .content-section {
   padding: 90px 75px;
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .content-section--overlap { padding-top: 60px; }
