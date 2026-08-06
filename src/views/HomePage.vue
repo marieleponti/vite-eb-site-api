@@ -508,7 +508,7 @@ onMounted(() => {
   margin: 50px auto 0;
 }
 
-.featured-card img { width: 42%; max-width: 380px; object-fit: cover; flex-shrink: 0; }
+.featured-card img { width: 38%; max-width: 340px; object-fit: cover; flex-shrink: 0; height: 260px; }
 .featured-card > div { text-align: left; }
 
 .featured-card h3 {
