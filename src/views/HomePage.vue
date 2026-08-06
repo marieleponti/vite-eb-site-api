@@ -73,21 +73,25 @@
             v-for="item in featuredContent"
             :key="`${item.type}-${item.id || item.slug}`"
             class="featured-card featured-slide"
-          >
+>
             <img :src="item.featuredImage || '/featured.jpg'" :alt="item.title" />
             <div>
               <h3>{{ item.title }}</h3>
               <p>{{ trimExcerpt(item.excerpt, 20) }}</p>
-              <a :href="item.permalink" target="_blank" rel="noopener noreferrer" class="featured-link">
+              <router-link :to="item.type === 'post' ? `/blog/${item.slug}` : `/resources/${item.slug}`"
+                class="featured-link">
                 {{ $t('home.readMore') }}
-              </a>
+              </router-link>
+
             </div>
           </div>
         </div>
 
         <template v-if="featuredContent.length > 1">
-          <button class="slider-arrow slider-arrow-prev" @click="prevSlide" :aria-label="$t('home.prevSlideAria')">&#8249;</button>
-          <button class="slider-arrow slider-arrow-next" @click="nextSlide" :aria-label="$t('home.nextSlideAria')">&#8250;</button>
+          <button class="slider-arrow slider-arrow-prev" @click="prevSlide"
+            :aria-label="$t('home.prevSlideAria')">&#8249;</button>
+          <button class="slider-arrow slider-arrow-next" @click="nextSlide"
+            :aria-label="$t('home.nextSlideAria')">&#8250;</button>
           <div class="slider-dots">
             <button
               v-for="(item, i) in featuredContent"
