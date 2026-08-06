@@ -597,13 +597,19 @@ onMounted(() => {
   .fence-decoration { width: 150px; right: 0; bottom: 0; }
 
   /* Featured slider: constrain to viewport */
-  .featured-slider { max-width: 100%; overflow: hidden; padding: 0 36px; }
+  .featured-slider {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
   .featured-slider-track .featured-slide { width: 100%; }
   .featured-card {
     flex-direction: column;
-    gap: 20px;
-    margin: 20px 0 0;
+    gap: 16px;
+    margin: 16px 0 0;
     max-width: 100%;
+    padding: 0 16px;
   }
   .featured-card img {
     width: 100%;
@@ -611,11 +617,12 @@ onMounted(() => {
     height: 160px;
     object-fit: cover;
   }
-  .featured-card h3 { font-size: 22px; }
+  .featured-card h3 { font-size: 20px; }
 
-  /* Slider arrows fully visible inside padding */
-  .slider-arrow-prev { left: -32px; }
-  .slider-arrow-next { right: -32px; }
+  /* Arrows sit inside the slider, not outside */
+  .slider-arrow { width: 32px; height: 32px; font-size: 18px; }
+  .slider-arrow-prev { left: 4px; }
+  .slider-arrow-next { right: 4px; }
 
   /* Wall section on mobile */
   .wall-section-content {
