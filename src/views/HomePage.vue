@@ -290,6 +290,7 @@ onMounted(() => {
   background-color: var(--color-teal);
   color: #F5F5F5;
   font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
 * { box-sizing: border-box; }
@@ -595,10 +596,45 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .hero-content { padding-left: 40px; padding-right: 40px; }
-  .hero-section, .content-section { padding: 50px 20px; }
+  .hero-content { padding-left: 20px; padding-right: 20px; }
+  .hero-section { padding: 40px 20px 60px; }
+  .content-section { padding: 40px 20px; }
   .section-title { font-size: 28px; }
-  .fence-decoration { width: 220px; height: 220px; right: -30px; }
+  .fence-decoration { width: 180px; right: 0; bottom: 0; }
+  .bullet-full { padding: 40px 20px; }
+
+  /* Featured slider: constrain to viewport */
+  .featured-slider { max-width: 100%; overflow: hidden; }
+  .featured-slider-track .featured-slide { width: 100%; }
+  .featured-card {
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0 0;
+    max-width: 100%;
+  }
+  .featured-card img {
+    width: 100%;
+    max-width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+  .featured-card h3 { font-size: 22px; }
+
+  /* Slider arrows visible on mobile */
+  .slider-arrow-prev { left: 4px; }
+  .slider-arrow-next { right: 4px; }
+
+  /* Wall section on mobile */
+  .wall-section-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    padding: 30px 20px 40px;
+  }
+  .wall-section { padding-bottom: 0; }
+  .wall-section-img { margin-bottom: 0; }
+
+  /* Bullet yellow section */
   .bullet-full { padding: 40px 20px; }
 }
 </style>
