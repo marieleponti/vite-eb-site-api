@@ -28,3 +28,4 @@ dist-ssr
 .env.production
 # Local Netlify folder
 .netlify
+.dev.vars
