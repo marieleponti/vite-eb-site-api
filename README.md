@@ -1,7 +1,7 @@
 # EB Vue/Vite App — Architecture & Security Documentation
 
-**Last updated:** July 2026
-**Status:** Migration from Netlify to Cloudflare Pages in progress
+**Last updated:** August 2026
+**Status:** Frontend live on the production domain via Cloudflare Pages. Backend domain cutover blocked on a Pantheon plan upgrade (Sandbox → paid) — see section 8.
 
 ---
 
@@ -28,11 +28,13 @@ The serverless functions layer exists so the frontend never talks to WordPress d
 
 ### Current / target domain map
 
-| Component | Current (during migration) | Target (after cutover) |
+| Component | Current | Target (after full cutover) |
 |---|---|---|
-| Legacy WP site | `yourdomain.com` | Decommissioned |
-| New frontend (Vue) | `random-hash.netlify.app` / `random-hash.pages.dev` | `yourdomain.com` |
-| New WP backend | `dev-eb-vue.pantheonsite.io` | `admin.yourdomain.com` |
+| Legacy WP site | Still live, serving legacy content | Decommissioned |
+| New frontend (Vue) | **`yourdomain.com` — LIVE** (Cloudflare Pages) | Same, no change needed |
+| New WP backend | `dev-eb-vue.pantheonsite.io` (Pantheon Sandbox plan) | `admin.yourdomain.com` |
+
+**⚠️ Blocker:** The new WP backend is on Pantheon's free Sandbox plan, which does not support custom domains. An upgrade purchase is pending Pantheon's approval (multi-day process). Until it clears, `admin.yourdomain.com` cannot be configured, `WP_API`/`VITE_WP_API` must keep pointing at the raw `dev-eb-vue.pantheonsite.io` URL, and PDFs/uploads served from that origin show Pantheon's Sandbox interstitial warning page to visitors (see section 8).
 
 ---
 
@@ -72,6 +74,7 @@ Two parallel implementations exist during the migration:
 | `netlify/functions/posts.js` | `functions/api/posts.js` | `/api/posts` |
 | `netlify/functions/resources.js` | `functions/api/resources.js` | `/api/resources` |
 | `netlify/functions/filters.js` | `functions/api/filters.js` | `/api/filters` |
+| *(none — used Netlify Forms)* | `functions/api/contact.js` | `/api/contact` |
 
 **Important naming note:** Cloudflare Pages Functions are routed by file path. Early in the migration, functions lived directly under `functions/` (e.g. `functions/resources.js` → `/resources`), which **collided with the Vue Router page of the same name**. All functions were moved under `functions/api/` to avoid this. `VITE_API_BASE` is set to `/api` in the Cloudflare Pages project (and to `/.netlify/functions` in the Netlify project) to match.
 
@@ -82,6 +85,7 @@ Two parallel implementations exist during the migration:
 - **`posts.js`** — read-only (`GET`). Write functionality (create/update posts) was removed as unused; all content is managed via wp-admin by the internal team.
 - **`resources.js`** — read-only (`GET`). Determines whether to include `private` status resources based on the requesting user's role (validated server-side against WordPress via `me.js`'s underlying check).
 - **`filters.js`** — read-only (`GET`), no authentication required. Returns the hierarchical taxonomy tree (topics, sources, formats, countries, languages) used to populate the resource library filter UI.
+- **`contact.js`** — accepts `POST` with `{ name, email, message, website }` from the About page contact form. Replaces **Netlify Forms**, a Netlify-native feature with no Cloudflare Pages equivalent. Sends the message via the [Resend](https://resend.com) API (`RESEND_API_KEY`, `CONTACT_FORM_RECIPIENT` env vars). Includes server-side honeypot validation (the `website` field) in addition to the existing frontend check, since a bot could bypass the frontend entirely.
 
 ---
 
@@ -153,22 +157,23 @@ All items below were identified and resolved during a manual security review of 
 - [x] Replaced raw `error.message` responses with generic client-facing messages across all functions; real errors are logged server-side only.
 - [x] `netlifyFetch` now checks `res.ok` and throws a typed error (`.status`, `.data`) instead of silently returning error bodies as if they were successful responses.
 - [x] `checkCurrentUser()` now forces logout on `401`/`403` responses instead of treating all errors as transient network issues.
-- [x] CORS restricted to specific origins (see above; needs final tightening at domain cutover).
-- [ ] **Pending:** Configure Cloudflare rate limiting on `/api/auth`.
-- [ ] **Pending:** Configure Cloudflare WAF (managed rules + custom rule restricting `/wp-admin` and `/wp-login.php`).
-- [ ] **Pending:** Set Cloudflare SSL/TLS mode to "Full (strict)" once `admin.yourdomain.com` is proxied through Cloudflare.
+- [x] CORS restricted to specific origins (see below; needs final tightening at domain cutover).
+- [x] Cloudflare's Free Managed Ruleset confirmed active by default on the frontend zone (no configuration needed on the Free plan).
+- [x] Rate limiting rule deployed on `/api/auth` (5 requests, currently limited to a 10-second window/block duration — the dashboard's rate-limiting rule editor would not accept longer values in this account; revisit via the Cloudflare API if a longer window is needed).
+- [x] Cloudflare SSL/TLS mode confirmed set to `Full (strict)`.
+- [ ] **Pending:** Configure Cloudflare WAF custom rule restricting `/wp-admin` and `/wp-login.php` — blocked until `admin.yourdomain.com` is proxied through Cloudflare.
 
 ### 🟡 Medium
 - [x] Applied `encodeURIComponent()` to all query parameters passed to WordPress from `posts.js`.
-- [ ] **Pending:** Add security headers (CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, HSTS) via `netlify.toml` / Cloudflare Pages headers configuration.
+- [x] Fixed `accessRules.js` — was checking `user?.role` (singular) while the rest of the codebase uses `roles` (array), which meant `canViewResource()` always evaluated to `false`. Not a security hole (failed closed), but a functional bug. Now checks `user?.roles?.includes('ebteam')` / `user?.roles?.includes('administrator')`.
+- [x] Removed duplicate/dead code: the legacy `inforepo/v1` route registration (`inforepo_api_get_resources()`) in `functions.php`, and the large commented-out legacy version of the resources formatter helper.
+- [ ] **Pending:** Add security headers (CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, HSTS) via Cloudflare Pages headers configuration.
 - [ ] **Pending:** Restrict `Access-Control-Allow-Origin: *` in `resources.js`/`posts.js` responses to the production domain only, once finalized.
 - [ ] **Pending:** Evaluate moving the JWT from `localStorage` to an `httpOnly` cookie (architectural change, not urgent given other mitigations in place).
-- [ ] **Pending:** Fix `accessRules.js` — currently checks `user?.role` (singular) but the rest of the codebase uses `roles` (array); this likely means `canViewResource()` always evaluates to `false`. Not a security hole (fails closed), but a functional bug.
-- [ ] **Pending:** Remove duplicate/dead code: the legacy `inforepo/v1` route registration in `functions.php`, and a large commented-out block in the resources formatter helper.
 
 ### 🟢 Low
 - [x] Deleted unused WordPress "Page" content type entries (not consumed by the headless frontend).
-- [ ] **Pending:** Delete `useAuth.bak` from the repository.
+- [x] Deleted `useAuth.bak` from the repository.
 - [ ] **Pending:** Monitor the JWT plugin's maintenance status long-term; consider alternatives if it becomes unmaintained.
 
 ### Noted but not yet actioned
@@ -191,19 +196,61 @@ All items below were identified and resolved during a manual security review of 
 - [x] CORS updated in WordPress to allow the `*.pages.dev` origin during testing.
 - [x] Fixed `authService.js`, which had the Netlify function path (`/.netlify/functions/auth`) hardcoded instead of using `VITE_API_BASE` like the rest of the API layer — this caused login to fail silently on Cloudflare until corrected.
 - [x] End-to-end verification complete: posts, resources, filters, login, resource/post detail pages (by slug), and search all confirmed working in the UI on Cloudflare Pages.
+- [x] Contact form migrated from Netlify Forms (no Cloudflare equivalent) to a custom function using the Resend email API.
 
 ### Remaining
-- [ ] Point `admin.yourdomain.com` DNS (via Cloudflare, proxied) to the new Pantheon WP environment.
-- [ ] Point the root domain to Cloudflare Pages.
+- [ ] Point `admin.yourdomain.com` DNS (via Cloudflare, proxied) to the new Pantheon WP environment — **blocked on Pantheon Sandbox → paid plan approval** (see section 8).
 - [ ] Update `WP_API` / `VITE_WP_API` to use `admin.yourdomain.com` instead of the raw Pantheon URL.
 - [ ] Tighten the WordPress CORS filter to the final production domain only.
-- [ ] Apply Cloudflare WAF, rate limiting, and SSL "Full (strict)" configuration.
+- [ ] Add the Cloudflare WAF custom rule restricting `/wp-admin` and `/wp-login.php` (depends on `admin.yourdomain.com` being proxied).
 - [ ] Decommission the legacy WordPress site.
 - [ ] Remove `netlify/functions/` and related Netlify configuration once Cloudflare is confirmed stable in production.
 
 ---
 
-## 7. Known Issues / Gotchas for Future Reference
+## 8. Domain Cutover Status
+
+### Frontend — done
+`yourdomain.com` now points to the Cloudflare Pages project and is confirmed live and working (login, posts, resources, filters, detail pages, search, and the contact form all verified in production).
+
+### Backend — blocked on Pantheon
+The new WordPress environment is still on Pantheon's **Sandbox** (free) plan. Pantheon does not support custom domains on Sandbox, so `admin.yourdomain.com` cannot be added yet. An upgrade purchase has been submitted and is pending Pantheon's approval (expected to take a few days).
+
+**Side effects while on Sandbox:**
+- Pantheon shows an interstitial "Sandbox environment" warning page to visitors before serving any asset from the raw Pantheon URL (e.g. PDFs under `wp-content/uploads/`). This is a deliberate anti-abuse measure on Pantheon's side (intended to discourage spam/phishing use of sandbox sites), not a vulnerability or misconfiguration on our end — confirmed no security impact, cosmetic only.
+- **Known bug (Pantheon's side, not ours):** the "Continue" button on that interstitial does not respond to taps on mobile (confirmed on both iOS Safari and Chrome Android; ruled out small tap-target and cookie-blocking causes). No fix available until the site leaves Sandbox — reported to Pantheon support.
+
+**Once the Pantheon upgrade is approved:**
+1. Add `admin.yourdomain.com` as a custom domain in Pantheon → Domains/HTTPS (Live environment).
+2. Create the corresponding `CNAME` in Cloudflare DNS (proxied — orange cloud).
+3. Update `WP_API` / `VITE_WP_API` in Cloudflare Pages from the raw Pantheon URL to `https://admin.yourdomain.com`.
+4. Tighten the WordPress CORS filter to the production frontend domain only (remove the `netlify.app` / `pages.dev` fallbacks).
+5. Add the Cloudflare WAF custom rule restricting `/wp-admin` and `/wp-login.php`.
+6. Decommission the legacy WordPress site.
+
+---
+
+## 9. Bug Fixes Found During Migration Testing
+
+- **Broken "Read More" link on the last item of the homepage featured content slider.** The link used WordPress's `permalink` field directly as the `href`, which `get_permalink()` always returns as an absolute URL on WordPress's own domain (the raw Pantheon URL) — not a relative path. Most items appeared to work because of how their data happened to pass through the mappers, but this wasn't reliable. Fixed by building the link from `item.slug` via Vue Router instead:
+  ```vue
+  <router-link
+    :to="item.type === 'post' ? `/blog/${item.slug}` : `/resources/${item.slug}`"
+    class="featured-link"
+  >
+  ```
+  **Takeaway:** never use a raw WordPress `permalink` field as a frontend link — it will always point at whatever domain WordPress itself is configured with, which may not match the frontend's domain in a headless setup. Build internal links from `slug` instead.
+
+---
+
+## 10. Open Items
+
+- [ ] **Map does not render** on the resource library / detail pages. Worked on the legacy site; not yet diagnosed on the new stack. (Frontend map component, library used, and any console errors still need to be gathered.)
+- [ ] Domain cutover for the backend (see section 8) — blocked on Pantheon plan approval.
+
+---
+
+## 11. Known Issues / Gotchas for Future Reference
 
 - **Cloudflare Pages Functions routing is filename/folder-based** — any function placed directly under `functions/` will intercept a matching frontend route if one exists with the same name (e.g. `/resources`). Always check for collisions with Vue Router paths before adding new functions.
 - **`VITE_*` environment variables are baked in at build time**, not read at runtime. Changing them in the Cloudflare Pages dashboard requires a fresh build (not just a redeploy of a previous build) to take effect.

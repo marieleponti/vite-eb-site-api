@@ -4,14 +4,10 @@
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-content">
-        <p class="hero-text">
-          Welcome to the Everywhere Border info repository. This is a living resource that makes visible the harms of US-driven border externalization, and how tech infrastructures are implemented and used in migration control systems, militarization, and policing in the Americas. Our goal is to support and strengthen transnational collaboration and advocacy to combat the role of technology in migration deterrence as a method of control, consolidation of power, structural violence, and impunity.
-        </p>
-        <p class="hero-text">
-          This info repository supports and reflects collaboration across borders. It contains original research, documentation, and analysis on border externalization policies and practices of multiple countries in the region, and the ever-growing tech and data infrastructure that support them, often made of opaque and inaccessible systems. Resources draw from the work of civil society organizations, academic research, financial investigation, and public records requests. The info repository is a collective work in progress—we welcome contributions from activists, researchers, and civil society organizations.
-        </p>
+        <p class="hero-text">{{ $t('home.heroText1') }}</p>
+        <p class="hero-text">{{ $t('home.heroText2') }}</p>
         <div class="hero-btn-wrap">
-          <router-link to="/resources" class="hero-btn">EXPLORE THE LIBRARY</router-link>
+          <router-link to="/resources" class="hero-btn">{{ $t('home.exploreLibrary') }}</router-link>
         </div>
       </div>
       <img src="/wire.png" alt="" class="fence-decoration" aria-hidden="true" />
@@ -19,10 +15,8 @@
 
     <!-- "Why" Section -->
     <section class="content-section">
-      <h2 class="section-title">Why the Everywhere Border?</h2>
-      <p class="section-text">
-        The border is not a fixed territorial boundary. It is an all-encompassing system of ideas, policies, practices, and infrastructures that reach deep into the interior of origin and transit countries through externalization processes, with the goal of controlling the movement of the majority of humans, reserving free movement to reach territorial frontiers and cross political boundaries for a select few. The US has been a key actor in advancing this vision and practice, which has a tremendous impact on targeted countries, facilitating and increasing militarization, state violence, and corporate power.
-      </p>
+      <h2 class="section-title">{{ $t('home.whyTitle') }}</h2>
+      <p class="section-text">{{ $t('home.whyText') }}</p>
     </section>
 
     <!-- Dashed wave decoration mid-page -->
@@ -32,39 +26,35 @@
     <div class="wall-section">
       <img src="/border_wall.png" alt="" class="wall-section-img" ref="wallImgRef" aria-hidden="true" />
       <div class="wall-section-content" :style="{ marginTop: wallContentMargin }">
-        <p class="section-text wall-section-text">
-          The bordering regime of the United States both drives and reflects a global trend. Wealthy nations, development finance institutions, and massive technology firms are feverishly investing in border policing regimes that entrench and reinforce structural violence and inequality. These same powerful interests derive much of their economic wealth and political clout through extractive and repressive practices, historically and in the present day. Despite playing a central role in fueling forced migration—including being responsible for the vast majority of emissions driving the climate crisis—these actors are constructing and expanding barriers to access national territories. By peddling securitization and militarization as solutions to societal inequalities, they disregard human rights, and undermine existing legal regimes.
-        </p>
+        <p class="section-text wall-section-text">{{ $t('home.wallSectionText') }}</p>
         <div class="icon-row">
           <img src="/border_icons.png" alt="" class="icon-row-image" />
         </div>
       </div>
     </div>
 
-    <!-- Bullet Section — full width, gold background, before train image -->
+    <!-- Bullet Section -->
     <div class="bullet-full">
-      <p class="bullet-title">This is &ldquo;The Everywhere Border&rdquo;:</p>
+      <p class="bullet-title">{{ $t('home.bulletTitle') }}</p>
       <ul class="bullet-list-gold">
-        <li>It enables the policing of people wherever they are, based on race, nationality, ethnicity, class, gender, and other social markers.</li>
-        <li>It relies on public narratives, laws, and politics to reinforce hierarchies of belonging, thereby allowing governments to more easily limit people&rsquo;s freedom of movement, ability to stay, and to live freely.</li>
-        <li>It plays a fundamental role in disrupting the social fabric of origin, transit, and destination countries, making communities surveilled, policed and unsafe.</li>
+        <li>{{ $t('home.bullet1') }}</li>
+        <li>{{ $t('home.bullet2') }}</li>
+        <li>{{ $t('home.bullet3') }}</li>
       </ul>
-      <p class="bullet-invite">
-        We invite you to explore the resources available here, leverage them in your work, and share information with others.
-      </p>
+      <p class="bullet-invite">{{ $t('home.bulletInvite') }}</p>
       <div class="center-btn-wrap">
-        <router-link to="/resources" class="bullet-btn">EXPLORE THE DATABASE</router-link>
+        <router-link to="/resources" class="bullet-btn">{{ $t('home.exploreDatabase') }}</router-link>
       </div>
     </div>
 
-    <!-- Full Width Image — gold background continues -->
+    <!-- Full Width Image -->
     <div class="full-image gold-bg">
-      <img src="/traincart.png" alt="People riding a freight train" />
+      <img src="/traincart.png" :alt="$t('home.trainImageAlt')" />
     </div>
 
     <!-- Featured Content -->
     <section class="content-section">
-      <h2 class="section-title section-title--light">Featured Content</h2>
+      <h2 class="section-title section-title--light">{{ $t('home.featuredTitle') }}</h2>
 
       <div v-if="loadingFeatured" class="featured-card">
         <div class="featured-skeleton-img"></div>
@@ -83,35 +73,39 @@
             v-for="item in featuredContent"
             :key="`${item.type}-${item.id || item.slug}`"
             class="featured-card featured-slide"
-          >
+>
             <img :src="item.featuredImage || '/featured.jpg'" :alt="item.title" />
             <div>
               <h3>{{ item.title }}</h3>
               <p>{{ trimExcerpt(item.excerpt, 20) }}</p>
-              <a :href="item.permalink" target="_blank" rel="noopener noreferrer" class="featured-link">
-                Read More
-              </a>
+              <router-link :to="item.type === 'post' ? `/blog/${item.slug}` : `/resources/${item.slug}`"
+                class="featured-link">
+                {{ $t('home.readMore') }}
+              </router-link>
+
             </div>
           </div>
         </div>
 
         <template v-if="featuredContent.length > 1">
-          <button class="slider-arrow slider-arrow-prev" @click="prevSlide" aria-label="Previous featured item">&#8249;</button>
-          <button class="slider-arrow slider-arrow-next" @click="nextSlide" aria-label="Next featured item">&#8250;</button>
+          <button class="slider-arrow slider-arrow-prev" @click="prevSlide"
+            :aria-label="$t('home.prevSlideAria')">&#8249;</button>
+          <button class="slider-arrow slider-arrow-next" @click="nextSlide"
+            :aria-label="$t('home.nextSlideAria')">&#8250;</button>
           <div class="slider-dots">
             <button
               v-for="(item, i) in featuredContent"
               :key="`dot-${i}`"
               class="slider-dot"
               :class="{ active: i === currentSlide }"
-              :aria-label="`Go to slide ${i + 1}`"
+              :aria-label="$t('home.goToSlideAria', { n: i + 1 })"
               @click="goToSlide(i)"
             ></button>
           </div>
         </template>
       </div>
 
-      <p v-else class="section-text">No featured content available right now.</p>
+      <p v-else class="section-text">{{ $t('home.noFeaturedContent') }}</p>
     </section>
 
   </div>
@@ -290,6 +284,7 @@ onMounted(() => {
   background-color: var(--color-teal);
   color: #F5F5F5;
   font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
 * { box-sizing: border-box; }
@@ -365,7 +360,9 @@ onMounted(() => {
 .content-section {
   padding: 90px 75px;
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .content-section--overlap { padding-top: 60px; }
@@ -513,7 +510,7 @@ onMounted(() => {
   margin: 50px auto 0;
 }
 
-.featured-card img { width: 42%; max-width: 380px; object-fit: cover; flex-shrink: 0; }
+.featured-card img { width: 38%; max-width: 340px; object-fit: cover; flex-shrink: 0; height: 260px; }
 .featured-card > div { text-align: left; }
 
 .featured-card h3 {
@@ -595,10 +592,51 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .hero-content { padding-left: 40px; padding-right: 40px; }
-  .hero-section, .content-section { padding: 50px 20px; }
+  .hero-content { padding-left: 16px; padding-right: 16px; }
+  .hero-section { padding: 32px 16px 50px; }
+  .content-section { padding: 32px 16px; }
   .section-title { font-size: 28px; }
-  .fence-decoration { width: 220px; height: 220px; right: -30px; }
-  .bullet-full { padding: 40px 20px; }
+  .fence-decoration { width: 150px; right: 0; bottom: 0; }
+
+  /* Featured slider: constrain to viewport */
+  .featured-slider {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
+  .featured-slider-track .featured-slide { width: 100%; }
+  .featured-card {
+    flex-direction: column;
+    gap: 16px;
+    margin: 16px 0 0;
+    max-width: 100%;
+    padding: 0 16px;
+  }
+  .featured-card img {
+    width: 100%;
+    max-width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
+  .featured-card h3 { font-size: 20px; }
+
+  /* Arrows sit inside the slider, not outside */
+  .slider-arrow { width: 32px; height: 32px; font-size: 18px; }
+  .slider-arrow-prev { left: 4px; }
+  .slider-arrow-next { right: 4px; }
+
+  /* Wall section on mobile */
+  .wall-section-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    padding: 30px 16px 40px;
+  }
+  .wall-section { padding-bottom: 0; }
+  .wall-section-img { margin-bottom: 0; }
+
+  /* Bullet yellow section */
+  .bullet-full { padding: 32px 16px; }
 }
 </style>

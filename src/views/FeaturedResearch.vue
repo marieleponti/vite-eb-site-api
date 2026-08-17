@@ -16,7 +16,7 @@
         </v-col>
         <v-col cols="12" md="6" class="d-none d-md-block position-relative line-illustration">
           <figure class="ma-0 position-relative fill-height">
-            <v-img src="src/assets/images/border-tech.jpg" alt="Border Infrastructure Illustration" height="100%" cover />
+            <v-img :src="borderTechImg" alt="Border Infrastructure Illustration" height="100%" cover />
             <figcaption class="caption-text">
               <a href="https://www.instagram.com/chewsomebubblegum/" target="_blank" rel="noopener noreferrer">
                 {{ $t('featuredResearch.illustrationCaption') }}
@@ -96,6 +96,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useContent } from '@/composables/useContent'
 import { useAuth } from '@/composables/useAuth'
+import borderTechImg from '@/assets/images/border-tech.jpg'
+import minibriefBorderExt from '@/assets/images/minibrief_border-ext.jpg'
+import minibriefBiometricsMgmt from '@/assets/images/minibrief_biometrics-migr-mgmt.jpg'
+import minibriefHumanImpacts from '@/assets/images/minibrief_human-impacts.png'
+import minibriefBiometricsBorders from '@/assets/images/minibrief_biometrics-borders.jpg'
 
 const { t } = useI18n()
 const { items: dynamicItems, fetch: cargarContenido, loading } = useContent()
@@ -115,7 +120,7 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static1Title'),
     permalink: '/featured-research/border-externalization-in-americas',
-    featuredImage: 'src/assets/images/minibrief_border-ext.jpg',
+    featuredImage: minibriefBorderExt,
     excerpt: t('featuredResearch.static1Excerpt'),
     author: 'Mizue Aizeki & S. Narváez',
     restricted: false
@@ -123,7 +128,7 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static2Title'),
     permalink: '/featured-research/biometrics-based-migration-management',
-    featuredImage: 'src/assets/images/minibrief_biometrics-migr-mgmt.jpg',
+    featuredImage: minibriefBiometricsMgmt,
     excerpt: t('featuredResearch.static2Excerpt'),
     author: 'Santiago Narváez',
     restricted: true
@@ -131,7 +136,7 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static3Title'),
     permalink: '/featured-research/human-impacts-brief',
-    featuredImage: 'src/assets/images/minibrief_human-impacts.png',
+    featuredImage: minibriefHumanImpacts,
     excerpt: t('featuredResearch.static3Excerpt'),
     author: 'Laura Bingham',
     restricted: false
@@ -139,7 +144,7 @@ const staticResearch = computed(() => [
   {
     title: t('featuredResearch.static4Title'),
     permalink: '/featured-research/biometrics-mx-ca',
-    featuredImage: 'src/assets/images/minibrief_biometrics-borders.jpg',
+    featuredImage: minibriefBiometricsBorders,
     excerpt: t('featuredResearch.static4Excerpt'),
     author: 'Everywhere Border Project',
     restricted: false
@@ -148,8 +153,9 @@ const staticResearch = computed(() => [
 
 function trimExcerpt(text, wordLimit) {
   if (!text) return ''
-  const words = text.replace(/<[^>]*>/g, '').split(/\s+/)
-  if (words.length <= wordLimit) return text
+  const plain = text.replace(/<[^>]*>/g, '').trim()
+  const words = plain.split(/\s+/)
+  if (words.length <= wordLimit) return plain
   return words.slice(0, wordLimit).join(' ') + '...'
 }
 

@@ -5,7 +5,7 @@ export function canViewResource(user, resource) {
   }
 
   if (resource.status === 'private') {
-    return user?.role === 'ebteam' || user?.role === 'admin'
+    return user?.roles?.includes('ebteam') || user?.roles?.includes('administrator')
   }
 
   return false
