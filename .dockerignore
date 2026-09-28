@@ -1,0 +1,9 @@
+.git
+node_modules
+dist
+netlify
+.netlify
+*.log
+.env
+.env.development
+.env.production
