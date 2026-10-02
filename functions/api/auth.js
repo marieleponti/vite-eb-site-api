@@ -3,6 +3,10 @@
 // Cloudflare Pages Function — equivalent to the old Netlify function.
 // Cloudflare auto-routes this file to the path /auth based on its filename.
 
+/* auth.js — accepts POST with { username, password }, 
+forwards to WP's jwt-auth/v1/token endpoint, 
+returns { token, user } or a generic error. */
+
 export async function onRequestPost(context) {
   const { request, env } = context
 
