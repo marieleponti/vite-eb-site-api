@@ -1,0 +1,90 @@
+name: Deploy frontend to DigitalOcean
+
+# Fires on every push to the listed branches. Testing phase: the feature
+# branch. At cutover, change this to [main] (and EB_FRONTEND_BRANCH in .env.eb
+# on the Droplet to match — the Droplet, not this file, decides what gets
+# pulled).
+#
+# The SSH key is pinned on the Droplet to one forced command that accepts only
+# the words "wordpress" or "frontend" (see infra/ops/deploy-entry.sh). It
+# cannot open a shell, read files, or run anything else.
+#
+# Required secrets, in a GitHub Environment named "production"
+# (Settings > Environments), printed by infra/ops/setup-github-deploy.sh:
+#   DEPLOY_SSH_KEY, DEPLOY_HOST, DEPLOY_USER, DEPLOY_KNOWN_HOSTS
+#   SMOKE_URL   the frontend domain, e.g. https://pruebas.everywhereborder.org
+#
+# This is independent of the Cloudflare Pages deployment, which keeps building
+# from its own branch until the cutover. Nothing here touches it.
+
+on:
+  push:
+    branches: [feature/droplet-docker]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-eb-frontend
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Cheap guard so a broken build is caught on the runner in about a minute,
+  # not after tying up the Droplet's 2 GB of RAM for a docker build.
+  build-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.16.0"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  deploy:
+    needs: build-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: production
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Trigger the deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=30 \
+              "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+              frontend 2>&1 | tee deploy.log
+
+      # /api/filters goes frontend -> proxy function -> WordPress, so a green
+      # result proves the whole chain, not just that the page is served.
+      - name: Smoke test
+        run: |
+          for path in / /api/filters; do
+            curl -fsS --retry 6 --retry-delay 5 --retry-all-errors \
+                -o /dev/null "${{ secrets.SMOKE_URL }}${path}"
+          done
+
+      - name: Clean up the key
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519
+
+      - name: Report failure
+        if: failure()
+        run: |
+          echo "::error::Deployment failed. The previous version keeps running."
+          echo "::error::Roll back: ssh <user>@<droplet>, then"
+          echo "::error::  git -C /opt/eb-site/vite-eb-site-api reset --hard <previous>"
+          echo "::error::  /opt/eb-site/infra/ops/deploy.sh frontend"
