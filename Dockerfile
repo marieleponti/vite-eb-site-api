@@ -1,24 +1,23 @@
-# NODE_VERSION here is a placeholder (20 LTS) — Mariele still needs to
-# confirm the exact Node version set in the Cloudflare Pages project
-# settings (it's not in any repo file). Update the tag below to match once
-# we have it; a mismatch can change build output subtly.
+# Node 22.16.0 / npm 10.9.2 match the Cloudflare Pages build settings
+# (confirmed by the client). The repo's lockfile is package-lock.json, so
+# this uses npm ci, not yarn.
 
-FROM node:20-alpine AS build
+FROM node:22.16.0-alpine AS build
 WORKDIR /app
-COPY package.json yarn.lock* package-lock.json* ./
-RUN corepack enable && yarn install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 # VITE_* vars are baked in at build time, not read at runtime — this must
 # be passed as a build arg, not a plain environment variable at `docker run`.
 ARG VITE_API_BASE=/api
 ENV VITE_API_BASE=$VITE_API_BASE
-RUN yarn build
+RUN npm run build
 
-FROM node:20-alpine
+FROM node:22.16.0-alpine
 WORKDIR /app
 ENV NODE_ENV=production
-COPY package.json yarn.lock* package-lock.json* ./
-RUN corepack enable && yarn install --frozen-lockfile --production
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 COPY functions ./functions
 COPY server ./server
