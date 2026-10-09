@@ -96,10 +96,18 @@ jobs:
       # /api/filters goes frontend -> proxy function -> WordPress, so a green
       # result proves the whole chain, not just that the page is served.
       - name: Smoke test
+        env:
+          SMOKE_URL: ${{ secrets.SMOKE_URL }}
         run: |
+          url="$(printf '%s' "$SMOKE_URL" | tr -d ' \r\n\t')"
+          url="${url%/}"
+          case "$url" in
+            https://*) ;;
+            *) echo "::error::SMOKE_URL must start with https:// and hold only the site address, e.g. https://example.org (got ${#url} characters)."; exit 1 ;;
+          esac
           for path in / /api/filters; do
             curl -fsS --retry 6 --retry-delay 5 --retry-all-errors \
-                -o /dev/null "${{ secrets.SMOKE_URL }}${path}"
+                -o /dev/null "${url}${path}"
           done
 
       - name: Clean up the key
