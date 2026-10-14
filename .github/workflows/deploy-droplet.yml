@@ -19,7 +19,7 @@ name: Deploy frontend to DigitalOcean
 
 on:
   push:
-    branches: [feature/droplet-docker]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
